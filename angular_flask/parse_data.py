@@ -1,9 +1,25 @@
 import pandas as pd
 import doctest
+import os
 
 import logging
 logging.basicConfig()
 LOG = logging.getLogger(__name__)
+
+def parse_file(filepath_or_buffer):
+     
+    if hasattr(filepath_or_buffer,'filename'):
+        filename = filepath_or_buffer.filename
+    else:
+        filename = filepath_or_buffer
+
+    base,ext = os.path.splitext(filename)
+
+    if ext == '.gtf':
+        return read_gtf(filename)
+    elif ext == '.wig':
+        return read_wig(filename)
+
 
 def read_gtf(filepath_or_buffer):
     """
