@@ -89,9 +89,11 @@ class BasePair(db.Model):
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_name = db.Column(db.String)
+    email = db.Column(db.String)
 
-    def __init__(self,user_name):
+    def __init__(self,user_name,email):
         self.user_name = user_name
+        self.email = email
 
     def __repr__(self):
         return self.user_name
