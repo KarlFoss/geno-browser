@@ -36,7 +36,7 @@ def user(user_id):
         if(user):
             return jsonify( user_name=user.user_name, user_id=user.id, email=user.email)
         else:
-            return jsonify(message="Can't fetch user",code=1)
+            return jsonify(message="Can't fetch user with id: "+user_id),404
 #    elif request.method == 'POST':
 #        json = request.get_json()
 #        print json
