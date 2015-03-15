@@ -6,6 +6,7 @@
 
 	<link rel="stylesheet" href="/static/lib/bootstrap/css/bootstrap.min.css">
 	<link rel="stylesheet" href="/static/lib/bootstrap/css/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="/static/css/bootstrap-fix.css">
 	<link rel="stylesheet" href="/static/css/main.css">
 
 	<script src="/static/lib/angular/angular.js"></script>
@@ -15,17 +16,17 @@
 	<script src="/static/js/controllers.js"></script>
  	<script src="/static/js/services.js"></script>
 
-	<script src="/static/lib/jquery/jquery.min.js"></script>
+	<script src="/static/lib/jquery/jquery-2.1.3.min.js"></script>
 	<script src="/static/lib/bootstrap/js/bootstrap.min.js"></script>
 </head>
 <body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
-                <div class="navbar-brand"><span class="glyphicon glyphicon-cog"></span></div>
+                <button type="button" class="navbar-toggle pull-left" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="glyphicon glyphicon-cog"></span>
+                </button>
                 <a class="navbar-brand" href="/">Geno-Browser</a>
-            </div>
-            <div id="navbar" class="navbar-collapse collapse">
                 <form class="navbar-form navbar-right">
                     <div class="form-group">
                         <input type="text" placeholder="Login" class="form-control">
@@ -36,6 +37,15 @@
                     <button type="submit" class="btn btn-default">Login</button>
                     <button type="submit" class="btn btn-default"/>Sign Up</button>
                 </form>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li class="active "><a href="#">Home</a></li>
+                    <li><a href="#">Link 1</a></li>
+                    <li><a href="#">Link 2</a></li>
+                    <li><a href="#">Link 3</a></li>
+                    <li><a href="#">Link 4</a></li>
+                </ul>  
             </div>
         </div>
     </nav>
