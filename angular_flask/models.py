@@ -1,8 +1,4 @@
-from datetime import datetime
-
 from angular_flask import db
-from angular_flask import app
-
 
 class Wig(db.Model):
     id = db.Column(db.Integer, primary_key=True)
