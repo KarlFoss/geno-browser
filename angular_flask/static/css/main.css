@@ -14,3 +14,8 @@ body {
 #navbar-menu .well.well-sm {
     height: 100%;
 }
+
+#navbar-menu h4 {
+    margin-top: 0;
+    font-weight: bold;
+}
