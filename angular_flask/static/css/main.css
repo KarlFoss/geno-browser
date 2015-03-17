@@ -1,0 +1,16 @@
+body {
+    background-color: #CCCCCC;
+}
+
+#navbar-menu > .row {
+    height: 400px;
+    padding: 15px 0;
+}
+
+#navbar-menu > .row > div {
+    height: 100%;
+}
+
+#navbar-menu .well.well-sm {
+    height: 100%;
+}
