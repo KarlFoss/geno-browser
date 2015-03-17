@@ -97,10 +97,3 @@ class User(db.Model):
 
     def __repr__(self):
         return self.user_name
-
-# models for which we want to create API endpoints
-app.config['API_MODELS'] = {}#{ 'post': BasePair }
-
-# models for which we want to create CRUD-style URL endpoints,
-# and pass the routing onto our AngularJS application
-app.config['CRUD_URL_MODELS'] = {}#{ 'post': Post }
