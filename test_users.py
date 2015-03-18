@@ -35,8 +35,8 @@ class UserTestCase(TestCase):
             data=json.dumps({'user_name': 'kyle', 'email': 'kyle@email.com'}), 
             content_type='application/json')
 
-        assert response.status == self.STATUS_OK 
-        assert json.loads(response.get_data()).get('user_id') == 1
+        self.assertEqual(response.status, self.STATUS_OK)
+        self.assertEqual(json.loads(response.get_data()).get('user_id'),1)
 
     def testGetUser(self):
         print "Testing user endpoint /users/<user_id> with GET"
@@ -46,12 +46,12 @@ class UserTestCase(TestCase):
 
         # Check the user json returned
         response = self.app.get('/users/1')
-        assert response.status == self.STATUS_OK
+        self.assertEqual(response.status,self.STATUS_OK)
 
         # Make sure the user dict has the right fields
         user = json.loads(response.get_data())
-        assert user.get('user_name') == 'kyle'
-        assert user.get('email') == 'kyle@email.com'
+        self.assertEqual(user.get('user_name'),'kyle')
+        self.assertEqual(user.get('email'),'kyle@email.com')
 
     def testPutUser(self):
         print "Testing user endoint /users/<user_id> with PUT"
@@ -64,13 +64,13 @@ class UserTestCase(TestCase):
         response = self.app.put('/users/'+str(user.get('user_id')), 
             data=updated_json, 
             content_type='application/json')
-        assert response.status == self.STATUS_OK
+        self.assertEqual(response.status,self.STATUS_OK)
         
 
         json_up = json.loads(response.get_data())
-        assert json_up.get('user_id') == user.get('user_id')
-        assert json_up.get('email') == user.get('email')
-        assert json_up.get('user_id') == user.get('user_id')
+        self.assertEqual(json_up.get('user_id'),user.get('user_id'))
+        self.assertEqual(json_up.get('email'),user.get('email'))
+        self.assertEqual(json_up.get('user_id'),user.get('user_id'))
 
     def testDeleteUser(self):
         print "Testing user endpoint /users/<user_id> with DELETE"
@@ -92,3 +92,4 @@ class UserTestCase(TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
