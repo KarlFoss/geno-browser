@@ -5,6 +5,10 @@ from flask import Flask, json, jsonify
 from angular_flask import app, db, session
 from angular_flask.models import User
 
+import logging
+logging.basicConfig()
+LOG = logging.getLogger(__name__)
+
 class UserTestCase(TestCase):
     STATUS_OK = "200 OK"
 
@@ -14,7 +18,6 @@ class UserTestCase(TestCase):
         return app
 
     def setUp(self):
-        print "#" * 40
     	app.config['TESTING'] = True
         app.config['WTF_CSRF_ENABLED'] = False
         # Use in-memory database
@@ -29,7 +32,7 @@ class UserTestCase(TestCase):
         db.drop_all()
 
     def testCreateUser(self):
-        print "Testing create user endpoint /users with POST"
+        LOG.info("Testing create user endpoint /users with POST")
 
         # Send post request
         response = self.app.post('/users', 
@@ -40,7 +43,7 @@ class UserTestCase(TestCase):
         self.assertEqual(json.loads(response.get_data()).get('user_id'),1)
 
     def testGetUser(self):
-        print "Testing user endpoint /users/<user_id> with GET"
+        LOG.info("Testing user endpoint /users/<user_id> with GET")
 
         # Helper to create a user (has already been tested above)
         self.createTestUser()
@@ -55,7 +58,7 @@ class UserTestCase(TestCase):
         self.assertEqual(user.get('email'),'kyle@email.com')
 
     def testPutUser(self):
-        print "Testing user endoint /users/<user_id> with PUT"
+        LOG.info("Testing user endoint /users/<user_id> with PUT")
         self.createTestUser()
         user = self.getTestUser()
         user['user_name'] = "KYLES NEW NAME"
@@ -74,7 +77,7 @@ class UserTestCase(TestCase):
         self.assertEqual(json_up.get('user_id'),user.get('user_id'))
 
     def testDeleteUser(self):
-        print "Testing user endpoint /users/<user_id> with DELETE"
+        LOG.info("Testing user endpoint /users/<user_id> with DELETE")
         self.createTestUser()
         user = self.getTestUser()
         user_id = str(user.get('user_id'))
