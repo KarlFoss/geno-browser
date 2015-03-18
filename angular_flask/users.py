@@ -10,7 +10,7 @@ def get_user(user_id):
     if(user):
         return jsonify( user_name=user.user_name, user_id=user.id, email=user.email)
     else:
-        return jsonify(response="Can't fetch user with id: "+user_id),404
+        return jsonify(response="Can't fetch user with id: {}".format(user_id)), 404
 
 @app.route('/users',methods=['POST'])
 def new_user():
