@@ -17,7 +17,8 @@ class UserTestCase(TestCase):
         print "#" * 40
     	app.config['TESTING'] = True
         app.config['WTF_CSRF_ENABLED'] = False
-        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////tmp/angular_flask.db'
+        # Use in-memory database
+        app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite://'
 
         # we set self to the app instance
         self.app = app.test_client()
