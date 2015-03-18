@@ -39,7 +39,7 @@ class UserTestCase(TestCase):
             data=json.dumps({'user_name': 'kyle', 'email': 'kyle@email.com'}), 
             content_type='application/json')
 
-        self.assertEqual(response.status, self.STATUS_OK)
+        self.assert200(response)
         self.assertEqual(json.loads(response.get_data()).get('user_id'),1)
 
     def testGetUser(self):
@@ -50,12 +50,18 @@ class UserTestCase(TestCase):
 
         # Check the user json returned
         response = self.app.get('/users/1')
-        self.assertEqual(response.status,self.STATUS_OK)
+        self.assert200(response)
 
         # Make sure the user dict has the right fields
         user = json.loads(response.get_data())
-        self.assertEqual(user.get('user_name'),'kyle')
-        self.assertEqual(user.get('email'),'kyle@email.com')
+        self.assertDictContainsSubset({'user_name':'kyle','email':'kyle@email.com'},user)
+
+    def test_get_nonexistant_user(self):
+        """
+        Try to GET a user by an invalid id
+        """
+        response = self.app.get('/users/1')
+        self.assert404(response)
 
     def testPutUser(self):
         LOG.info("Testing user endoint /users/<user_id> with PUT")
@@ -68,13 +74,15 @@ class UserTestCase(TestCase):
         response = self.app.put('/users/'+str(user.get('user_id')), 
             data=updated_json, 
             content_type='application/json')
-        self.assertEqual(response.status,self.STATUS_OK)
+        self.assert200(response)
         
-
+        # Check that PUT response matches request data
         json_up = json.loads(response.get_data())
-        self.assertEqual(json_up.get('user_id'),user.get('user_id'))
-        self.assertEqual(json_up.get('email'),user.get('email'))
-        self.assertEqual(json_up.get('user_id'),user.get('user_id'))
+        self.assertEqual(user,json_up)
+
+        # Check that changes are still there when we GET
+        user_refresh = self.getTestUser()
+        self.assertEqual(user_refresh,json_up)
 
     def testDeleteUser(self):
         LOG.info("Testing user endpoint /users/<user_id> with DELETE")
@@ -82,6 +90,11 @@ class UserTestCase(TestCase):
         user = self.getTestUser()
         user_id = str(user.get('user_id'))
         response = self.app.delete('/users/'+user_id)
+        self.assert200(response)
+
+        # Check if we can still GET
+        response_get = self.app.get('/users/{uid}'.format(uid=user_id))
+        self.assert404(response_get)
 
     def createTestUser(self):
         response = self.app.post('/users', 
@@ -90,6 +103,7 @@ class UserTestCase(TestCase):
 
     def getTestUser(self):
         response = self.app.get('/users/1')
+        self.assert200(response)
         user = json.loads(response.get_data())
         return user
 
