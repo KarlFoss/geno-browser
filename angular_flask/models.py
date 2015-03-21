@@ -93,3 +93,28 @@ class User(db.Model):
 
     def __repr__(self):
         return self.user_name
+
+class Track(db.Model):
+	id = db.Column(db.Integer, primary_key=True)
+	track_name = db.Column(db.String)
+	user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+	data_id = db.Column(db.Integer)
+	data_type = db.Column(db.Enum('wig','bed','gtf','fasta'))
+	file_name = db.Column(db.String)
+
+	def __init__(self,track_name,user_id,data_type,data_id, file_name):
+		self.track_name = track_name
+		self.user_id = user_id
+		self.data_type = data_type
+		self.data_id = data_id
+		self.file_name = file_name
+
+	def to_json(self):
+		return {
+			'track_id'   : self.id,
+			'track_name' : self.track_name,
+			'user_id'    : self.user_id,
+			'data_type'  : self.data_type,
+			'data_id'    : self.data_id,
+			'file_name'  : self.file_name
+		}
