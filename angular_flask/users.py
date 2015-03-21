@@ -1,6 +1,4 @@
-from flask import Flask, request, Response
-from flask import jsonify
-from angular_flask import parse_data
+from flask import Flask, request, Response, jsonify
 from angular_flask import app, db, session
 from angular_flask.models import User
 
@@ -10,7 +8,7 @@ def get_user(user_id):
     if(user):
         return jsonify( user_name=user.user_name, user_id=user.id, email=user.email)
     else:
-        return jsonify(response="Can't fetch user with id: {}".format(user_id)), 404
+        return jsonify(response="Can't fetch user with id: {}".format(user_id)),404
 
 @app.route('/users',methods=['POST'])
 def new_user():
