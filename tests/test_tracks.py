@@ -42,35 +42,34 @@ class TrackTestCase(TestCase):
             data=json.dumps({
                 'track_name': 'kyles track', 
                 'data_type': 'wig',
-                'data_id':'1',
+                'data_id':1,
                 'file_name':'mywig.wig'
             }), 
             content_type='application/json',
-            headers={"X-UserId":"1"})
+            headers={"X-Userid":1})
 
         self.assert200(response)
         self.assertEqual(json.loads(response.get_data()).get('track_id'),1)
 
     def testGetTrack(self):
-        LOG.info("Testing track endpoint /tracks/<track_id> with GET")#
+        LOG.info("Testing track endpoint /tracks/<track_id> with GET")
 
         # Helper to create a user + track (has already been tested above)
         self.createTestUser()
         self.createTestTrack()
 
         # Check the user json returned
-        response = self.app.get('/tracks/1',headers={"X-UserId":"1"})
+        response = self.app.get('/tracks/1',headers={"X-Userid":"1"})
         self.assert200(response)
 
         # Make sure the user dict has the right fields
         track = json.loads(response.get_data())
-        print track
         self.assertDictContainsSubset({
-                'track_id' : '1',
+                'track_id' : 1,
                 'track_name':'kyles track',
                 'data_type':'wig',
-                'data_id':'1',
-                'user_id':'1',
+                'data_id':1,
+                'user_id':1,
                 'file_name':'mywig.wig'
             },
             track

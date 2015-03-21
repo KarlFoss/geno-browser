@@ -6,10 +6,10 @@ from angular_flask.models import Track, User
 def get_all_tracks():
 
     # get user_id
-    user_id = request.headers.get("X-UserId")
+    user_id = request.headers.get("X-Userid")
 
     if not user_id:
-        return jsonify(response="Can't fetch tracks for user, X-UserId header not set")
+        return jsonify(response="Can't fetch tracks for user, X-UserId header not set"),404
 
     # First make sure the user exists
     user = session.query(User).get(user_id)
@@ -28,10 +28,10 @@ def get_all_tracks():
 def get_one_track(track_id):
 
     # get user_id
-    user_id = request.headers.get("X-UserId")
+    user_id = request.headers.get("X-Userid")
 
     if not user_id:
-        return jsonify(response="Can't fetch tracks for user, X-UserId header not set")
+        return jsonify(response="Can't fetch tracks for user, X-Userid header not set"),404
 
     # First make sure the user exists
     user = session.query(User).get(user_id)
@@ -45,8 +45,8 @@ def get_one_track(track_id):
     if not track:
         return jsonify(response="Cannot fetch track {0} from user {1}".format(track_id,user_id)),404
 
-    # make sure the track belongs to the user
-    if not track.user_id == user_id:
+    # make sure the track belongs to the userid
+    if not track.user_id == int(user_id):
         return jsonify(response="Cannot return track {0} it does not belong to user {1}".format(track_id,user_id)),404
 
     # otherwise return it
@@ -56,9 +56,9 @@ def get_one_track(track_id):
 def new_track():
 
     # get user_id
-    user_id = request.headers.get("X-UserId")
+    user_id = request.headers.get("X-Userid")
     if not user_id:
-        return jsonify(response="Can't fetch tracks for user, X-UserId header not set")
+        return jsonify(response="Can't fetch tracks for user, X-UserId header not set"),404
 
     # Get json
     json = request.get_json()
@@ -101,10 +101,10 @@ def new_track():
 def update_track():
 
     # get user_id
-    user_id = request.headers.get("X-UserId")
+    user_id = request.headers.get("X-Userid")
 
     if not user_id:
-        return jsonify(response="Can't fetch tracks for user, X-UserId header not set")
+        return jsonify(response="Can't fetch tracks for user, X-UserId header not set"),404
 
     if not track_id:
         return jsonify(response="Can't fetch track, track_id required"),404
@@ -120,7 +120,7 @@ def update_track():
     if not track:
         return jsonify(response="Can't fetch track with id: {}".format(track_id)),404
 
-    if not track.user_id == user.id:
+    if not track.user_id == int(user.id):
         return jsonify(response="Cant update track {0} for user {1} they do not own it".format(track.id,user.id)),404
 
     for field in ['track_name','data_type','data_id']:
@@ -134,18 +134,18 @@ def update_track():
 @app.route('/tracks/<int:track_id>',methods=['DELETE'])
 def delete_track(track_id):
      # get user_id
-    user_id = request.headers.get("X-UserId")
+    user_id = request.headers.get("X-Userid")
 
     if not user_id:
-        return jsonify(response="Can't fetch tracks for user, X-UserId header not set")
+        return jsonify(response="Can't fetch tracks for user, X-UserId header not set"),404
 
     track = session.query(Track).get(track_id)
 
     if not track:
         return jsonify(response="Could not fetch track with id: {}".format(track_id)),404
 
-    if not track.user_id == user_id:
-        return jsonify(response="Could not delete track {0} it is not owned by user {1}".format(track.id,user_id))
+    if not track.user_id == int(user_id):
+        return jsonify(response="Could not delete track {0} it is not owned by user {1}".format(track.id,user_id)),404
 
     session.delete(user)
     session.commit()
