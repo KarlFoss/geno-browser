@@ -19,7 +19,7 @@
 	<script src="/static/lib/bootstrap/js/bootstrap.min.js"></script>
 </head>
 <body>
-    <nav class="navbar navbar-default navbar-fixed-top">
+    <nav class="navbar navbar-default">
         <div class="container-fluid">
             <div class="navbar-header">
                 <a class="navbar-brand" data-toggle="collapse" href="#navbar-menu">
@@ -69,8 +69,42 @@
             </div>
         </div>
     </nav>
-	<div class="container">
-		
-	</div>
+
+    <div id="data-viewer" class="container">
+	
+    </div>
+
+    <footer class="footer navbar-fixed-bottom">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-1">
+                </div>
+                <div class="col-md-10">
+                    <form class="form-inline">
+                        <div class="input-group">
+                            <span>Range: </span>
+                            <div class="form-group">
+                                <input type="number" class="form-control" id="range-min" placeholder="Position">
+                            </div>
+                            <span> thru </span>
+                            <div class="form-group">
+                                <input type="number" class="form-control" id="range-min" placeholder="Position">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-md-1">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-1">
+                </div>
+                <div class="col-md-10">
+                </div>
+                <div class="col-md-1">
+                </div>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
