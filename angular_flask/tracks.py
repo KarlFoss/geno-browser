@@ -62,7 +62,7 @@ def new_track():
 
     # Get json
     json = request.get_json()
-    print json
+
     # Try and get everything
     track_name = json.get('track_name')
     data_type = json.get('data_type').lower()
@@ -98,7 +98,7 @@ def new_track():
     return jsonify(track_id=new_track.id)
 
 @app.route('/tracks/<int:track_id>',methods=['PUT'])
-def update_track():
+def update_track(track_id):
 
     # get user_id
     user_id = request.headers.get("X-Userid")
@@ -108,12 +108,11 @@ def update_track():
 
     if not track_id:
         return jsonify(response="Can't fetch track, track_id required"),404
-    if not user_id:
-        return jsonify(response="Can't fetch track, user_id required"),404
 
     user = session.query(User).get(user_id)
     track = session.query(Track).get(track_id)
-    
+    json = request.get_json()
+
     if not user:
         return jsonify(response="Can't fetch user with id: {}".format(user_id)),404
 
@@ -137,7 +136,7 @@ def delete_track(track_id):
     user_id = request.headers.get("X-Userid")
 
     if not user_id:
-        return jsonify(response="Can't fetch tracks for user, X-UserId header not set"),404
+        return jsonify(response="Can't fetch tracks for user, X-Userid header not set"),404
 
     track = session.query(Track).get(track_id)
 
@@ -147,6 +146,6 @@ def delete_track(track_id):
     if not track.user_id == int(user_id):
         return jsonify(response="Could not delete track {0} it is not owned by user {1}".format(track.id,user_id)),404
 
-    session.delete(user)
+    session.delete(track)
     session.commit()
     return jsonify()

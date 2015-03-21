@@ -10,7 +10,7 @@ logging.basicConfig()
 LOG = logging.getLogger(__name__)
 
 class TrackTestCase(TestCase):
-    STATUS_OK = "200 OK"
+    user_header = {"X-Userid":1}
 
     def create_app(self):
         app = Flask(__name__)
@@ -46,7 +46,7 @@ class TrackTestCase(TestCase):
                 'file_name':'mywig.wig'
             }), 
             content_type='application/json',
-            headers={"X-Userid":1})
+            headers=self.user_header)
 
         self.assert200(response)
         self.assertEqual(json.loads(response.get_data()).get('track_id'),1)
@@ -59,7 +59,7 @@ class TrackTestCase(TestCase):
         self.createTestTrack()
 
         # Check the user json returned
-        response = self.app.get('/tracks/1',headers={"X-Userid":"1"})
+        response = self.app.get('/tracks/1',headers=self.user_header)
         self.assert200(response)
 
         # Make sure the user dict has the right fields
@@ -75,46 +75,49 @@ class TrackTestCase(TestCase):
             track
         )
 
-#    def test_get_nonexistant_user(self):
-#        """
-#        Try to GET a user by an invalid id
-#        """
-#        response = self.app.get('/users/1')
-#        self.assert404(response)
-#
-#    def testPutUser(self):
-#        LOG.info("Testing user endoint /users/<user_id> with PUT")
-#        self.createTestUser()
-#        user = self.getTestUser()
-#        user['user_name'] = "KYLES NEW NAME"
-#
-#        # Handle put request
-#        updated_json = json.dumps(user)
-#        response = self.app.put('/users/'+str(user.get('user_id')), 
-#            data=updated_json, 
-#            content_type='application/json')
-#        self.assert200(response)
-#        
-#        # Check that PUT response matches request data
-#        json_up = json.loads(response.get_data())
-#        self.assertEqual(user,json_up)
-#
-#        # Check that changes are still there when we GET
-#        user_refresh = self.getTestUser()
-#        self.assertEqual(user_refresh,json_up)
-#
-#    def testDeleteUser(self):
-#        LOG.info("Testing user endpoint /users/<user_id> with DELETE")
-#        self.createTestUser()
-#        user = self.getTestUser()
-#        user_id = str(user.get('user_id'))
-#        response = self.app.delete('/users/'+user_id)
-#        self.assert200(response)
-#
-#        # Check if we can still GET
-#        response_get = self.app.get('/users/{uid}'.format(uid=user_id))
-#        self.assert404(response_get)
-#
+    def testGetNonexistantTrack(self):
+        response = self.app.get('/tracks/1',headers=self.user_header)
+        self.assert404(response)
+
+    def testPutTrack(self):
+        LOG.info("Testing track endoint /tracks/<track_id> with PUT")
+        self.createTestUser()
+        self.createTestTrack()
+        track = self.getTestTrack()
+        track['track_name'] = "New_TRACK_NAME"
+
+        # Handle put request
+        updated_json = json.dumps(track)
+        response = self.app.put('/tracks/'+str(track.get('track_id')), 
+           data=updated_json, 
+           content_type='application/json',
+           headers=self.user_header
+        )
+        self.assert200(response)
+
+        # Check that PUT response matches request data
+        json_up = json.loads(response.get_data())
+        self.assertEqual(track,json_up)
+
+        # Check that changes are still there when we GET
+        track_refresh = self.getTestTrack()
+        self.assertEqual(track_refresh,json_up)
+
+    def testDeleteTrack(self):
+        LOG.info("Testing track endpoint /track/<track_id> with DELETE")
+        self.createTestUser()
+        self.createTestTrack()
+        track = self.getTestTrack()
+        track_id = str(track.get('track_id'))
+        response = self.app.delete('/tracks/{}'.format(track_id),
+            headers=self.user_header
+        )
+        self.assert200(response)
+
+        # Check if we can still GET
+        response_get = self.app.get('/tracks/{}'.format(track_id))
+        self.assert404(response_get)
+
     def createTestUser(self):
         response = self.app.post('/users', 
             data=json.dumps({'user_name': 'kyle', 'email': 'kyle@email.com'}), 
@@ -125,11 +128,18 @@ class TrackTestCase(TestCase):
             data=json.dumps({
                 'track_name': 'kyles track', 
                 'data_type': 'wig',
-                'data_id':'1',
+                'data_id':1,
                 'file_name':'mywig.wig'
             }), 
             content_type='application/json',
-            headers={"X-UserId":"1"})
+            headers=self.user_header)
+
+    def getTestTrack(self):
+        response = self.app.get('/tracks/1',
+            headers=self.user_header
+        )
+        track = json.loads(response.get_data())
+        return track
 
 
 if __name__ == '__main__':
