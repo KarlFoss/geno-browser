@@ -37,10 +37,13 @@ def get_view(view_id):
     session.commit()
 
     view = View(view_name = "Test View")
+    session.add(view)
+    session.commit()
 
 
     # Mock the view track
-    view_trac = ViewTrack(track_id = track.id, view_id = view.id)
+    view_track = ViewTrack(track_id = track.id, view_id = view.id)
+    session.add(view_track)
+    session.commit()
 
-    print view
-    return view
+    return jsonify(view.to_json())
