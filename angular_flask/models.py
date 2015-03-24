@@ -2,22 +2,26 @@ from angular_flask import db, session
 
 class Wig(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    span = db.Column(db.String)
+    step = db.Column(db.Enum('variable','fixed'))
 
     def __repr__(self):
         return "Wig: {}".format(self.id)
+
+    def __init__(self,step):
+        self.step = step
 
 class WigValue(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     position = db.Column(db.Integer)
     value = db.Column(db.Integer)
-    id_wig = db.Column(db.Integer, db.ForeignKey('wig.id'))
+    wig_id = db.Column(db.Integer, db.ForeignKey('wig.id'))
     
     wig = db.relationship("Wig",backref=db.backref("values",order_by=position))
 
-    def __init__(self, position, value):
+    def __init__(self, position, value, wig_id):
         self.position = position
         self.value = value
+        self.wig_id = wig_id
 
     def __repr__(self):
             return "{}".format(self.value)
