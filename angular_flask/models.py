@@ -22,7 +22,6 @@ class WigValue(db.Model):
     def __repr__(self):
             return "{}".format(self.value)
 
-
 class Bed(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     chrom = db.Column(db.String)
@@ -72,12 +71,12 @@ class BasePair(db.Model):
     nucleotide = db.Column(db.String(1))
     position = db.Column(db.Integer)
     fasta_id = db.Column(db.Integer, db.ForeignKey('fasta.id'))
-
     fasta = db.relationship("Fasta",backref=db.backref("base_pairs",order_by=position))
 
-    def __init__(self, position, nucleotide):
+    def __init__(self, position, nucleotide,fasta_id):
         self.position = position
         self.nucleotide = nucleotide
+        self.fasta_id = fasta_id
 
     def __repr__(self):
             return self.nucleotide
@@ -118,3 +117,20 @@ class Track(db.Model):
 			'data_id'    : self.data_id,
 			'file_name'  : self.file_name
 		}
+
+class View(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    view_name = db.Column(db.String)
+    view_tracks = db.relationship('ViewTrack', backref="view")
+
+    def __init__(self, view_name):
+        self.view_name = view_name
+
+class ViewTrack(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    track_id = db.Column(db.Integer, db.ForeignKey('track.id'))
+    view_id = db.Column(db.Integer, db.ForeignKey('view.id'))
+
+    def __init__(self, track_id, view_id):
+        self.track_id = track_id
+        self.view_id = view_id

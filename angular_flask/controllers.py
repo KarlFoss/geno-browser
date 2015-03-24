@@ -6,7 +6,7 @@ from flask import send_file, make_response, abort
 
 from angular_flask import parse_data
 from angular_flask import app, db, session
-from angular_flask import users,tracks
+from angular_flask import users,tracks,views
 
 # routing for API endpoints (generated from the models designated as API_MODELS)
 from angular_flask.models import *
