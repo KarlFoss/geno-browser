@@ -1,3 +1,5 @@
 *.pyc
 flask/
+geno-browser.iml
+.idea/
 angular_flask/.curl

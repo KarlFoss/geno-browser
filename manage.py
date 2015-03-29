@@ -23,7 +23,7 @@ def seed_db():
 
     # add the users
     user_ids = []
-    users = ["kyle","karl","coda","max","goof"]
+    users = ["default","kyle","karl","coda","max","goof"]
     for name in users:
         new_user = User(user_name=name,email="{}@email.com".format(name))
         session.add(new_user)
@@ -33,66 +33,16 @@ def seed_db():
     ## Give each a track ##
     for u_id in user_ids:
 
-        view = View(view_name = "Test View")
-        session.add(view)
-        session.commit()
-
-        # Create a fasta and a wig data set, tracks, and a view holding them
-        fasta = Fasta(header=">EBV1")
-        session.add(fasta)
-        session.commit()
-
-        i = 0
-        for base in "ATTATTAGCATGCATGATCAGTAGCTAGGGGATGCATGCAACTGATCGATCGATGCATGCAT":
-            bp = BasePair(nucleotide=base,position=i,fasta_id=fasta.id)
-            i+=1
-            session.add(bp)
-    
-        session.commit()
-    
         # Add a fasta track
         fasta_track = Track(
             track_name = "Fasta Test Track",
             user_id = u_id,
             data_type = "fasta",
-            data_id = fasta.id,
+            data_id = 1,
             file_name = "testFasta.fasta",
         )
-    
+
         session.add(fasta_track)
-        session.commit()
-    
-        # Mock the view track for the fasta
-        view_track = ViewTrack(track_id = fasta_track.id, view_id = view.id)
-        session.add(view_track)
-        session.commit()
-
-
-        # add a wig data set
-        wig = Wig(step="fixed")
-        session.add(wig)
-        session.commit()
-
-        i = 0
-        values = random.sample(xrange(100), 62)
-        for val in values:
-            wig_val = WigValue(position=i, value=val, wig_id=wig.id)
-            session.add(wig_val)
-            i+=1
-        session.commit()
-
-        wig_track = Track(
-            track_name = "Test wig Track",
-            user_id = u_id,
-            data_type = "wig",
-            data_id = wig.id,
-            file_name = "testWig.wig",
-        )
-        session.add(wig_track)
-        session.commit()
-
-        view_track = ViewTrack(track_id = wig_track.id, view_id = view.id)
-        session.add(view_track)
         session.commit()
 
 
