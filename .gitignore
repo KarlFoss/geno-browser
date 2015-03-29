@@ -1,2 +1,3 @@
 *.pyc
 flask/
+angular_flask/.curl
