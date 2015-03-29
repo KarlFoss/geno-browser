@@ -61,13 +61,14 @@
                         <h4>Tracks</h4>
                         <div class="list-group">
                             <a href="#" class="list-group-item"><span class="glyphicon glyphicon-plus"></span> Add New Track</a>
-                            <a ng-repeat="track in tracks" href="#" class="list-group-item">{{track.track_name}}</a>
+                            <a href="#" class="list-group-item" ng-repeat="track in tracks" ng-click="updateInfoPane(track)">{{track.track_name}}</a>
                         </div>
                     </div> 
                 </div>
                 <div class="col-md-3">
                     <div class="well well-sm">
                         <h4>Track Info</h4>
+                        <span>From File: {{info.file_name}}</span>
                     </div> 
                 </div>
             </div>

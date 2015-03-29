@@ -35,4 +35,9 @@ genoBrowserControllers.controller('navMenuController', ['$scope', 'Tracks',
       Tracks.query(function(response) {
           $scope.tracks = response.tracks;
       });
+
+      $scope.updateInfoPane = function(track) {
+          $scope.info = track;
+          console.log(track);
+      }
   }]);
