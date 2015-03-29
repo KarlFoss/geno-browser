@@ -51,6 +51,7 @@
                         <h4>Views</h4>
                         <div class="list-group">
                             <a href="#" class="list-group-item"><span class="glyphicon glyphicon-plus"></span> Add New View</a>
+                            <a ng-repeat="view in views" href="#" class="list-group-item">{{view.name}}</a>
                         </div>
                     </div>                 
                 </div>
@@ -59,6 +60,7 @@
                         <h4>Tracks</h4>
                         <div class="list-group">
                             <a href="#" class="list-group-item"><span class="glyphicon glyphicon-plus"></span> Add New Track</a>
+                            <a ng-repeat="track in tracks" href="#" class="list-group-item">{{track.name}}</a>
                         </div>
                     </div> 
                 </div>
