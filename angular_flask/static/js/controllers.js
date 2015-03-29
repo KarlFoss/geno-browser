@@ -1,7 +1,5 @@
 'use strict';
 
-/* Controllers */
-
 var genoBrowserControllers = angular.module('genoBrowserControllers', []);
 
 genoBrowserControllers.controller('navMenuController', ['$scope', 'Tracks',
