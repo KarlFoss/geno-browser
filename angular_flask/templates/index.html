@@ -13,8 +13,8 @@
 	<script src="/static/lib/angular/angular-resource.min.js"></script>
 
 	<script src="/static/js/app.js"></script>
+    <script src="/static/js/services.js"></script>
 	<script src="/static/js/controllers.js"></script>
- 	<script src="/static/js/services.js"></script>
 
 	<script src="/static/lib/jquery/jquery-2.1.3.min.js"></script>
 	<script src="/static/lib/bootstrap/js/bootstrap.min.js"></script>
@@ -61,7 +61,7 @@
                         <h4>Tracks</h4>
                         <div class="list-group">
                             <a href="#" class="list-group-item"><span class="glyphicon glyphicon-plus"></span> Add New Track</a>
-                            <a ng-repeat="track in tracks" href="#" class="list-group-item">{{track.name}}</a>
+                            <a ng-repeat="track in tracks" href="#" class="list-group-item">{{track.track_name}}</a>
                         </div>
                     </div> 
                 </div>

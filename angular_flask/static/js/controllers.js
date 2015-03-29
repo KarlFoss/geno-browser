@@ -35,6 +35,7 @@ genoBrowserControllers.controller('navMenuController', ['$scope', 'Tracks',
       ];
 
     Tracks.get({ id: 1}, function(data) {
+        console.log(data);
         $scope.tracks = data;
     });
 

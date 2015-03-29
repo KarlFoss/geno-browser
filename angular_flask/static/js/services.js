@@ -9,5 +9,11 @@ genoBrowserServices.factory('Users', ['$resource',
 
 genoBrowserServices.factory('Tracks', ['$resource',
   function($resource){
-    return $resource('tracks/:id', {}, {headers: {'X-UserId':'1'}});
+    return $resource('tracks/:id', {}, {
+      get: {
+        method:'GET',
+        isArray:false,
+        headers: {'X-Userid':'1'}
+      }
+    });
   }]);
