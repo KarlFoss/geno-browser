@@ -2,22 +2,16 @@
 
 /* Controllers */
 
-function IndexController($scope) {
-	
-}
+var genoBrowserControllers = angular.module('genoBrowserControllers', []);
 
-function AboutController($scope) {
-	
-}
-
-function PostListController($scope, Post) {
-	var postsQuery = Post.get({}, function(posts) {
-		$scope.posts = posts.objects;
-	});
-}
-
-function PostDetailController($scope, $routeParams, Post) {
-	var postQuery = Post.get({ postId: $routeParams.postId }, function(post) {
-		$scope.post = post;
-	});
-}
+genoBrowserControllers.controller('navMenuController', ['$scope',
+  function ($scope) {
+      $scope.files = [
+        {'name': 'fasta_file',
+         'type': 'fa'},
+        {'name': 'wiggity_wack',
+         'type': 'wig'},
+        {'name': 'beddy_byeeeeee',
+         'type': 'bed'}
+      ];
+  }]);
