@@ -4,8 +4,8 @@
 
 var genoBrowserControllers = angular.module('genoBrowserControllers', []);
 
-genoBrowserControllers.controller('navMenuController', ['$scope',
-  function ($scope) {
+genoBrowserControllers.controller('navMenuController', ['$scope', 'Tracks',
+  function ($scope, Tracks) {
       $scope.files = [
         {'name': 'fasta_file',
          'type': 'fa'},
@@ -34,5 +34,8 @@ genoBrowserControllers.controller('navMenuController', ['$scope',
         {'name': 'a view?'}
       ];
 
+    Tracks.get({ id: 1}, function(data) {
+        $scope.tracks = data;
+    });
 
   }]);

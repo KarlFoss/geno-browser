@@ -3,14 +3,14 @@
 var genoBrowser = angular.module('genoBrowser', [
     'ngRoute',
     'ngResource',
-    'genoBrowserControllers'
+    'genoBrowserControllers',
+    'genoBrowserServices'
 ]);
 
 genoBrowser.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
       when('/', {
-        //templateUrl: 'partials/phone-list.html',
         controller: 'navMenuController'
       }).
       otherwise({

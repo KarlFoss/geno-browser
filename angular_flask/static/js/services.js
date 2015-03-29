@@ -1,16 +1,16 @@
 'use strict';
 
-angular.module('angularFlaskServices', ['ngResource'])
-	.factory('Post', function($resource) {
-		return $resource('/api/post/:postId', {}, {
-			query: {
-				method: 'GET',
-				params: { postId: '' },
-				isArray: true
-			}
-		});
-	})
-;
+var genoBrowserServices = angular.module('genoBrowserServices', ['ngResource']);
+
+genoBrowserServices.factory('Users', ['$resource',
+  function($resource){
+    return $resource('users/:id');
+  }]);
+
+genoBrowserServices.factory('Tracks', ['$resource',
+  function($resource){
+    return $resource('tracks/:id');
+  }]);
 
 
 
