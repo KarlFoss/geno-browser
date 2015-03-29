@@ -1,8 +1,9 @@
 'use strict';
 
 var genoBrowser = angular.module('genoBrowser', [
-  'ngRoute',
-  'genoBrowserControllers'
+    'ngRoute',
+    'ngResource',
+    'genoBrowserControllers'
 ]);
 
 genoBrowser.config(['$routeProvider',
