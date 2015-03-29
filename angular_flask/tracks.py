@@ -1,21 +1,13 @@
-from flask import Flask, request, Response, jsonify
+from flask import Flask, request, Response, jsonify, g
 from angular_flask import app, db, session
 from angular_flask.models import Track, User
+from controllers import check_headers
 
 @app.route('/tracks',methods=['GET'])
+@check_headers
 def get_all_tracks():
 
-    # get user_id
-    user_id = request.headers.get("X-Userid")
-
-    if not user_id:
-        return jsonify(response="Can't fetch tracks for user, X-UserId header not set"),404
-
-    # First make sure the user exists
-    user = session.query(User).get(user_id)
-    if not user:
-        return jsonify(response="Can't fetch tracks for user with id: {}".format(user_id)),404
-
+    user_id = request.user_id
     # look up all the tracks
     tracks = session.query(Track).filter_by(user_id=user_id).all()
 

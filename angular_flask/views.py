@@ -2,48 +2,54 @@ from flask import Flask, request, Response, jsonify
 from angular_flask import app, db, session
 from models import *
 
+@app.route('/views/',methods=['POST'])
+def new_view(view_id):
+
+     # get user_id
+    user_id = request.headers.get("X-Userid")
+    if not user_id:
+        return jsonify(response="Can't create view for user, X-Userid header not set"),404
+
+    # First make sure the user exists
+    user = session.query(User).get(user_id)
+    if not user:
+        return jsonify(response="Can't create view for user with id: {} , user does not exists".format(user_id)),404
+
 @app.route('/views/<int:view_id>',methods=['GET'])
 def get_view(view_id):
 
-    # mock the user
-    new_user = User(user_name="kyle",email="kyle@email.com")
-    session.add(new_user)
-    session.commit()
+     # get user_id
+    user_id = request.headers.get("X-Userid")
+    if not user_id:
+        return jsonify(response="Can't fetch view for user, X-Userid header not set"),404
 
+    # First make sure the user exists
+    user = session.query(User).get(user_id)
+    if not user:
+        return jsonify(response="Can't fetch view for user with id: {} , user does not exists".format(user_id)),404
 
-    # Mock the data
-    fasta = Fasta(header=">Test Fasta Header")
-    session.add(fasta)
-    session.commit()
+@app.route('/views/<int:view_id>',methods=['PUT'])
+def update_view(view_id):
 
-    i = 0
-    for base in "ATTATTAGCATGCATGATCAGTAGCTAGGGGATGCATGCAACTGATCGATCGATGCATGCAT":
-        bp = BasePair(nucleotide=base,position=i,fasta_id=fasta.id)
-        i = i + 1
-        session.add(bp)
+     # get user_id
+    user_id = request.headers.get("X-Userid")
+    if not user_id:
+        return jsonify(response="Can't update view for user, X-Userid header not set"),404
+    
+    # First make sure the user exists
+    user = session.query(User).get(user_id)
+    if not user:
+        return jsonify(response="Can't update view for user with id: {} , user does not exists".format(user_id)),404
 
-    session.commit()
+@app.route('/views/<int:view_id>',methods=['DELETE'])
+def delete_view(view_id):
 
-    # Mock the track
-    track = Track(
-        track_name = "Test Track",
-        user_id = new_user.id,
-        data_type = "fasta",
-        data_id = fasta.id,
-        file_name = "testFasta.fasta",
-    )
+     # get user_id
+    user_id = request.headers.get("X-Userid")
+    if not user_id:
+        return jsonify(response="Can't delete view for user, X-Userid header not set"),404
 
-    session.add(track)
-    session.commit()
-
-    view = View(view_name = "Test View")
-    session.add(view)
-    session.commit()
-
-
-    # Mock the view track
-    view_track = ViewTrack(track_id = track.id, view_id = view.id)
-    session.add(view_track)
-    session.commit()
-
-    return jsonify(view.to_json())
+    # First make sure the user exists
+    user = session.query(User).get(user_id)
+    if not user:
+        return jsonify(response="Can't delete view for user with id: {} , user does not exists".format(user_id)),404
