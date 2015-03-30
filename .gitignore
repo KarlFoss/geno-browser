@@ -2,4 +2,5 @@
 flask/
 geno-browser.iml
 .idea/
+run.sh
 angular_flask/.curl
