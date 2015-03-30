@@ -4,9 +4,9 @@ import argparse
 import requests
 import random
 
-from angular_flask import app,db,session
-from angular_flask.models import BasePair
-from angular_flask.models import *
+from gb import app,db,session
+from gb.models import BasePair
+from gb.models import *
 
 def create_sample_db_entry(api_endpoint, payload):
     url = 'http://localhost:5000/' + api_endpoint

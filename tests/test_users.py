@@ -1,9 +1,9 @@
 from flask.ext.testing import TestCase
 import unittest
-import angular_flask
+import gb
 from flask import Flask, json, jsonify
-from angular_flask import app, db, session
-from angular_flask.models import User
+from gb import app, db, session
+from gb.models import User
 
 import logging
 logging.basicConfig()

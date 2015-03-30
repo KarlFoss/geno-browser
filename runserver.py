@@ -1,3 +1,3 @@
 #!flask/bin/python
-from angular_flask import app
+from gb import app
 app.run(debug=True)

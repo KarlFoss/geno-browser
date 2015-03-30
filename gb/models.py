@@ -1,4 +1,4 @@
-from angular_flask import db, session
+from gb import db, session
 
 class Wig(db.Model):
     id = db.Column(db.Integer, primary_key=True)
