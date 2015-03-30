@@ -43,10 +43,10 @@
                     <div class="well well-sm">
                         <h4>
                             <span>Files</span>
-                            <small class="pull-right"><span class="glyphicon glyphicon-plus"></span></small>
+                            <small class="pull-right"><a href="#"><span class="glyphicon glyphicon-plus"></span></a></small>
                         </h4>
                         <div class="list-group">
-                            <a ng-repeat="file in files" href="#" class="list-group-item">{{file.name}}</a>
+                            <a ng-repeat="file in files" ng-click="selectFile(file)" href="#" class="list-group-item">{{file.name}}</a>
                         </div>
                     </div>
                 </div>
@@ -54,10 +54,10 @@
                     <div class="well well-sm">
                         <h4>
                             <span>Views</span>
-                            <small class="pull-right"><span class="glyphicon glyphicon-plus"></span></small>
+                            <small class="pull-right"><a href="#"><span class="glyphicon glyphicon-plus"></span></a></small>
                         </h4>
                         <div class="list-group">
-                            <a ng-repeat="view in views" href="#" class="list-group-item">{{view.name}}</a>
+                            <a ng-repeat="view in views" ng-click="selectView(view)" href="#" class="list-group-item">{{view.name}}</a>
                         </div>
                     </div>                 
                 </div>
@@ -65,10 +65,10 @@
                     <div class="well well-sm">
                         <h4>
                             <span>Tracks</span>
-                            <small class="pull-right"><span class="glyphicon glyphicon-plus"></span></small>
+                            <small class="pull-right"><a href="#"><span class="glyphicon glyphicon-plus"></span></a></small>
                         </h4>
                         <div class="list-group">
-                            <a href="#" class="list-group-item" ng-repeat="track in tracks" ng-click="updateInfoPane(track)">{{track.track_name}}</a>
+                            <a ng-repeat="track in tracks" ng-click="selectTrack(track)" href="#" class="list-group-item" >{{track.track_name}}</a>
                         </div>
                     </div> 
                 </div>
