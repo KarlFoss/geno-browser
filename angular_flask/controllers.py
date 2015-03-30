@@ -44,4 +44,4 @@ def gene():
         return str(parse_data.parse_file(f).shape)
 
 
-from angular_flask import users,tracks,views
+from angular_flask import users,tracks,views,files
