@@ -1,8 +1,9 @@
 from flask import Flask, request, Response, jsonify
 from angular_flask import app, db, session
 from angular_flask.models import User
+from controllers import check_headers
 
-@app.route('/users/<int:user_id>',methods=['GET'])
+@app.route('/api/users/<int:user_id>',methods=['GET'])
 def get_user(user_id):
     user = session.query(User).get(user_id)
     if(user):
@@ -10,7 +11,7 @@ def get_user(user_id):
     else:
         return jsonify(response="Can't fetch user with id: {}".format(user_id)),404
 
-@app.route('/users',methods=['POST'])
+@app.route('/api/users',methods=['POST'])
 def new_user():
     # Parse the json
     json = request.get_json()
@@ -36,7 +37,7 @@ def new_user():
     # Return the user id on success
     return jsonify(user_id=new_user.id)
 
-@app.route('/users/<int:user_id>',methods=['PUT'])
+@app.route('/api/users/<int:user_id>',methods=['PUT'])
 def update_user(user_id):
     json = request.get_json()
     user = session.query(User).get(user_id)
@@ -53,7 +54,7 @@ def update_user(user_id):
     session.commit()
     return jsonify(user_name=user.user_name, user_id=user.id, email=user.email)
 
-@app.route('/users/<int:user_id>',methods=['DELETE'])
+@app.route('/api/users/<int:user_id>',methods=['DELETE'])
 def delete_user(user_id):
     user = session.query(User).get(user_id)
 
