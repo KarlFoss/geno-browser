@@ -48,12 +48,12 @@
                             </small>
                         </h4>
                         <div class="list-group">
-                            <div ng-repeat="file in files" ng-click="selectFile(file)" href="#" class="list-group-item">
+                            <div ng-repeat="file in files" ng-click="File.select(file)" href="#" class="list-group-item">
                                 <span>{{file.name}}</span>
-                                <a href="#" class="action-item pull-right" ng-click="$event.stopPropagation()">
+                                <a href="#" class="action-item pull-right" ng-click="File.delete(file); $event.stopPropagation()">
                                     <span class="glyphicon glyphicon-remove"></span>
                                 </a>
-                                <a href="#" class="action-item pull-right" ng-click="$event.stopPropagation()">
+                                <a href="#" class="action-item pull-right" ng-click="File.edit(file); $event.stopPropagation()">
                                     <span class="glyphicon glyphicon-edit"></span>
                                 </a>
                             </div>
@@ -69,12 +69,12 @@
                             </small>
                         </h4>
                         <div class="list-group">
-                            <div ng-repeat="view in views" ng-click="selectView(view)" href="#" class="list-group-item">
+                            <div ng-repeat="view in views" ng-click="View.select(view)" href="#" class="list-group-item">
                                 <span>{{view.name}}</span>
-                                <a href="#" class="action-item pull-right" ng-click="$event.stopPropagation()">
+                                <a href="#" class="action-item pull-right" ng-click="View.delete(view); $event.stopPropagation()">
                                     <span class="glyphicon glyphicon-remove"></span>
                                 </a>
-                                <a href="#" class="action-item pull-right" ng-click="$event.stopPropagation()">
+                                <a href="#" class="action-item pull-right" ng-click="View.edit(view); $event.stopPropagation()">
                                     <span class="glyphicon glyphicon-edit"></span>
                                 </a>
                             </div>
@@ -90,12 +90,12 @@
                             </small>
                         </h4>
                         <div class="list-group">
-                            <div ng-repeat="track in tracks" ng-click="selectTrack(track)" href="#" class="list-group-item">
+                            <div ng-repeat="track in tracks" ng-click="Track.select(track)" href="#" class="list-group-item">
                                 <span>{{track.track_name}}</span>
-                                <a href="#" class="action-item pull-right" ng-click="$event.stopPropagation()">
+                                <a href="#" class="action-item pull-right" ng-click="Track.delete(track); $event.stopPropagation()">
                                     <span class="glyphicon glyphicon-remove"></span>
                                 </a>
-                                <a href="#" class="action-item pull-right" ng-click="$event.stopPropagation()">
+                                <a href="#" class="action-item pull-right" ng-click="Track.edit(track); $event.stopPropagation()">
                                     <span class="glyphicon glyphicon-edit"></span>
                                 </a>
                             </div>

@@ -25,22 +25,64 @@ genoBrowserControllers.controller('navMenuController', ['$scope', 'Tracks',
          'type': 'bed'}
       ];
 
-      $scope.selectFile = function(file) {
-          $scope.views = [
-              {'name': 'my view'},
-              {'name': 'your view'},
-              {'name': 'our view'},
-              {'name': 'a view?'}
-          ];
+      $scope.File = {
+          add: function() {
+
+          },
+
+          select: function(file) {
+            $scope.views = [
+                {'name': 'my view'},
+                {'name': 'your view'},
+                {'name': 'our view'},
+                {'name': 'a view?'}
+            ];
+          },
+
+          edit: function(file) {
+
+          },
+
+          delete: function(file) {
+
+          }
       };
 
-      $scope.selectView = function(view) {
-          Tracks.query(function(response) {
-              $scope.tracks = response.tracks;
-          });
-      }
+      $scope.View = {
+          add: function() {
 
-      $scope.selectTrack = function(track) {
+          },
 
-      }
+          select: function(view) {
+              Tracks.query(function(response) {
+                  $scope.tracks = response.tracks;
+              });
+          },
+
+          edit: function(view) {
+
+          },
+
+          delete: function(view) {
+
+          }
+      };
+
+      $scope.Track = {
+          add: function() {
+
+          },
+
+          select: function(track) {
+
+          },
+
+          edit: function(track) {
+
+          },
+
+          delete: function(track) {
+
+          }
+      };
   }]);
