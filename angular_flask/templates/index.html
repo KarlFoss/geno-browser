@@ -43,7 +43,9 @@
                     <div class="well well-sm">
                         <h4>
                             <span>Files</span>
-                            <small class="pull-right"><a href="#"><span class="glyphicon glyphicon-plus"></span></a></small>
+                            <small class="pull-right">
+                                <a href="#" data-toggle="modal" data-target="#fileModal"><span class="glyphicon glyphicon-plus"></span></a>
+                            </small>
                         </h4>
                         <div class="list-group">
                             <a ng-repeat="file in files" ng-click="selectFile(file)" href="#" class="list-group-item">{{file.name}}</a>
@@ -54,7 +56,9 @@
                     <div class="well well-sm">
                         <h4>
                             <span>Views</span>
-                            <small class="pull-right"><a href="#"><span class="glyphicon glyphicon-plus"></span></a></small>
+                            <small class="pull-right">
+                                <a href="#" data-toggle="modal" data-target="#viewModal"><span class="glyphicon glyphicon-plus"></span></a>
+                            </small>
                         </h4>
                         <div class="list-group">
                             <a ng-repeat="view in views" ng-click="selectView(view)" href="#" class="list-group-item">{{view.name}}</a>
@@ -65,7 +69,9 @@
                     <div class="well well-sm">
                         <h4>
                             <span>Tracks</span>
-                            <small class="pull-right"><a href="#"><span class="glyphicon glyphicon-plus"></span></a></small>
+                            <small class="pull-right">
+                                <a href="#" data-toggle="modal" data-target="#trackModal"><span class="glyphicon glyphicon-plus"></span></a>
+                            </small>
                         </h4>
                         <div class="list-group">
                             <a ng-repeat="track in tracks" ng-click="selectTrack(track)" href="#" class="list-group-item" >{{track.track_name}}</a>
@@ -112,5 +118,9 @@
             </div>
         </div>
     </footer>
+
+    <ng-include src="'static/partials/file-modal.html'"></ng-include>
+    <ng-include src="'static/partials/view-modal.html'"></ng-include>
+    <ng-include src="'static/partials/track-modal.html'"></ng-include>
 </body>
 </html>
