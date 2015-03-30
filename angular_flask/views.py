@@ -1,49 +1,48 @@
 from flask import Flask, request, Response, jsonify
 from angular_flask import app, db, session
 from models import *
+from controllers import check_headers
 
-@app.route('/views/<int:view_id>',methods=['GET'])
+@app.route('/api/views/',methods=['POST'])
+@check_headers
+def new_view(view_id):
+
+    user_id = request.user_id
+
+    # First make sure the user exists
+    user = session.query(User).get(user_id)
+    if not user:
+        return jsonify(response="Can't create view for user with id: {} , user does not exists".format(user_id)),404
+
+@app.route('/api/views/<int:view_id>',methods=['GET'])
+@check_headers
 def get_view(view_id):
 
-    # mock the user
-    new_user = User(user_name="kyle",email="kyle@email.com")
-    session.add(new_user)
-    session.commit()
+    user_id = request.user_id
 
+    # First make sure the user exists
+    user = session.query(User).get(user_id)
+    if not user:
+        return jsonify(response="Can't fetch view for user with id: {} , user does not exists".format(user_id)),404
 
-    # Mock the data
-    fasta = Fasta(header=">Test Fasta Header")
-    session.add(fasta)
-    session.commit()
+@app.route('/api/views/<int:view_id>',methods=['PUT'])
+@check_headers
+def update_view(view_id):
 
-    i = 0
-    for base in "ATTATTAGCATGCATGATCAGTAGCTAGGGGATGCATGCAACTGATCGATCGATGCATGCAT":
-        bp = BasePair(nucleotide=base,position=i,fasta_id=fasta.id)
-        i = i + 1
-        session.add(bp)
+    user_id = request.user_id
 
-    session.commit()
+    # First make sure the user exists
+    user = session.query(User).get(user_id)
+    if not user:
+        return jsonify(response="Can't update view for user with id: {} , user does not exists".format(user_id)),404
 
-    # Mock the track
-    track = Track(
-        track_name = "Test Track",
-        user_id = new_user.id,
-        data_type = "fasta",
-        data_id = fasta.id,
-        file_name = "testFasta.fasta",
-    )
+@app.route('/api/views/<int:view_id>',methods=['DELETE'])
+@check_headers
+def delete_view(view_id):
 
-    session.add(track)
-    session.commit()
+    user_id = request.user_id
 
-    view = View(view_name = "Test View")
-    session.add(view)
-    session.commit()
-
-
-    # Mock the view track
-    view_track = ViewTrack(track_id = track.id, view_id = view.id)
-    session.add(view_track)
-    session.commit()
-
-    return jsonify(view.to_json())
+    # First make sure the user exists
+    user = session.query(User).get(user_id)
+    if not user:
+        return jsonify(response="Can't delete view for user with id: {} , user does not exists".format(user_id)),404

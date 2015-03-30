@@ -1,20 +1,13 @@
-from flask import Flask, request, Response, jsonify
+from flask import Flask, request, Response, jsonify, g
 from angular_flask import app, db, session
 from angular_flask.models import Track, User
+from controllers import check_headers
 
-@app.route('/tracks',methods=['GET'])
+@app.route('/api/tracks',methods=['GET'])
+@check_headers
 def get_all_tracks():
 
-    # get user_id
-    user_id = request.headers.get("X-Userid")
-
-    if not user_id:
-        return jsonify(response="Can't fetch tracks for user, X-UserId header not set"),404
-
-    # First make sure the user exists
-    user = session.query(User).get(user_id)
-    if not user:
-        return jsonify(response="Can't fetch tracks for user with id: {}".format(user_id)),404
+    user_id = request.user_id
 
     # look up all the tracks
     tracks = session.query(Track).filter_by(user_id=user_id).all()
@@ -24,15 +17,12 @@ def get_all_tracks():
 
     return jsonify(tracks=[ track.to_json() for track in tracks])
 
-@app.route('/tracks/<int:track_id>',methods=['GET'])
+@app.route('/api/tracks/<int:track_id>',methods=['GET'])
+@check_headers
 def get_one_track(track_id):
 
-    # get user_id
-    user_id = request.headers.get("X-Userid")
-
-    if not user_id:
-        return jsonify(response="Can't fetch tracks for user, X-Userid header not set"),404
-
+    user_id = request.user_id
+    
     # First make sure the user exists
     user = session.query(User).get(user_id)
     if not user:
@@ -52,13 +42,11 @@ def get_one_track(track_id):
     # otherwise return it
     return jsonify(track.to_json())
 
-@app.route('/tracks',methods=['POST'])
+@app.route('/api/tracks',methods=['POST'])
+@check_headers
 def new_track():
 
-    # get user_id
-    user_id = request.headers.get("X-Userid")
-    if not user_id:
-        return jsonify(response="Can't fetch tracks for user, X-UserId header not set"),404
+    user_id = request.user_id
 
     # Get json
     json = request.get_json()
@@ -97,11 +85,11 @@ def new_track():
     # Return the user id on success
     return jsonify(track_id=new_track.id)
 
-@app.route('/tracks/<int:track_id>',methods=['PUT'])
+@app.route('/api/tracks/<int:track_id>',methods=['PUT'])
+@check_headers
 def update_track(track_id):
 
-    # get user_id
-    user_id = request.headers.get("X-Userid")
+    user_id = request.user_id
 
     if not user_id:
         return jsonify(response="Can't fetch tracks for user, X-UserId header not set"),404
@@ -130,11 +118,13 @@ def update_track(track_id):
     session.commit()
     return jsonify(track.to_json())
 
-@app.route('/tracks/<int:track_id>',methods=['DELETE'])
+@app.route('/api/tracks/<int:track_id>',methods=['DELETE'])
+@check_headers
 def delete_track(track_id):
-     # get user_id
-    user_id = request.headers.get("X-Userid")
-
+    
+    # get user_id
+    user_id = request.user_id
+    
     if not user_id:
         return jsonify(response="Can't fetch tracks for user, X-Userid header not set"),404
 

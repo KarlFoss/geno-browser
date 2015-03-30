@@ -38,7 +38,7 @@ class TrackTestCase(TestCase):
         self.createTestUser()
 
         # Send post request
-        response = self.app.post('/tracks', 
+        response = self.app.post('/api/tracks', 
             data=json.dumps({
                 'track_name': 'kyles track', 
                 'data_type': 'wig',
@@ -59,7 +59,7 @@ class TrackTestCase(TestCase):
         self.createTestTrack()
 
         # Check the user json returned
-        response = self.app.get('/tracks/1',headers=self.user_header)
+        response = self.app.get('/api/tracks/1',headers=self.user_header)
         self.assert200(response)
 
         # Make sure the user dict has the right fields
@@ -76,11 +76,11 @@ class TrackTestCase(TestCase):
         )
 
     def testGetNonexistantTrack(self):
-        response = self.app.get('/tracks/1',headers=self.user_header)
+        response = self.app.get('/api/tracks/1',headers=self.user_header)
         self.assert404(response)
 
     def testPutTrack(self):
-        LOG.info("Testing track endoint /tracks/<track_id> with PUT")
+        LOG.info("Testing track endoint /api/tracks/<track_id> with PUT")
         self.createTestUser()
         self.createTestTrack()
         track = self.getTestTrack()
@@ -88,7 +88,7 @@ class TrackTestCase(TestCase):
 
         # Handle put request
         updated_json = json.dumps(track)
-        response = self.app.put('/tracks/'+str(track.get('track_id')), 
+        response = self.app.put('/api/tracks/'+str(track.get('track_id')), 
            data=updated_json, 
            content_type='application/json',
            headers=self.user_header
@@ -104,27 +104,27 @@ class TrackTestCase(TestCase):
         self.assertEqual(track_refresh,json_up)
 
     def testDeleteTrack(self):
-        LOG.info("Testing track endpoint /track/<track_id> with DELETE")
+        LOG.info("Testing track endpoint /api/track/<track_id> with DELETE")
         self.createTestUser()
         self.createTestTrack()
         track = self.getTestTrack()
         track_id = str(track.get('track_id'))
-        response = self.app.delete('/tracks/{}'.format(track_id),
+        response = self.app.delete('/api/tracks/{}'.format(track_id),
             headers=self.user_header
         )
         self.assert200(response)
 
         # Check if we can still GET
-        response_get = self.app.get('/tracks/{}'.format(track_id))
+        response_get = self.app.get('/api/tracks/{}'.format(track_id))
         self.assert404(response_get)
 
     def createTestUser(self):
-        response = self.app.post('/users', 
+        response = self.app.post('/api/users', 
             data=json.dumps({'user_name': 'kyle', 'email': 'kyle@email.com'}), 
             content_type='application/json')
     
     def createTestTrack(self):
-        response = self.app.post('/tracks', 
+        response = self.app.post('/api/tracks', 
             data=json.dumps({
                 'track_name': 'kyles track', 
                 'data_type': 'wig',
@@ -135,7 +135,7 @@ class TrackTestCase(TestCase):
             headers=self.user_header)
 
     def getTestTrack(self):
-        response = self.app.get('/tracks/1',
+        response = self.app.get('/api/tracks/1',
             headers=self.user_header
         )
         track = json.loads(response.get_data())
