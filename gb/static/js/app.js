@@ -7,13 +7,15 @@ var genoBrowser = angular.module('genoBrowser', [
     'genoBrowserServices'
 ]);
 
+/*
 genoBrowser.config(['$routeProvider',
   function($routeProvider) {
     $routeProvider.
       when('/', {
-        controller: 'navMenuController'
+        //controller: 'navMenuController'
       }).
       otherwise({
         redirectTo: '/'
       });
   }]);
+*/

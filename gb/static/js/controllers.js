@@ -2,6 +2,16 @@
 
 var genoBrowserControllers = angular.module('genoBrowserControllers', []);
 
+genoBrowserControllers.controller('navBarController', ['$scope', 'userService',
+    function($scope, userService) {
+        $scope.user = userService;
+    }]);
+
+genoBrowserControllers.controller('registerModalController', ['$scope', 'userService',
+    function($scope, userService) {
+        $scope.user = userService;
+    }]);
+
 genoBrowserControllers.controller('navMenuController', ['$scope', 'Tracks',
   function ($scope, Tracks) {
       $scope.files = [

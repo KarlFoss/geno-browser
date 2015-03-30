@@ -30,3 +30,11 @@ genoBrowserServices.factory('Views', ['$resource',
   function($resource) {
     return $resource('api/views/:user_id/:view_id', {}, {});
   }]);
+
+genoBrowserServices.factory('userService', function() {
+  return {
+    username:'',
+    email:'',
+    password:''
+  };
+});
