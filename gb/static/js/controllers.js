@@ -8,13 +8,18 @@
             $scope.user = userService;
         }]);
 
-    genoBrowserControllers.controller('registerModalController', ['$scope', 'userService',
-        function($scope, userService) {
+    genoBrowserControllers.controller('registerModalController', ['$scope', 'userService', 'Users',
+        function($scope, userService, Users) {
             $scope.user = userService;
+
+            $scope.register = function () {
+                Users.save($scope.user);
+            }
         }]);
 
     genoBrowserControllers.controller('navMenuController', ['$scope', 'Tracks',
       function ($scope, Tracks) {
+
           $scope.files = [
             {'name': 'fasta_file',
              'type': 'fa'},

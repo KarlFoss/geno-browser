@@ -11,25 +11,22 @@
     genoBrowserServices.factory('Tracks', ['$resource',
       function($resource) {
         return $resource('/api/tracks/:track_id', {}, {
-          get: {
-            method: 'GET',
-            headers: {'X-Userid':'1'}
-          },
-          query: {
-            method: 'GET',
-            headers: {'X-Userid':'1'}
-          }
+            query: { isArray: false }
         });
       }]);
 
     genoBrowserServices.factory('Files', ['$resource',
       function($resource) {
-        return $resource('/api/files/:type/:user_id/:file_id', {}, {});
+        return $resource('/api/files/:type/:user_id/:file_id', {}, {
+            query: { isArray: false }
+        });
       }]);
 
     genoBrowserServices.factory('Views', ['$resource',
       function($resource) {
-        return $resource('/api/views/:user_id/:view_id', {}, {});
+        return $resource('/api/views/:user_id/:view_id', {}, {
+            query: { isArray: false }
+        });
       }]);
 
     genoBrowserServices.factory('userService',
