@@ -8,6 +8,7 @@
         'genoBrowserServices'
     ]);
 
+    /*
     genoBrowser.config(['$routeProvider',
       function($routeProvider) {
         $routeProvider.
@@ -18,4 +19,5 @@
             redirectTo: '/'
           });
       }]);
+      */
 })();
