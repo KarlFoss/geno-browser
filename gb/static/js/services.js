@@ -5,7 +5,7 @@
 
     genoBrowserServices.factory('Users', ['$resource',
       function($resource) {
-        return $resource('/api/users/:user_id');
+        return $resource('/api/users/:user_id', {}, {});
       }]);
 
     genoBrowserServices.factory('Tracks', ['$resource',

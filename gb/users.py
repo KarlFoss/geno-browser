@@ -15,7 +15,7 @@ def get_user(user_id):
 def new_user():
     # Parse the json
     json = request.get_json()
-    u_name = json.get('user_name')
+    u_name = json.get('username')
     email = json.get('email')
     
     # Ensure user_name and email were passed
@@ -26,7 +26,7 @@ def new_user():
         return jsonify(response="Could not create user. email field is required"),404
 
     # Crete user and commit 
-    new_user = User(user_name=json.get('user_name'),email=json.get('email'))
+    new_user = User(user_name=json.get('username'),email=json.get('email'))
     session.add(new_user)
     session.commit()
     

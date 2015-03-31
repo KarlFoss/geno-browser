@@ -12,7 +12,8 @@
         function($scope, userService, Users) {
             $scope.user = userService;
 
-            $scope.register = function () {
+            $scope.register = function() {
+                console.log($scope.user);
                 Users.save($scope.user);
             }
         }]);
@@ -99,7 +100,7 @@
 
               delete: function(track) {
 
-                  }
-              };
+              }
+          };
       }]);
 })();
