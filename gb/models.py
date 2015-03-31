@@ -63,9 +63,11 @@ class Annotation(db.Model):
 class Fasta(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     header = db.Column(db.String)
+    file_name = db.Column(db.String)
 
-    def __init__(self, header):
+    def __init__(self, header, file_name):
         self.header = header
+        self.file_name = file_name
 
     def __repr__(self):
             return "{}".format(self.header)
