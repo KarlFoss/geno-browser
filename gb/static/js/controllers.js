@@ -1,88 +1,90 @@
-'use strict';
+(function(){
+    'use strict';
 
-var genoBrowserControllers = angular.module('genoBrowserControllers', []);
+    var genoBrowserControllers = angular.module('genoBrowserControllers', []);
 
-genoBrowserControllers.controller('navMenuController', ['$scope', 'Tracks',
-  function ($scope, Tracks) {
-      $scope.files = [
-        {'name': 'fasta_file',
-         'type': 'fa'},
-        {'name': 'wiggity_wack',
-         'type': 'wig'},
-        {'name': 'beddy_byeeeeee',
-         'type': 'bed'},
-        {'name': 'fasta_file',
-         'type': 'fa'},
-        {'name': 'wiggity_wack',
-         'type': 'wig'},
-        {'name': 'beddy_byeeeeee',
-         'type': 'bed'},
-        {'name': 'fasta_file',
-         'type': 'fa'},
-        {'name': 'wiggity_wack',
-         'type': 'wig'},
-        {'name': 'beddy_byeeeeee',
-         'type': 'bed'}
-      ];
+    genoBrowserControllers.controller('navMenuController', ['$scope', 'Tracks',
+      function ($scope, Tracks) {
+          $scope.files = [
+            {'name': 'fasta_file',
+             'type': 'fa'},
+            {'name': 'wiggity_wack',
+             'type': 'wig'},
+            {'name': 'beddy_byeeeeee',
+             'type': 'bed'},
+            {'name': 'fasta_file',
+             'type': 'fa'},
+            {'name': 'wiggity_wack',
+             'type': 'wig'},
+            {'name': 'beddy_byeeeeee',
+             'type': 'bed'},
+            {'name': 'fasta_file',
+             'type': 'fa'},
+            {'name': 'wiggity_wack',
+             'type': 'wig'},
+            {'name': 'beddy_byeeeeee',
+             'type': 'bed'}
+          ];
 
-      $scope.File = {
-          add: function() {
+          $scope.File = {
+              add: function() {
 
-          },
+              },
 
-          select: function(file) {
-            $scope.views = [
-                {'name': 'my view'},
-                {'name': 'your view'},
-                {'name': 'our view'},
-                {'name': 'a view?'}
-            ];
-          },
+              select: function(file) {
+                $scope.views = [
+                    {'name': 'my view'},
+                    {'name': 'your view'},
+                    {'name': 'our view'},
+                    {'name': 'a view?'}
+                ];
+              },
 
-          edit: function(file) {
+              edit: function(file) {
 
-          },
+              },
 
-          delete: function(file) {
+              delete: function(file) {
 
-          }
-      };
+              }
+          };
 
-      $scope.View = {
-          add: function() {
+          $scope.View = {
+              add: function() {
 
-          },
+              },
 
-          select: function(view) {
-              Tracks.query(function(response) {
-                  $scope.tracks = response.tracks;
-              });
-          },
+              select: function(view) {
+                  Tracks.query(function(response) {
+                      $scope.tracks = response.tracks;
+                  });
+              },
 
-          edit: function(view) {
+              edit: function(view) {
 
-          },
+              },
 
-          delete: function(view) {
+              delete: function(view) {
 
-          }
-      };
+              }
+          };
 
-      $scope.Track = {
-          add: function() {
+          $scope.Track = {
+              add: function() {
 
-          },
+              },
 
-          select: function(track) {
+              select: function(track) {
 
-          },
+              },
 
-          edit: function(track) {
+              edit: function(track) {
 
-          },
+              },
 
-          delete: function(track) {
+              delete: function(track) {
 
-          }
-      };
-  }]);
+              }
+          };
+      }]);
+})();
