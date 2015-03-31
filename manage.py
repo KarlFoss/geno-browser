@@ -4,9 +4,9 @@ import argparse
 import requests
 import random
 
-from angular_flask import app,db,session
-from angular_flask.models import BasePair
-from angular_flask.models import *
+from gb import app,db,session
+from gb.models import BasePair
+from gb.models import *
 
 def create_sample_db_entry(api_endpoint, payload):
     url = 'http://localhost:5000/' + api_endpoint
@@ -49,50 +49,17 @@ def seed_db():
             session.add(bp)
     
         session.commit()
-    
+
         # Add a fasta track
         fasta_track = Track(
             track_name = "Fasta Test Track",
             user_id = u_id,
             data_type = "fasta",
-            data_id = fasta.id,
+            data_id = 1,
             file_name = "testFasta.fasta",
         )
-    
+
         session.add(fasta_track)
-        session.commit()
-    
-        # Mock the view track for the fasta
-        view_track = ViewTrack(track_id = fasta_track.id, view_id = view.id)
-        session.add(view_track)
-        session.commit()
-
-
-        # add a wig data set
-        wig = Wig(step="fixed")
-        session.add(wig)
-        session.commit()
-
-        i = 0
-        values = random.sample(xrange(100), 62)
-        for val in values:
-            wig_val = WigValue(position=i, value=val, wig_id=wig.id)
-            session.add(wig_val)
-            i+=1
-        session.commit()
-
-        wig_track = Track(
-            track_name = "Test wig Track",
-            user_id = u_id,
-            data_type = "wig",
-            data_id = wig.id,
-            file_name = "testWig.wig",
-        )
-        session.add(wig_track)
-        session.commit()
-
-        view_track = ViewTrack(track_id = wig_track.id, view_id = view.id)
-        session.add(view_track)
         session.commit()
 
 
