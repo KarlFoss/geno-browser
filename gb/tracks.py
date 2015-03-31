@@ -1,6 +1,6 @@
 from flask import Flask, request, Response, jsonify, g
-from angular_flask import app, db, session
-from angular_flask.models import Track, User
+from gb import app, db, session
+from gb.models import Track, User
 from controllers import check_headers
 
 @app.route('/api/tracks',methods=['GET'])

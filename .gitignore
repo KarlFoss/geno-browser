@@ -1,2 +1,6 @@
 *.pyc
-angular_flask/.curl
+flask/
+geno-browser.iml
+.idea/
+run.sh
+gb/.curl

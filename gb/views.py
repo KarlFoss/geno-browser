@@ -1,5 +1,5 @@
 from flask import Flask, request, Response, jsonify
-from angular_flask import app, db, session
+from gb import app, db, session
 from models import *
 from controllers import check_headers
 

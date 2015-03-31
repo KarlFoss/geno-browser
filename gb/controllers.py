@@ -4,8 +4,13 @@ from functools import wraps
 from flask import Flask, request, Response
 from flask import render_template, url_for, redirect, send_from_directory, jsonify
 from flask import send_file, make_response, abort, g
-from angular_flask import app, db, session, parse_data
-from angular_flask.models import *
+from gb import app, db, session, parse_data
+from gb.models import *
+
+# routing for basic pages (pass routing onto the Angular app)
+@app.route('/')
+def basic_pages(**kwargs):
+    return make_response(open('gb/static/index.html').read())
 
 @app.route('/favicon.ico')
 def favicon():
@@ -44,4 +49,4 @@ def gene():
         return str(parse_data.parse_file(f).shape)
 
 
-from angular_flask import users,tracks,views,files
+from gb import users,tracks,views
