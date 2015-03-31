@@ -1,6 +1,7 @@
-'use strict';
+(function(){
+    'use strict';
 
-var genoBrowserControllers = angular.module('genoBrowserControllers', []);
+    var genoBrowserControllers = angular.module('genoBrowserControllers', []);
 
 genoBrowserControllers.controller('navBarController', ['$scope', 'userService',
     function($scope, userService) {
@@ -93,6 +94,7 @@ genoBrowserControllers.controller('navMenuController', ['$scope', 'Tracks',
 
           delete: function(track) {
 
-          }
-      };
-  }]);
+              }
+          };
+      }]);
+})();

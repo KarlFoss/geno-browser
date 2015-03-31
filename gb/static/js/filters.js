@@ -1,9 +1,11 @@
-'use strict';
+(function(){
+    'use strict';
 
-/* Filters */
+    /* Filters */
 
-angular.module('angularFlaskFilters', []).filter('uppercase', function() {
-	return function(input) {
-		return input.toUpperCase();
-	}
-});
+    angular.module('angularFlaskFilters', []).filter('uppercase', function() {
+        return function(input) {
+            return input.toUpperCase();
+        };
+    });
+})();

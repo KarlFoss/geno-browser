@@ -19,7 +19,8 @@ module.exports = function(grunt) {
         eqnull: true,
         browser: true,
         globals: {
-          jQuery: true
+          jQuery: true,
+          angular: true
         }
       },
       gruntfile: {
@@ -52,7 +53,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-wiredep');
 
   // Default task.
-  grunt.registerTask('default', ['wiredep','jshint']);
+  grunt.registerTask('default', ['jshint']);
   grunt.registerTask('build', ['wiredep']);
 
 };
