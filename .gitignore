@@ -5,4 +5,4 @@ geno-browser.iml
 run.sh
 gb/.curl
 gb/static/lib/
-gb/static/node_modules
+gb/static/node_modules/

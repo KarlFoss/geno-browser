@@ -10,7 +10,7 @@ from gb.models import *
 # routing for basic pages (pass routing onto the Angular app)
 @app.route('/')
 def basic_pages(**kwargs):
-    return make_response(open('gb/static/index.html').read())
+    return redirect('/static/index.html')
 
 @app.route('/favicon.ico')
 def favicon():
