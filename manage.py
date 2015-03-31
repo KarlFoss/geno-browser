@@ -49,7 +49,6 @@ def seed_db():
             session.add(bp)
     
         session.commit()
-    
         # Add a fasta track
         fasta_track = Track(
             track_name = "Fasta Test Track",
