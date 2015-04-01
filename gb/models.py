@@ -2,13 +2,13 @@ from gb import db, session
 
 class Wig(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    step = db.Column(db.Enum('variable','fixed'))
+    chrom = db.Column(db.String)
 
     def __repr__(self):
-        return "Wig: {}".format(self.id)
+        return "Wig: {} - {}".format(self.id, self.chrom)
 
-    def __init__(self,step):
-        self.step = step
+    def __init__(self,chrom):
+        self.chrom = chrom
 
 class WigValue(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -24,7 +24,7 @@ class WigValue(db.Model):
         self.wig_id = wig_id
 
     def __repr__(self):
-            return "{}".format(self.value)
+            return "wig_id: {} - pos: {} - score: {}".format(self.wig_id, self.position, self.value)
 
 class Bed(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -48,4 +48,4 @@ def gene():
         f = request.files['file']
         return str(parse_data.parse_file(f).shape)
 
-from gb import users,tracks,views
+from gb import users,tracks,views,files
