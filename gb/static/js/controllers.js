@@ -3,9 +3,15 @@
 
     var genoBrowserControllers = angular.module('genoBrowserControllers', []);
 
-    genoBrowserControllers.controller('navBarController', ['$scope', 'userService',
-        function($scope, userService) {
+    genoBrowserControllers.controller('navBarController', ['$scope', 'userService', 'Users',
+        function($scope, userService, Users) {
             $scope.user = userService;
+
+            $scope.login = function() {
+                Users.get(function(response) {
+
+                });
+            }
         }]);
 
     genoBrowserControllers.controller('registerModalController', ['$scope', 'userService', 'Users',
@@ -24,7 +30,7 @@
           $scope.files = [
             {'name': 'fasta_file',
              'type': 'fa'},
-            {'name': 'wiggity_wack',
+            {'name': 'wiggity_wack don\'t talk back',
              'type': 'wig'},
             {'name': 'beddy_byeeeeee',
              'type': 'bed'},

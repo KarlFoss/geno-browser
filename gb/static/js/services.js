@@ -3,6 +3,20 @@
 
     var genoBrowserServices = angular.module('genoBrowserServices', ['ngResource']);
 
+    genoBrowserServices.factory('Token', ['$resource',
+        function($resource) {
+            return function(username, password) {
+                return $resource('/api/token/', {}, {
+                    get: {
+                        headers: {
+                            'username': username,
+                            'password': password
+                        }
+                    }
+                });
+            };
+        }]);
+
     genoBrowserServices.factory('Users', ['$resource',
       function($resource) {
         return $resource('/api/users/:user_id', {}, {});
