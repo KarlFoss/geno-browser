@@ -26,6 +26,10 @@ class WigValue(db.Model):
     def __repr__(self):
             return "wig_id: {} - pos: {} - score: {}".format(self.wig_id, self.position, self.value)
 
+class Gtf(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
+
 class Bed(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     chrom = db.Column(db.String)
@@ -63,11 +67,9 @@ class Annotation(db.Model):
 class Fasta(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     header = db.Column(db.String)
-    file_name = db.Column(db.String)
 
-    def __init__(self, header, file_name):
+    def __init__(self, header):
         self.header = header
-        self.file_name = file_name
 
     def __repr__(self):
             return "{}".format(self.header)

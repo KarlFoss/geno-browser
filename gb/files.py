@@ -23,8 +23,8 @@ def new_file():
         return new_fasta(file)
     
     elif type == 'wig':
-        return new_wig(file)
-                
+        return new_wigs(file)
+        
 def valid_wig_header(header):
     if header.startswith("fixedStep"):
         return re.match(r"^fixedStep\schrom=\w+\sstart=\d+\sstep=\d+(\sspan=\d+$|$)", header)
@@ -48,7 +48,7 @@ def parse_header(header):
 
     return values
 
-
+# TODO implement support for multi fasta files
 def new_fasta(fasta_file):
     position = 0
     fasta_id = -1
@@ -56,7 +56,7 @@ def new_fasta(fasta_file):
     for line in fasta_file:
         if(line.startswith(">")):
         # Create a fasta and a wig data set, tracks, and a view holding them
-            fasta = Fasta(header=line, file_name=file.filename)
+            fasta = Fasta(header=line)
             session.add(fasta)
             session.commit()
             fasta_id = fasta.id
@@ -69,10 +69,10 @@ def new_fasta(fasta_file):
     session.add_all(basepairs)
     session.commit()
 
-    return jsonif(fasta_id = fasta_id),200
+    return jsonify(fasta_id = fasta_id),200
 
 
-def new_wig(wig_file):
+def new_wigs(wig_file):
     current_id = -1
     current_dict = None
     current_data = []
@@ -110,7 +110,7 @@ def new_wig(wig_file):
 
             # parse a var step line
             if current_dict['stepType'] == "variableStep":
-                (position, score) = line.split()
+                (position, score) = (int(val) for val in line.split())
                 
                 # if there is no span it is easy
                 if 'span' not in current_dict:
@@ -123,7 +123,7 @@ def new_wig(wig_file):
 
                 # handle the span
                 else:
-                    span = current_dict['span']
+                    span = int(current_dict['span'])
                     for pos in range(position, position+span):
                         wig_val = WigValue(
                             position = pos,

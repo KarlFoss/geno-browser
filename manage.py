@@ -38,7 +38,7 @@ def seed_db():
         session.commit()
 
         # Create a fasta and a wig data set, tracks, and a view holding them
-        fasta = Fasta(header=">EBV1", file_name="Test.fasta")
+        fasta = Fasta(header=">EBV1")
         session.add(fasta)
         session.commit()
 
