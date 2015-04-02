@@ -23,11 +23,6 @@ def get_one_track(track_id):
 
     user_id = request.user_id
     
-    # First make sure the user exists
-    user = session.query(User).get(user_id)
-    if not user:
-        return jsonify(response="Cannot fetch track for user with id: {}".format(user_id)),404
-
     # get the track
     track = session.query(Track).get(track_id)
 
@@ -62,11 +57,6 @@ def new_track():
         if not field:
             return jsonify(response="Could not create track, {} field is required".format(track)),404
 
-    # make sure the user exists
-    user = session.query(User).get(user_id)
-    if not user:
-         return jsonify(response="Can't create track for user with id: {}".format(user_id)), 404
-
     new_track = Track(
         track_name = track_name,
         user_id = user_id,
@@ -91,23 +81,16 @@ def update_track(track_id):
 
     user_id = request.user_id
 
-    if not user_id:
-        return jsonify(response="Can't fetch tracks for user, X-UserId header not set"),404
-
     if not track_id:
         return jsonify(response="Can't fetch track, track_id required"),404
 
-    user = session.query(User).get(user_id)
     track = session.query(Track).get(track_id)
     json = request.get_json()
-
-    if not user:
-        return jsonify(response="Can't fetch user with id: {}".format(user_id)),404
 
     if not track:
         return jsonify(response="Can't fetch track with id: {}".format(track_id)),404
 
-    if not track.user_id == int(user.id):
+    if not track.user_id == int(user_id):
         return jsonify(response="Cant update track {0} for user {1} they do not own it".format(track.id,user.id)),404
 
     for field in ['track_name','data_type','data_id']:
@@ -125,9 +108,6 @@ def delete_track(track_id):
     # get user_id
     user_id = request.user_id
     
-    if not user_id:
-        return jsonify(response="Can't fetch tracks for user, X-Userid header not set"),404
-
     track = session.query(Track).get(track_id)
 
     if not track:
