@@ -130,9 +130,11 @@ class View(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     view_name = db.Column(db.String)
     view_tracks = db.relationship('ViewTrack', backref="view")
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
-    def __init__(self, view_name):
+    def __init__(self, view_name, user_id):
         self.view_name = view_name
+        self.user_id = user_id
 
     def to_json(self):
         view_tracks = []
@@ -146,7 +148,8 @@ class View(db.Model):
 class ViewTrack(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     track_id = db.Column(db.Integer, db.ForeignKey('track.id'))
-    
+    view_id = db.Column(db.Integer, db.ForeignKey('view.id'))
+
     def __init__(self, track_id, view_id):
         self.track_id = track_id
         self.view_id = view_id
@@ -157,7 +160,7 @@ class ViewTrack(db.Model):
         if track.data_type == 'fasta':
             fasta = session.query(Fasta).get(track.data_id)
             data.append(fasta.header)
-            data.append(join(str(base) for base in fasta.base_pairs))
+            data.append("".join(str(base) for base in fasta.base_pairs))
 
         elif track.data_type == 'wig':
             wig = session.query(Wig).get(track.data_id)
@@ -166,6 +169,8 @@ class ViewTrack(db.Model):
             for wigVal in wig.values:
                 pos.append(wigVal.position)
                 scores.append(wigVal.value)
+            data.append(pos)
+            data.append(scores)
         return {
             'track_name' : track.track_name,
             'data_type' : track.data_type,
