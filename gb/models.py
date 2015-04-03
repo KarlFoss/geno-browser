@@ -24,7 +24,7 @@ class WigValue(db.Model):
         self.wig_id = wig_id
 
     def __repr__(self):
-            return "wig_id: {} - pos: {} - score: {}".format(self.wig_id, self.position, self.value)
+        return "wig_id: {} - pos: {} - score: {}".format(self.wig_id, self.position, self.value)
 
 class Gtf(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -146,19 +146,28 @@ class View(db.Model):
 class ViewTrack(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     track_id = db.Column(db.Integer, db.ForeignKey('track.id'))
-    view_id = db.Column(db.Integer, db.ForeignKey('view.id'))
-
+    
     def __init__(self, track_id, view_id):
         self.track_id = track_id
         self.view_id = view_id
 
     def to_json(self):
         track = session.query(Track).get(self.track_id)
-        if(track.data_type == 'fasta'):
+        data = []
+        if track.data_type == 'fasta':
             fasta = session.query(Fasta).get(track.data_id)
-            return {
-                'track_name' : track.track_name,
-                'data_type' : 'fasta',
-                'header' : fasta.header,
-                'bases' : ''.join(str(base) for base in fasta.base_pairs)
-            }
+            data.append(fasta.header)
+            data.append(join(str(base) for base in fasta.base_pairs))
+
+        elif track.data_type == 'wig':
+            wig = session.query(Wig).get(track.data_id)
+            pos = []
+            scores = []
+            for wigVal in wig.values:
+                pos.append(wigVal.position)
+                scores.append(wigVal.value)
+        return {
+            'track_name' : track.track_name,
+            'data_type' : track.data_type,
+            'data' : data
+        }
