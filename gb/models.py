@@ -142,7 +142,8 @@ class View(db.Model):
             view_tracks.append(view_track.to_json())
         return {
             'view_name' : self.view_name,
-            'view_tracks' : view_tracks
+            'view_tracks' : view_tracks,
+            'user_id' : self.user_id
         }
 
 class ViewTrack(db.Model):

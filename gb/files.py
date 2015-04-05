@@ -33,6 +33,9 @@ def valid_wig_header(header):
     else:
         return False
 
+def validate_fasta_header(header):
+    return re.match(r"^>.*$",header)
+
 def parse_header(header):
     array = header.split()
     step_type = array.pop(0)
@@ -51,21 +54,26 @@ def parse_header(header):
 # TODO implement support for multi fasta files
 def new_fasta(fasta_file):
     position = 0
-    fasta_id = -1
     basepairs = []
+
+    header = fasta_file.readline()
+
+    if not validate_fasta_header(header):
+        return jsonify(response="Cannot upload fasta file {} is not a valid header".format(header)),404
+
+    fasta = Fasta(header=header)
+    session.add(fasta)
+    session.commit()
+    fasta_id = fasta.id
+    
     for line in fasta_file:
-        if(line.startswith(">")):
-        # Create a fasta and a wig data set, tracks, and a view holding them
-            fasta = Fasta(header=line)
-            session.add(fasta)
-            session.commit()
-            fasta_id = fasta.id
-        else:
-            line.strip("\n")
-            for base in line:
-                bp = BasePair(nucleotide=base,position=position,fasta_id=fasta_id)
-                position+=1
-                basepairs.append(bp)
+        line.strip("\n")
+
+        for base in line:
+            bp = BasePair(nucleotide=base,position=position,fasta_id=fasta_id)
+            position+=1
+            basepairs.append(bp)
+
     session.add_all(basepairs)
     session.commit()
 

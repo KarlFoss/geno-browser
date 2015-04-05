@@ -33,7 +33,7 @@ def seed_db():
     ## Give each a track ##
     for u_id in user_ids:
 
-        view = View(view_name = "Test View")
+        view = View(view_name = "Test View", user_id = u_id)
         session.add(view)
         session.commit()
 
