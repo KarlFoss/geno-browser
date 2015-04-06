@@ -3,6 +3,11 @@
 
     var genoBrowserServices = angular.module('genoBrowserServices', ['ngResource']);
 
+    genoBrowserServices.factory('PlotBounds', function(){
+        var bounds = [0,-1];
+        return bounds;
+    });
+
     genoBrowserServices.factory('Users', ['$resource',
       function($resource) {
         return $resource('/api/users/:user_id');

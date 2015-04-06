@@ -5,7 +5,8 @@
         'ngRoute',
         'ngResource',
         'genoBrowserControllers',
-        'genoBrowserServices'
+        'genoBrowserServices',
+        'nvd3ChartDirectives'
     ]);
 
     /*
