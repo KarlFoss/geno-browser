@@ -99,6 +99,9 @@ class User(db.Model):
     def __repr__(self):
         return self.user_name
 
+    def generate_token(self):
+        return self.user_name
+
 class Track(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	track_name = db.Column(db.String)
