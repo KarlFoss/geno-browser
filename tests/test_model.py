@@ -45,11 +45,13 @@ class TestWig(unittest.TestCase):
         wig = Wig(chrom='EBV')
         db.session.add(wig)
         db.session.commit()
+        self.assertEqual(wig.id == 1)
 
     def test_create_empty_fixed_wig(self):
         wig = Wig(chrom='EBV')
         db.session.add(wig)
         db.session.commit()
+        self.assertEqual(wig.id == 1)
 
     def test_create_wig_with_values(self):
         wig = Wig(chrom='EBV')
