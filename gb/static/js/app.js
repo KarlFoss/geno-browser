@@ -6,7 +6,8 @@
         'ngResource',
         'genoBrowserControllers',
         'genoBrowserServices',
-        'nvd3ChartDirectives'
+        'nvd3ChartDirectives',
+        'genoBrowserDirectives'
     ]);
 
     /*

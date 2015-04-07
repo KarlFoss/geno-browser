@@ -38,6 +38,10 @@
             $scope.boundedData = newBoundedData;
         }, true);
 
+        $scope.hidden = false;
+
+        $scope.sticky = false;
+
     }]);
 
     genoBrowserControllers.controller('navBarController', ['$scope', 'userService',

@@ -1,0 +1,27 @@
+<div class="well track" ng-hide="hidden" ng-class="{sticky:sticky}">
+    <div id="plot_controls" class="col-xs-1">
+        <button ng-click="hideTrack()" class="btn btn-primary btn-md row">
+            Y-Max
+        </button>
+        <button class="btn btn-primary btn-md row" ng-click="sticky=!sticky">
+            Sticky
+        </button>
+        <button class="btn btn-primary btn-md row" ng-click="hidden=true">
+            Hide
+        </button>
+        <button class="btn btn-primary btn-md row">
+            Style
+        </button>
+    </div>
+    <div class="col-xs-11 plot">
+        <nvd3-line-chart
+                data="boundedData"
+                id="example"
+                height="350"
+                showxaxis="true"
+                showyaxis="true"
+                >
+            <svg></svg>
+        </nvd3-line-chart>
+    </div>
+</div>
