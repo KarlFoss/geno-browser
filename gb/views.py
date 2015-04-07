@@ -57,6 +57,25 @@ def get_view(view_id):
     # otherwise return it
     return jsonify(view.to_json())
 
+@app.route('/api/views/data/<int:view_id>',methods=['GET'])
+@check_headers
+def get_data_view(view_id):
+
+    user_id = request.user_id
+
+    view = session.query(View).get(view_id)
+
+    # make sure the view was found
+    if not view:
+        return jsonify(response="Cannot fetch view {0} from user {1}".format(view_id,user_id)),404
+
+    # make sure the view belongs to the userid
+    if not view.user_id == int(user_id):
+        return jsonify(response="Cannot return view {0} it does not belong to user {1}".format(view_id,user_id)),404
+
+    # otherwise return it
+    return jsonify(view.to_data())
+
 @app.route('/api/views/',methods=['GET'])
 @check_headers
 def get_views():
@@ -99,6 +118,7 @@ def update_view(view_id):
         current_v_tracks = session.query(ViewTrack).filter_by(view_id = view.id)
         for v_track in current_v_tracks:
             if v_track.track_id not in track_ids:
+                print "removing"
                 session.remove(v_track)
 
         # go through the list of given track ids
@@ -107,8 +127,8 @@ def update_view(view_id):
             if not track_id in [v_track.track_id for v_track in current_v_tracks]:
                 view_track = ViewTrack(track_id = track_id, view_id = view.id)
                 session.add(view_track)
-        session.commit        
-
+        
+        session.commit()
     return jsonify(view.to_json())
 
 @app.route('/api/views/<int:view_id>',methods=['DELETE'])

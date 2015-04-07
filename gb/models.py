@@ -139,13 +139,23 @@ class View(db.Model):
         self.view_name = view_name
         self.user_id = user_id
 
-    def to_json(self):
+    def to_data(self):
         view_tracks = []
         for view_track in self.view_tracks:
             view_tracks.append(view_track.to_json())
         return {
             'view_name' : self.view_name,
             'view_tracks' : view_tracks,
+            'user_id' : self.user_id
+        }
+
+    def to_json(self):
+        track_ids = []
+        for view_track in self.view_tracks:
+            track_ids.append(view_track.track_id)
+        return {
+            'view_name' : self.view_name,
+            'track_ids' : track_ids,
             'user_id' : self.user_id
         }
 
@@ -177,6 +187,7 @@ class ViewTrack(db.Model):
             data.append(scores)
         return {
             'track_name' : track.track_name,
+            'track_id' : self.track_id,
             'data_type' : track.data_type,
             'data' : data
         }
