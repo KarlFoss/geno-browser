@@ -24,27 +24,32 @@
 
     genoBrowserServices.factory('Users', ['$resource',
       function($resource) {
-        return $resource('/api/users/:user_id', {}, {});
+        return $resource('/api/users/:user_id', {}, {
+            update: { method:'PUT' }
+        });
       }]);
 
     genoBrowserServices.factory('Tracks', ['$resource',
       function($resource) {
         return $resource('/api/tracks/:track_id', {}, {
-            query: { isArray: false }
+            query: { isArray: false },
+            update: { method:'PUT' }
         });
       }]);
 
     genoBrowserServices.factory('Files', ['$resource',
       function($resource) {
         return $resource('/api/files/:type/:user_id/:file_id', {}, {
-            query: { isArray: false }
+            query: { isArray: false },
+            update: { method:'PUT' }
         });
       }]);
 
     genoBrowserServices.factory('Views', ['$resource',
       function($resource) {
         return $resource('/api/views/:user_id/:view_id', {}, {
-            query: { isArray: false }
+            query: { isArray: false },
+            update: { method:'PUT' }
         });
       }]);
 

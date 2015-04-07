@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en" ng-app="genoBrowser">
 <head>
 	<meta charset="utf-8">
@@ -24,7 +24,6 @@
 
     <script src="js/app.js"></script>
     <script src="js/services.js"></script>
-    <script src="js/constants.js"></script>
 	<script src="js/controllers.js"></script>
     <script src="js/directives.js"></script>
 </head>
@@ -50,27 +49,6 @@
         </div>
         <div id="navbar-menu" class="container-fluid collapse" ng-controller="navMenuController">
             <div class="row">
-                <div class="col-md-6">
-                    <div class="well well-sm">
-                        <h4>
-                            <span>Files</span>
-                            <small class="pull-right">
-                                <a href="#" data-toggle="modal" data-target="#fileModal"><span class="glyphicon glyphicon-plus"></span></a>
-                            </small>
-                        </h4>
-                        <div class="list-group">
-                            <div ng-repeat="file in files" ng-click="File.select(file)" href="#" class="list-group-item">
-                                <span>{{file.name}}</span>
-                                <a href="#" class="action-item pull-right" ng-click="File.delete(file); $event.stopPropagation()">
-                                    <span class="glyphicon glyphicon-remove"></span>
-                                </a>
-                                <a href="#" class="action-item pull-right" ng-click="File.edit(file); $event.stopPropagation()">
-                                    <span class="glyphicon glyphicon-edit"></span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <div class="col-md-3">
                     <div class="well well-sm">
                         <h4>
@@ -81,7 +59,7 @@
                         </h4>
                         <div class="list-group">
                             <div ng-repeat="view in views" ng-click="View.select(view)" href="#" class="list-group-item">
-                                <span>{{view.name}}</span>
+                                <span>{{view.view_name}}</span>
                                 <a href="#" class="action-item pull-right" ng-click="View.delete(view); $event.stopPropagation()">
                                     <span class="glyphicon glyphicon-remove"></span>
                                 </a>
@@ -112,6 +90,15 @@
                             </div>
                         </div>
                     </div> 
+                </div>
+                <div class="col-md-6">
+                    <div class="well well-sm">
+                        <h4>
+                            <span>Track Information</span>
+                        </h4>
+                        <div class="list-group">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -155,7 +142,6 @@
     </footer>
 
 	<ng-include src="'partials/register-modal.html'"></ng-include>
-    <ng-include src="'partials/file-modal.html'"></ng-include>
     <ng-include src="'partials/view-modal.html'"></ng-include>
     <ng-include src="'partials/track-modal.html'"></ng-include>
 </body>

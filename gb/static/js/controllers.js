@@ -67,52 +67,13 @@
             }
         }]);
 
-    genoBrowserControllers.controller('navMenuController', ['$scope', 'Tracks',
-      function ($scope, Tracks) {
+    genoBrowserControllers.controller('navMenuController', ['$scope', 'Views', 'Tracks',
+      function ($scope, Views, Tracks) {
 
-          $scope.files = [
-            {'name': 'fasta_file',
-             'type': 'fa'},
-            {'name': 'wiggity_wack don\'t talk back',
-             'type': 'wig'},
-            {'name': 'beddy_byeeeeee',
-             'type': 'bed'},
-            {'name': 'fasta_file',
-             'type': 'fa'},
-            {'name': 'wiggity_wack',
-             'type': 'wig'},
-            {'name': 'beddy_byeeeeee',
-             'type': 'bed'},
-            {'name': 'fasta_file',
-             'type': 'fa'},
-            {'name': 'wiggity_wack',
-             'type': 'wig'},
-            {'name': 'beddy_byeeeeee',
-             'type': 'bed'}
-          ];
-
-          $scope.File = {
-              add: function() {
-
-              },
-
-              select: function(file) {
-                $scope.views = [
-                    {'name': 'my view'},
-                    {'name': 'your view'},
-                    {'name': 'our view'},
-                    {'name': 'a view?'}
-                ];
-              },
-
-              edit: function(file) {
-
-              },
-
-              delete: function(file) {
-
-              }
-          };
+          // Initialize menu with all user's views
+          Views.query(function(response) {
+              $scope.views = response.views;
+          });
 
           $scope.View = {
               add: function() {
@@ -120,8 +81,11 @@
               },
 
               select: function(view) {
-                  Tracks.query(function(response) {
-                      $scope.tracks = response.tracks;
+                  $scope.tracks = {};
+                  angular.forEach(view.track_ids, function(value) {
+                      $scope.tracks = $scope.tracks.concat(
+                          Tracks.get({track_id:value})
+                      );
                   });
               },
 
