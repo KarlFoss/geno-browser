@@ -14,8 +14,8 @@ def new_view():
     view_name  = json.get('view_name')
 
     for field in [track_ids, view_name]:
-    	if not field:
-    		return jsonify(response="Could not create view, {} is required".format(field)),404
+        if not field:
+            return jsonify(response="Could not create view, {} is required".format(field)),404
 
     new_view = View(view_name = view_name, user_id = user_id)
     session.add(new_view)
@@ -24,19 +24,19 @@ def new_view():
 
     view_tracks = []
     for track_id in track_ids:
-    	track = session.query(Track).get(track_id)
+        track = session.query(Track).get(track_id)
         if not track:
-    		return jsonify(response="Could not create view, {} is not a valid track id".format(track_id)),404
+            return jsonify(response="Could not create view, {} is not a valid track id".format(track_id)),404
 
-    	if not track.user_id == int(user_id):
-    		return jsonify(response="Could not create view with track {} is not a owned by user {}".format(track_id,user_id)),404
+        if not track.user_id == int(user_id):
+            return jsonify(response="Could not create view with track {} is not a owned by user {}".format(track_id,user_id)),404
 
-    	view_track = ViewTrack(track_id = track_id, view_id = new_view.id)
-    	view_tracks.append(view_track)
+        view_track = ViewTrack(track_id = track_id, view_id = new_view.id)
+        view_tracks.append(view_track)
 
     session.add_all(view_tracks)
     session.commit()
-    return jsonify(new_view.to_json()),200
+    return jsonify(view_id=new_view.id),200
 
 @app.route('/api/views/<int:view_id>',methods=['GET'])
 @check_headers
@@ -75,12 +75,10 @@ def get_views():
 @app.route('/api/views/<int:view_id>',methods=['PUT'])
 @check_headers
 def update_view(view_id):
-
+    
     user_id = request.user_id
     json = request.get_json()
-
     view = session.query(View).get(view_id)
-    json = request.get_json()
 
     if not view:
         return jsonify(response="Can't fetch view with id: {}".format(view_id)),404
@@ -88,12 +86,29 @@ def update_view(view_id):
     if not view.user_id == int(user_id):
         return jsonify(response="Cant update view {0} for user {1} they do not own it".format(view.id,user.id)),404
 
-    for field in ['view_name','view_tracks']:
-        val = json.get(field)
-        if val:
-            setattr(track,field,val)
+    # update the view_name if given
+    view_name = json.get('view_name')
+    if view_name:
+        view.view_name = view_name
 
-    session.commit()
+    # update the viewtracks if given
+    track_ids = json.get('track_ids')
+    if track_ids:
+
+        # first remove any view_tracks that are associated with this view but their track ids aret in the new list
+        current_v_tracks = session.query(ViewTrack).filter_by(view_id = view.id)
+        for v_track in current_v_tracks:
+            if v_track.track_id not in track_ids:
+                session.remove(v_track)
+
+        # go through the list of given track ids
+        for track_id in track_ids:
+            # check if there is a view_track with track_id equal 
+            if not track_id in [v_track.track_id for v_track in current_v_tracks]:
+                view_track = ViewTrack(track_id = track_id, view_id = view.id)
+                session.add(view_track)
+        session.commit        
+
     return jsonify(view.to_json())
 
 @app.route('/api/views/<int:view_id>',methods=['DELETE'])
