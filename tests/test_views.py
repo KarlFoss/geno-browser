@@ -46,8 +46,24 @@ class TrackTestCase(TestCase):
         data = json.loads(response.get_data())
         self.assertEqual(data.get('view_name'), 'TEST-VIEW')
         self.assertEqual(data.get('user_id'), 1)
-        self.assertTrue(data.has_key('view_tracks'))
+        self.assertEqual(data.get('track_ids'), [1])
 
+    def testGetDataView(self):
+        LOG.info("Testing getting view endpoint /views/data with GET")
+        self.createTestUser()
+        self.uploadTestWig()
+        self.createTestTrack()
+        self.createTestView()
+
+        response = self.app.get('/api/views/data/1',
+            headers=self.user_header
+        )
+        self.assert200(response)
+        
+        data = json.loads(response.get_data())
+        self.assertEqual(data.get('view_name'), 'TEST-VIEW')
+        self.assertEqual(data.get('user_id'), 1)
+        self.assertTrue(data.has_key('view_tracks'))
 
     def testCreateView(self):
         LOG.info("Testing create view endpoint /views with POST")
@@ -76,12 +92,14 @@ class TrackTestCase(TestCase):
         self.createTestUser()
         self.uploadTestWig()
         self.createTestTrack()
+        self.createAnotherTestTrack()
         self.createTestView()
+
         view = self.getTestView()
 
         response = self.app.put('/api/views/1', 
             data=json.dumps({
-                'track_ids': [1],
+                'track_ids': [1,2],
                 'view_name': 'NEW-NAME'
             }), 
             content_type='application/json',
@@ -89,7 +107,11 @@ class TrackTestCase(TestCase):
         )
 
         self.assert200(response)
-        self.assertEqual(json.loads(response.get_data()).get('view_name'), 'NEW-NAME')
+
+        data = json.loads(response.get_data())
+        self.assertEqual(data.get('view_name'), 'NEW-NAME')
+        self.assertEqual(data.get('user_id'), 1)
+        self.assertEqual(data.get('track_ids'), [1,2])
 
     def testDeleteView(self):
         LOG.info("Testing delet view endpoint /views with DELETE")
@@ -126,6 +148,17 @@ class TrackTestCase(TestCase):
                 'track_name': 'kyles track', 
                 'data_type': 'wig',
                 'data_id':1,
+                'file_name':'mywig.wig'
+            }), 
+            content_type='application/json',
+            headers=self.user_header)
+
+    def createAnotherTestTrack(self):
+        response = self.app.post('/api/tracks', 
+            data=json.dumps({
+                'track_name': 'kyles track', 
+                'data_type': 'wig',
+                'data_id':2,
                 'file_name':'mywig.wig'
             }), 
             content_type='application/json',
@@ -170,4 +203,3 @@ class TrackTestCase(TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-
