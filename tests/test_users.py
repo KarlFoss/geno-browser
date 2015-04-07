@@ -36,7 +36,7 @@ class UserTestCase(TestCase):
 
         # Send post request
         response = self.app.post('/api/users', 
-            data=json.dumps({'user_name': 'kyle', 'email': 'kyle@email.com'}), 
+            data=json.dumps({'username': 'kyle', 'email': 'kyle@email.com'}), 
             content_type='application/json')
 
         self.assert200(response)
@@ -54,7 +54,7 @@ class UserTestCase(TestCase):
 
         # Make sure the user dict has the right fields
         user = json.loads(response.get_data())
-        self.assertDictContainsSubset({'user_name':'kyle','email':'kyle@email.com'},user)
+        self.assertDictContainsSubset({'username':'kyle','email':'kyle@email.com'},user)
 
     def test_get_nonexistant_user(self):
         """
@@ -67,7 +67,7 @@ class UserTestCase(TestCase):
         LOG.info("Testing user endoint /api/users/<user_id> with PUT")
         self.createTestUser()
         user = self.getTestUser()
-        user['user_name'] = "KYLES NEW NAME"
+        user['username'] = "KYLES NEW NAME"
 
         # Handle put request
         updated_json = json.dumps(user)
@@ -98,7 +98,7 @@ class UserTestCase(TestCase):
 
     def createTestUser(self):
         response = self.app.post('/api/users', 
-            data=json.dumps({'user_name': 'kyle', 'email': 'kyle@email.com'}), 
+            data=json.dumps({'username': 'kyle', 'email': 'kyle@email.com'}), 
             content_type='application/json')
 
     def getTestUser(self):

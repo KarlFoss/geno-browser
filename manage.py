@@ -25,7 +25,7 @@ def seed_db():
     user_ids = []
     users = ["default","kyle","karl","coda","max","goof"]
     for name in users:
-        new_user = User(user_name=name,email="{}@email.com".format(name))
+        new_user = User(username=name,email="{}@email.com".format(name))
         session.add(new_user)
         session.commit()
         user_ids.append(new_user.id)
@@ -33,12 +33,12 @@ def seed_db():
     ## Give each a track ##
     for u_id in user_ids:
 
-        view = View(view_name = "Test View")
+        view = View(view_name = "Test View", user_id = u_id)
         session.add(view)
         session.commit()
 
         # Create a fasta and a wig data set, tracks, and a view holding them
-        fasta = Fasta(header=">EBV1", file_name="Test.fasta")
+        fasta = Fasta(header=">EBV1")
         session.add(fasta)
         session.commit()
 

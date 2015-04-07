@@ -6,7 +6,9 @@
         'ngResource',
         'genoBrowserConstants',
         'genoBrowserControllers',
-        'genoBrowserServices'
+        'genoBrowserServices',
+        'nvd3ChartDirectives',
+        'genoBrowserDirectives'
     ]);
 
     genoBrowser.config(function($httpProvider) {

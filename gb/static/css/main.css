@@ -38,3 +38,16 @@ a.action-item {
     background-color: #FCFCFC;
     padding: 8px 0;
 }
+
+.plot {
+    background-color: #f5f5f5;
+}
+
+#plot_controls button {
+    width:100%
+}
+
+.track {
+    min-height: 400px;
+    min-width: 500px;
+}

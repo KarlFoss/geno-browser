@@ -1,0 +1,37 @@
+track type=wiggle_0 name="C666" description="C666/SRR1178329 mRNA seq aligned with Bowtie2"
+fixedStep chrom=EBV1 start=1 step=1
+0
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+1
+fixedStep chrom=EBV1 start=1 step=100 span=5
+1
+2
+3
+4
+5
+6
+variableStep chrom=EBV1 span=5
+1	1
+10	2
+20	3
+30	4
+40	5
+50	6
+variableStep chrom=EBV1
+1	1
+100	2123
+123120	3
+30	4
+40	5
+50	6
