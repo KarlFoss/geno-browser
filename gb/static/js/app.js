@@ -4,7 +4,6 @@
     var genoBrowser = angular.module('genoBrowser', [
         'ngRoute',
         'ngResource',
-        'genoBrowserConstants',
         'genoBrowserControllers',
         'genoBrowserServices',
         'nvd3ChartDirectives',
