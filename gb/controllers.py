@@ -12,6 +12,16 @@ from gb.models import *
 def basic_pages(**kwargs):
     return redirect('/static/index.html')
 
+@app.route('/api/token', methods=["GET"])
+def get_token():
+    username = request.headers.get("username")
+    password = request.headers.get("password")
+
+    user = session.query(User).filter("")
+
+    token = g.user.generate_auth_token()
+    return jsonify({ 'token': token.decode('ascii') })
+
 @app.route('/favicon.ico')
 def favicon():
     return send_from_directory(os.path.join(app.root_path, 'static'),

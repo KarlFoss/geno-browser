@@ -6,7 +6,6 @@ from controllers import check_headers
 @app.route('/api/tracks',methods=['GET'])
 @check_headers
 def get_all_tracks():
-
     user_id = request.user_id
 
     # look up all the tracks
