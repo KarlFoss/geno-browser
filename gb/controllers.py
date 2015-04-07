@@ -17,9 +17,9 @@ def get_token():
     username = request.headers.get("username")
     password = request.headers.get("password")
 
-    user = session.query(User).filter("")
+    #user = session.query(User).filter("")
 
-    token = g.user.generate_auth_token()
+    token = username #g.user.generate_auth_token()
     return jsonify({ 'token': token.decode('ascii') })
 
 @app.route('/favicon.ico')

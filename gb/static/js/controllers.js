@@ -44,13 +44,15 @@
 
     }]);
 
-    genoBrowserControllers.controller('navBarController', ['$scope', 'userService', 'Users',
-        function($scope, userService, Users) {
+    genoBrowserControllers.controller('navBarController', ['$scope', 'userService', 'Token',
+        function($scope, userService, Token) {
             $scope.user = userService;
 
             $scope.login = function() {
-                Users.get(function(response) {
-
+                Token($scope.user.username, $scope.user.password).get(function(response) {
+                    console.log(response);
+                }, function(error) {
+                    console.log(error);
                 });
             }
         }]);
