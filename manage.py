@@ -33,12 +33,12 @@ def seed_db():
     ## Give each a track ##
     for u_id in user_ids:
 
-        view = View(view_name = "Test View")
+        view = View(view_name = "Test View", user_id = u_id)
         session.add(view)
         session.commit()
 
         # Create a fasta and a wig data set, tracks, and a view holding them
-        fasta = Fasta(header=">EBV1", file_name="Test.fasta")
+        fasta = Fasta(header=">EBV1")
         session.add(fasta)
         session.commit()
 

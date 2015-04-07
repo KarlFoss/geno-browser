@@ -2,13 +2,13 @@ from gb import db, session
 
 class Wig(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    step = db.Column(db.Enum('variable','fixed'))
+    chrom = db.Column(db.String)
 
     def __repr__(self):
-        return "Wig: {}".format(self.id)
+        return "Wig: {} - {}".format(self.id, self.chrom)
 
-    def __init__(self,step):
-        self.step = step
+    def __init__(self,chrom):
+        self.chrom = chrom
 
 class WigValue(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -24,7 +24,11 @@ class WigValue(db.Model):
         self.wig_id = wig_id
 
     def __repr__(self):
-            return "{}".format(self.value)
+        return "wig_id: {} - pos: {} - score: {}".format(self.wig_id, self.position, self.value)
+
+class Gtf(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
 
 class Bed(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -63,11 +67,9 @@ class Annotation(db.Model):
 class Fasta(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     header = db.Column(db.String)
-    file_name = db.Column(db.String)
 
-    def __init__(self, header, file_name):
+    def __init__(self, header):
         self.header = header
-        self.file_name = file_name
 
     def __repr__(self):
             return "{}".format(self.header)
@@ -128,9 +130,11 @@ class View(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     view_name = db.Column(db.String)
     view_tracks = db.relationship('ViewTrack', backref="view")
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
-    def __init__(self, view_name):
+    def __init__(self, view_name, user_id):
         self.view_name = view_name
+        self.user_id = user_id
 
     def to_json(self):
         view_tracks = []
@@ -138,7 +142,8 @@ class View(db.Model):
             view_tracks.append(view_track.to_json())
         return {
             'view_name' : self.view_name,
-            'view_tracks' : view_tracks
+            'view_tracks' : view_tracks,
+            'user_id' : self.user_id
         }
 
 class ViewTrack(db.Model):
@@ -152,11 +157,23 @@ class ViewTrack(db.Model):
 
     def to_json(self):
         track = session.query(Track).get(self.track_id)
-        if(track.data_type == 'fasta'):
+        data = []
+        if track.data_type == 'fasta':
             fasta = session.query(Fasta).get(track.data_id)
-            return {
-                'track_name' : track.track_name,
-                'data_type' : 'fasta',
-                'header' : fasta.header,
-                'bases' : ''.join(str(base) for base in fasta.base_pairs)
-            }
+            data.append(fasta.header)
+            data.append("".join(str(base) for base in fasta.base_pairs))
+
+        elif track.data_type == 'wig':
+            wig = session.query(Wig).get(track.data_id)
+            pos = []
+            scores = []
+            for wigVal in wig.values:
+                pos.append(wigVal.position)
+                scores.append(wigVal.value)
+            data.append(pos)
+            data.append(scores)
+        return {
+            'track_name' : track.track_name,
+            'data_type' : track.data_type,
+            'data' : data
+        }

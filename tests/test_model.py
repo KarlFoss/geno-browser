@@ -42,17 +42,17 @@ class TestWig(unittest.TestCase):
         db.drop_all()
 
     def test_create_empty_variable_wig(self):
-        wig = Wig('variable')
+        wig = Wig(chrom='EBV')
         db.session.add(wig)
         db.session.commit()
 
     def test_create_empty_fixed_wig(self):
-        wig = Wig('variable')
+        wig = Wig(chrom='EBV')
         db.session.add(wig)
         db.session.commit()
 
     def test_create_wig_with_values(self):
-        wig = Wig('variable')
+        wig = Wig(chrom='EBV')
         wig.values = [WigValue(i,x,None) for i,x in enumerate(range(0,1000,10))]
         db.session.add(wig)
         db.session.commit()
