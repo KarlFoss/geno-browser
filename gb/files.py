@@ -223,26 +223,25 @@ def new_gtf(gtf_file):
 
         gtf_dict = dict(zip(gtf_fields, line.split("\t")))
         gtf_dict['gtf_id'] = gtf.id
-        print gtf_dict
+
         # handle the '.' in score and frame
         if gtf_dict['score'] == '.':
-            gtf_dict['score'] = float(0.0)
+            gtf_dict['score'] = 0.0
         if gtf_dict['frame'] == '.':
-             gtf_dict['frame'] = 0
-
+            gtf_dict['frame'] = 0
 
         # create each value record
         gtf_val = GtfValue(
-             seqname = gtf_dict['seqname'],
-             source = gtf_dict['source'],
-             feature = gtf_dict['feature'],
-             start = gtf_dict['start'],
-             end = gtf_dict['end'],
-             score = gtf_dict['score'],
-             strand = gtf_dict['strand'],
-             frame = gtf_dict['frame'],
-             attribute = gtf_dict['attribute'],
-             gtf_id = gtf_dict['gtf_id']
+            seqname = gtf_dict['seqname'],
+            source = gtf_dict['source'],
+            feature = gtf_dict['feature'],
+            start = int(gtf_dict['start']),
+            end = int(gtf_dict['end']),
+            score = gtf_dict['score'],
+            strand = gtf_dict['strand'],
+            frame = int(gtf_dict['frame']),
+            attribute = gtf_dict['attribute'],
+            gtf_id = gtf_dict['gtf_id']
         )
         gtf_values.append(gtf_val)
 
