@@ -6,7 +6,7 @@
         .directive('gbWigPlot', function(){
             return {
                 restrict:'E',
-                templateUrl:'partials/wig-plot.html',
+                templateUrl:'partials/wig-plot.html'
             };
         });
 })();
