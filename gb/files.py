@@ -4,7 +4,7 @@ from models import *
 from controllers import check_headers
 import pandas as pd
 import re
-import pprint
+import numpy
 
 @app.route('/api/files/',methods=['POST'])
 @check_headers
@@ -56,6 +56,18 @@ def new_file():
         session.commit()
         return jsonify(track_ids = [new_track.id for new_track in new_tracks])
 
+    elif type == 'gtf':
+        gtf_id = new_gtf(file)
+        new_track = Track(
+            track_name = track_name,
+            user_id = user_id,
+            data_type = type,
+            data_id = gtf_id,
+            file_name = file.filename,
+        )
+        session.add(new_track)
+        session.commit()
+
 def valid_wig_header(header):
     if header.startswith("fixedStep"):
         return re.match(r"^fixedStep\schrom=\w+\sstart=\d+\sstep=\d+(\sspan=\d+$|$)", header)
@@ -67,7 +79,7 @@ def valid_wig_header(header):
 def validate_fasta_header(header):
     return re.match(r"^>.*$",header)
 
-def parse_header(header):
+def parse_wig_header(header):
     array = header.split()
     step_type = array.pop(0)
     
@@ -127,7 +139,7 @@ def new_wigs(wig_file):
                 return jsonify(response="Wig format incorrect"),404
 
             # get the values from the header
-            header_dict = parse_header(line)
+            header_dict = parse_wig_header(line)
 
             # commit the bases from the the previous wig
             if current_data:
@@ -196,3 +208,44 @@ def new_wigs(wig_file):
     session.add_all(current_data)
     session.commit()
     return wig_ids
+
+
+def new_gtf(gtf_file):
+    gtf_fields = ['seqname','source','feature','start','end','score','strand','frame','attribute']
+
+    # create the base record
+    gtf = Gtf()
+    session.add(gtf)
+    session.commit()
+
+    gtf_values = []
+    for line in gtf_file:
+
+        gtf_dict = dict(zip(gtf_fields, line.split("\t")))
+        gtf_dict['gtf_id'] = gtf.id
+        print gtf_dict
+        # handle the '.' in score and frame
+        if gtf_dict['score'] == '.':
+            gtf_dict['score'] = float(0.0)
+        if gtf_dict['frame'] == '.':
+             gtf_dict['frame'] = 0
+
+
+        # create each value record
+        gtf_val = GtfValue(
+             seqname = gtf_dict['seqname'],
+             source = gtf_dict['source'],
+             feature = gtf_dict['feature'],
+             start = gtf_dict['start'],
+             end = gtf_dict['end'],
+             score = gtf_dict['score'],
+             strand = gtf_dict['strand'],
+             frame = gtf_dict['frame'],
+             attribute = gtf_dict['attribute'],
+             gtf_id = gtf_dict['gtf_id']
+        )
+        gtf_values.append(gtf_val)
+
+    session.add_all(gtf_values)
+    session.commit()
+    return gtf.id

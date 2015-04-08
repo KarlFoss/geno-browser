@@ -29,8 +29,37 @@ class WigValue(db.Model):
 class Gtf(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
+class GtfValue(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
 
-class Bed(db.Model):
+    # actal atters
+    seqname = db.Column(db.String)
+    source = db.Column(db.String)
+    feature = db.Column(db.String)
+    start = db.Column(db.Integer)
+    end = db.Column(db.Integer)
+    score = db.Column(db.Float)
+    strand = db.Column(db.Enum("+","-","."))
+    frame = db.Column(db.Integer)
+    attribute = db.Column(db.String)
+
+    # relationship
+    gtf_id = db.Column(db.Integer, db.ForeignKey("gtf.id"))
+    gtf = db.relationship("Gtf",backref=db.backref("values",order_by=start))
+
+    def __init__(self, seqname, source, feature, start, end, score, strand, frame, attribute, gtf_id):
+        self.seqname = seqname,
+        self.source = source,
+        self.feature = feature,
+        self.start = start,
+        self.end = end,
+        self.score = score,
+        self.strand = strand,
+        self.frame = frame,
+        self.attribute = attribute,
+        self.gtf_id = gtf_id
+
+class BedValue(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     chrom = db.Column(db.String)
     chromStart = db.Column(db.Integer)
