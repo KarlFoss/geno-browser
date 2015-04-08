@@ -1,4 +1,4 @@
-<div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true">
+<div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel" aria-hidden="true" ng-controller="addViewController">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -6,10 +6,23 @@
                 <h4 class="modal-title" id="viewModalLabel">Add New View</h4>
             </div>
             <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="view-name">View Name</label>
+                        <input type="text" class="form-control" ng-model="view.view_name" id="view-name" placeholder="View Name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="view-track">Initial Track</label>
+                        <select class="form-control" id="view-track"
+                                ng-model="view.track_ids"
+                                ng-options="track as track.track_name for track in tracks" required>
+                        </select>
+                    </div>
+                </form>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-primary" ng-click="View.add(view)" data-dismiss="modal">Add View</button>
             </div>
         </div>
     </div>

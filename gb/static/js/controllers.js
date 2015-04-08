@@ -76,21 +76,14 @@
           });
 
           $scope.View = {
-              add: function() {
-
-              },
-
               select: function(view) {
-                  $scope.tracks = {};
+                  // Clear tracks
+                  $scope.tracks = [];
+
+                  // Get tracks associated with selected view
                   angular.forEach(view.track_ids, function(value) {
-                      $scope.tracks = $scope.tracks.concat(
-                          Tracks.get({track_id:value})
-                      );
+                      $scope.tracks.push(Tracks.get({track_id:value}));
                   });
-              },
-
-              edit: function(view) {
-
               },
 
               delete: function(view) {
@@ -99,15 +92,7 @@
           };
 
           $scope.Track = {
-              add: function() {
-
-              },
-
               select: function(track) {
-
-              },
-
-              edit: function(track) {
 
               },
 
@@ -116,4 +101,26 @@
               }
           };
       }]);
+
+    genoBrowserControllers.controller('addViewController', ['$scope', 'Views', 'Tracks',
+        function($scope, Views, Tracks) {
+            // Structure of view
+            $scope.view = {
+                view_name: '',
+                track_ids: []
+            };
+
+            // All tracks associated with user
+            Tracks.query(function(response) {
+                $scope.tracks = response.tracks;
+            });
+
+            // Add View
+            $scope.View = {
+                add: function(view) {
+                    view.track_ids = [view.track_ids.track_id];
+                    Views.save(view);
+                }
+            };
+        }]);
 })();
