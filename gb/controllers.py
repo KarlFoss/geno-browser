@@ -36,7 +36,7 @@ def favicon():
 @app.route('/api/token', methods=["GET"])
 @auth.login_required
 def get_token():
-    token = g.user.generate_auth_token()
+    token = g.user.generate_token()
     return jsonify({ 'token': token.decode('ascii') })
 
 @app.route('/gene_test',methods=['GET','POST'])
