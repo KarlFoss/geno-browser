@@ -86,7 +86,7 @@ def get_views():
 
     # make sure the view was found
     if not views:
-        return jsonify(response="Cannot fetch views {0} from user {1}".format(view_id,user_id)),404
+        return jsonify(response="Cannot fetch views from user {1}".format(user_id)),404
 
     # otherwise return it
     return jsonify(views=[ view.to_json() for view in views])
