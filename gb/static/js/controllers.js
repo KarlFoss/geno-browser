@@ -71,9 +71,11 @@
       function ($scope, Views, Tracks) {
 
           // Initialize menu with all user's views
+          /*
           Views.query(function(response) {
               $scope.views = response.views;
           });
+            */
 
           $scope.View = {
               select: function(view) {
@@ -111,9 +113,11 @@
             };
 
             // All tracks associated with user
+            /*
             Tracks.query(function(response) {
                 $scope.tracks = response.tracks;
             });
+            */
 
             // Add View
             $scope.View = {
