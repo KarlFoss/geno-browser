@@ -112,8 +112,8 @@ class User(db.Model):
         return pwd_context.verify(password, self.password_hash)
 
     def generate_token(self, expiration = 600):
-        s = Serializer(app.config['SECRET_KEY'], expires_in = expiration);
-        return self.user_name
+        s = Serializer(app.config['SECRET_KEY'], expires_in = expiration)
+        return s.dumps({ 'id': self.id })
 
 class Track(db.Model):
     id = db.Column(db.Integer, primary_key=True)
