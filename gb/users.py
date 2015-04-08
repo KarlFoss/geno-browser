@@ -1,7 +1,6 @@
 from flask import Flask, request, Response, jsonify
-from gb import app, db, session
+from gb import app, auth, db, session
 from gb.models import User
-from controllers import check_headers
 
 @app.route('/api/users/<int:user_id>',methods=['GET'])
 def get_user(user_id):

@@ -1,16 +1,14 @@
 from flask import Flask, request, Response, jsonify
-from gb import app, db, session
+from gb import app, auth, db, session
 from models import *
-from controllers import check_headers
 import pandas as pd
 import re
 import pprint
 
 @app.route('/api/files/',methods=['POST'])
-@check_headers
+@auth.login_required
 def new_file():
-
-    user_id = request.user_id
+    user_id = g.user.id
     file = request.files['file']
     type = request.form['type']
 
