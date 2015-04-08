@@ -67,6 +67,7 @@ def new_file():
         )
         session.add(new_track)
         session.commit()
+        return jsonify(track_id = new_track.id)
 
 def valid_wig_header(header):
     if header.startswith("fixedStep"):
