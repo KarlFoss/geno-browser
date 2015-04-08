@@ -1,13 +1,11 @@
-from flask import Flask, request, Response, jsonify
-from gb import app, db, session
+from flask import Flask, request, Response, jsonify, g
+from gb import app, auth, db, session
 from models import *
-from controllers import check_headers
 
 @app.route('/api/views/',methods=['POST'])
-@check_headers
+@auth.login_required
 def new_view():
-
-    user_id = request.user_id
+    user_id = g.user.id
     json = request.get_json()
 
     track_ids = json.get('track_ids')
@@ -39,11 +37,9 @@ def new_view():
     return jsonify(view_id=new_view.id),200
 
 @app.route('/api/views/<int:view_id>',methods=['GET'])
-@check_headers
+@auth.login_required
 def get_view(view_id):
-
-    user_id = request.user_id
-
+    user_id = g.user.id
     view = session.query(View).get(view_id)
 
     # make sure the view was found
@@ -58,11 +54,9 @@ def get_view(view_id):
     return jsonify(view.to_json())
 
 @app.route('/api/views/data/<int:view_id>',methods=['GET'])
-@check_headers
+@auth.login_required
 def get_data_view(view_id):
-
-    user_id = request.user_id
-
+    user_id = g.user.id
     view = session.query(View).get(view_id)
 
     # make sure the view was found
@@ -77,25 +71,22 @@ def get_data_view(view_id):
     return jsonify(view.to_data())
 
 @app.route('/api/views/',methods=['GET'])
-@check_headers
+@auth.login_required
 def get_views():
-
-    user_id = request.user_id
-
+    user_id = g.user.id
     views = session.query(View).filter_by(user_id=user_id).all()
 
     # make sure the view was found
     if not views:
-        return jsonify(response="Cannot fetch views from user {1}".format(user_id)),404
+        return jsonify(response="Cannot fetch views from user {0}".format(user_id)),404
 
     # otherwise return it
     return jsonify(views=[ view.to_json() for view in views])
 
 @app.route('/api/views/<int:view_id>',methods=['PUT'])
-@check_headers
+@auth.login_required
 def update_view(view_id):
-    
-    user_id = request.user_id
+    user_id = g.user.id
     json = request.get_json()
     view = session.query(View).get(view_id)
 
@@ -132,10 +123,9 @@ def update_view(view_id):
     return jsonify(view.to_json())
 
 @app.route('/api/views/<int:view_id>',methods=['DELETE'])
-@check_headers
+@auth.login_required
 def delete_view(view_id):
-
-    user_id = request.user_id
+    user_id = g.user.id
     view = session.query(View).get(view_id)
 
     if not view:

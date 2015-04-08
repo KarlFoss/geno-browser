@@ -49,11 +49,12 @@
             $scope.user = userService;
 
             $scope.login = function() {
-                Token($scope.user.username, $scope.user.password).get(function(response) {
-                    console.log(response);
-                }, function(error) {
-                    console.log(error);
-                });
+                Token.get($scope.user,
+                    function(response) {
+                        console.log(response);
+                    }, function(error) {
+                        console.log(error);
+                    });
             }
         }]);
 

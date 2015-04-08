@@ -8,18 +8,29 @@
         return bounds;
     });
 
+    genoBrowserServices.factory('TokenHandler', function() {
+        var token = "";
+
+        return {
+            get: function() {
+                return token;
+            },
+
+            set: function(newToken) {
+                token = newToken;
+            }
+        }
+    });
+
     genoBrowserServices.factory('Token', ['$resource',
         function($resource) {
-            return function(username, password) {
-                return $resource('/api/token/', {}, {
-                    get: {
-                        headers: {
-                            'username': username,
-                            'password': password
-                        }
+            return $resource('/api/token/', {}, {
+                get: {
+                    headers: {
+                        'Content-Type': 'application/json'
                     }
-                });
-            };
+                }
+            });
         }]);
 
     genoBrowserServices.factory('Users', ['$resource',
@@ -44,7 +55,7 @@
 
     genoBrowserServices.factory('Files', ['$resource',
       function($resource) {
-        return $resource('/api/files/:type/:user_id/:file_id', {}, {
+        return $resource('/api/files/:type/:file_id', {}, {
             query: { isArray: false },
             update: { method:'PUT' }
         });
@@ -52,7 +63,7 @@
 
     genoBrowserServices.factory('Views', ['$resource',
       function($resource) {
-        return $resource('/api/views/:user_id/:view_id', {}, {
+        return $resource('/api/views/:view_id', {}, {
             query: { isArray: false },
             update: { method:'PUT' }
         });

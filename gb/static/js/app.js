@@ -11,21 +11,19 @@
     ]);
 
     genoBrowser.config(function($httpProvider) {
+        $httpProvider.interceptors.push(['$q', '$location', 'TokenHandler',
+            function($q, $location, TokenHandler) {
+                return {
+                    'request': function (config) {
+                        config.headers = config.headers || {};
+                        config.headers['token'] = TokenHandler.get();
 
+                        return config;
+                    },
+                    'responseError': function(response) {
 
-        $httpProvider.interceptors.push(['$q', '$location', function($q, $location) {
-            return {
-                'request': function (config) {
-                    config.headers = config.headers || {};
-                    config.headers['X-Userid']   = '1';
-                    config.headers['auth-token'] = '';
-
-                    return config;
-                },
-                'responseError': function(response) {
-
-                }
-            };
+                    }
+                };
         }]);
     });
 

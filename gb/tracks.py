@@ -1,12 +1,11 @@
 from flask import Flask, request, Response, jsonify, g
-from gb import app, db, session
+from gb import app, auth, db, session
 from gb.models import Track, User
-from controllers import check_headers
 
 @app.route('/api/tracks',methods=['GET'])
-@check_headers
+@auth.login_required
 def get_all_tracks():
-    user_id = request.user_id
+    user_id = g.user.id
 
     # look up all the tracks
     tracks = session.query(Track).filter_by(user_id=user_id).all()
@@ -17,10 +16,9 @@ def get_all_tracks():
     return jsonify(tracks=[ track.to_json() for track in tracks])
 
 @app.route('/api/tracks/<int:track_id>',methods=['GET'])
-@check_headers
+@auth.login_required
 def get_one_track(track_id):
-
-    user_id = request.user_id
+    user_id = g.user.id
     
     # get the track
     track = session.query(Track).get(track_id)
@@ -37,10 +35,9 @@ def get_one_track(track_id):
     return jsonify(track.to_json())
 
 @app.route('/api/tracks',methods=['POST'])
-@check_headers
+@auth.login_required
 def new_track():
-
-    user_id = request.user_id
+    user_id = g.user.id
 
     # Get json
     json = request.get_json()
@@ -75,10 +72,9 @@ def new_track():
     return jsonify(track_id=new_track.id)
 
 @app.route('/api/tracks/<int:track_id>',methods=['PUT'])
-@check_headers
+@auth.login_required
 def update_track(track_id):
-
-    user_id = request.user_id
+    user_id = g.user.id
 
     if not track_id:
         return jsonify(response="Can't fetch track, track_id required"),404
@@ -101,11 +97,9 @@ def update_track(track_id):
     return jsonify(track.to_json())
 
 @app.route('/api/tracks/<int:track_id>',methods=['DELETE'])
-@check_headers
+@auth.login_required
 def delete_track(track_id):
-    
-    # get user_id
-    user_id = request.user_id
+    user_id = g.user.id
     
     track = session.query(Track).get(track_id)
 
