@@ -55,7 +55,7 @@
 
     genoBrowserServices.factory('Files', ['$resource',
       function($resource) {
-        return $resource('/api/files/:type/:user_id/:file_id', {}, {
+        return $resource('/api/files/:type/:file_id', {}, {
             query: { isArray: false },
             update: { method:'PUT' }
         });
@@ -63,7 +63,7 @@
 
     genoBrowserServices.factory('Views', ['$resource',
       function($resource) {
-        return $resource('/api/views/:user_id/:view_id', {}, {
+        return $resource('/api/views/:view_id', {}, {
             query: { isArray: false },
             update: { method:'PUT' }
         });
