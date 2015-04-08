@@ -33,7 +33,12 @@
       function($resource) {
         return $resource('/api/tracks/:track_id', {}, {
             query: { isArray: false },
-            update: { method:'PUT' }
+            update: { method:'PUT' },
+            save: {
+                method: 'POST',
+                transformRequest: angular.identity,
+                headers: {'Content-Type': undefined}
+            }
         });
       }]);
 

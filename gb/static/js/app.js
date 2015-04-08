@@ -11,6 +11,8 @@
     ]);
 
     genoBrowser.config(function($httpProvider) {
+
+
         $httpProvider.interceptors.push(['$q', '$location', function($q, $location) {
             return {
                 'request': function (config) {
