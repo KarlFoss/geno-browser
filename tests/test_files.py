@@ -49,7 +49,7 @@ class TrackTestCase(TestCase):
         )
 
         self.assert200(response)
-        self.assertEqual(json.loads(response.get_data()).get('fasta_id'),1)
+        self.assertEqual(json.loads(response.get_data()).get('track_id'),1)
 
     def testUploadWig(self):
         LOG.info("Testing upload of wig file to endpoint /files with POST")
@@ -68,12 +68,12 @@ class TrackTestCase(TestCase):
         )
 
         self.assert200(response)
-        self.assertEqual(json.loads(response.get_data()).get('wig_ids'),[1,2,3,4])
+        self.assertEqual(json.loads(response.get_data()).get('track_ids'),[1,2,3,4])
 
 
     def createTestUser(self):
         response = self.app.post('/api/users', 
-            data=json.dumps({'username': 'kyle', 'email': 'kyle@email.com'}), 
+            data=json.dumps({'username': 'kyle', 'email': 'kyle@email.com','password':'SECRET'}), 
             content_type='application/json')
 
 if __name__ == '__main__':

@@ -1,16 +1,6 @@
 import unittest
 from gb import db,app
-from gb.models import (Wig,
-    WigValue,
-    BasePair,
-    Bed,
-    Annotation,
-    Fasta,
-    User,
-    Track,
-    View,
-    ViewTrack)
-
+from gb.models import *
 import logging
 logging.basicConfig()
 

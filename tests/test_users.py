@@ -11,6 +11,8 @@ LOG = logging.getLogger(__name__)
 
 class UserTestCase(TestCase):
     STATUS_OK = "200 OK"
+    user_header = {"X-Userid":1}
+
 
     def create_app(self):
         app = Flask(__name__)
@@ -36,20 +38,20 @@ class UserTestCase(TestCase):
 
         # Send post request
         response = self.app.post('/api/users', 
-            data=json.dumps({'username': 'kyle', 'email': 'kyle@email.com'}), 
+            data=json.dumps({'username': 'kyle', 'email': 'kyle@email.com','password':''}), 
             content_type='application/json')
 
         self.assert200(response)
         self.assertEqual(json.loads(response.get_data()).get('user_id'),1)
 
     def testGetUser(self):
-        LOG.info("Testing user endpoint /api/users/<user_id> with GET")
+        LOG.info("Testing user endpoint /api/users/ with GET")
 
         # Helper to create a user (has already been tested above)
         self.createTestUser()
 
         # Check the user json returned
-        response = self.app.get('/api/users/1')
+        response = self.app.get('/api/users/', headers = self.user_header)
         self.assert200(response)
 
         # Make sure the user dict has the right fields
@@ -60,18 +62,19 @@ class UserTestCase(TestCase):
         """
         Try to GET a user by an invalid id
         """
-        response = self.app.get('/api/users/1')
+        response = self.app.get('/api/users/', headers=self.user_header)
         self.assert404(response)
 
     def testPutUser(self):
-        LOG.info("Testing user endoint /api/users/<user_id> with PUT")
+        LOG.info("Testing user endoint /api/users/ with PUT")
         self.createTestUser()
         user = self.getTestUser()
         user['username'] = "KYLES NEW NAME"
 
         # Handle put request
         updated_json = json.dumps(user)
-        response = self.app.put('/api/users/'+str(user.get('user_id')), 
+        response = self.app.put('/api/users/', 
+            headers=self.user_header,
             data=updated_json, 
             content_type='application/json')
         self.assert200(response)
@@ -85,24 +88,24 @@ class UserTestCase(TestCase):
         self.assertEqual(user_refresh,json_up)
 
     def testDeleteUser(self):
-        LOG.info("Testing user endpoint /api/users/<user_id> with DELETE")
+        LOG.info("Testing user endpoint /api/users/ with DELETE")
         self.createTestUser()
         user = self.getTestUser()
         user_id = str(user.get('user_id'))
-        response = self.app.delete('/api/users/'+user_id)
+        response = self.app.delete('/api/users/', headers=self.user_header)
         self.assert200(response)
 
         # Check if we can still GET
-        response_get = self.app.get('/api/users/{uid}'.format(uid=user_id))
+        response_get = self.app.get('/api/users/', headers=self.user_header)
         self.assert404(response_get)
 
     def createTestUser(self):
         response = self.app.post('/api/users', 
-            data=json.dumps({'username': 'kyle', 'email': 'kyle@email.com'}), 
+            data=json.dumps({'username': 'kyle', 'email': 'kyle@email.com', 'password':'SECRET'}), 
             content_type='application/json')
 
     def getTestUser(self):
-        response = self.app.get('/api/users/1')
+        response = self.app.get('/api/users/', headers=self.user_header)
         self.assert200(response)
         user = json.loads(response.get_data())
         return user
