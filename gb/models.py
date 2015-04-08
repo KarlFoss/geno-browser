@@ -97,8 +97,9 @@ class User(db.Model):
     password_hash = db.Column(db.String(128))
     email = db.Column(db.String)
 
-    def __init__(self, username, email):
+    def __init__(self, username, password, email):
         self.username = username
+        self.hash_password(password);
         self.email = email
 
     def __repr__(self):
