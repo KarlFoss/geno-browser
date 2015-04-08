@@ -17,8 +17,6 @@ def get_token():
     username = request.headers.get("username")
     password = request.headers.get("password")
 
-    #user = session.query(User).filter("")
-
     token = username #g.user.generate_auth_token()
     return jsonify({ 'token': token.decode('ascii') })
 
