@@ -1,4 +1,5 @@
-from gb import db, session
+from gb import app, db, session
+from passlib.apps import custom_app_context as pwd_context
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
 class Wig(db.Model):
@@ -102,6 +103,12 @@ class User(db.Model):
 
     def __repr__(self):
         return self.username
+
+    def hash_password(self, password):
+        self.password_hash = pwd_context.encrypt(password)
+
+    def verify_password(self, password):
+        return pwd_context.verify(password, self.password_hash)
 
     def generate_token(self, expiration = 600):
         s = Serializer(app.config['SECRET_KEY'], expires_in = expiration);
