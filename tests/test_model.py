@@ -1,16 +1,6 @@
 import unittest
 from gb import db,app
-from gb.models import (Wig,
-    WigValue,
-    BasePair,
-    Bed,
-    Annotation,
-    Fasta,
-    User,
-    Track,
-    View,
-    ViewTrack)
-
+from gb.models import *
 import logging
 logging.basicConfig()
 
@@ -45,11 +35,13 @@ class TestWig(unittest.TestCase):
         wig = Wig(chrom='EBV')
         db.session.add(wig)
         db.session.commit()
+        self.assertEqual(wig.id == 1)
 
     def test_create_empty_fixed_wig(self):
         wig = Wig(chrom='EBV')
         db.session.add(wig)
         db.session.commit()
+        self.assertEqual(wig.id == 1)
 
     def test_create_wig_with_values(self):
         wig = Wig(chrom='EBV')

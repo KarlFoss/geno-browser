@@ -120,7 +120,7 @@ class TrackTestCase(TestCase):
 
     def createTestUser(self):
         response = self.app.post('/api/users', 
-            data=json.dumps({'username': 'kyle', 'email': 'kyle@email.com'}), 
+            data=json.dumps({'username': 'kyle', 'email': 'kyle@email.com','password':'SECRET'}), 
             content_type='application/json')
     
     def createTestTrack(self):
@@ -144,4 +144,3 @@ class TrackTestCase(TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-

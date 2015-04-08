@@ -3,7 +3,7 @@ from gb import app, auth, db, session
 from models import *
 import pandas as pd
 import re
-import pprint
+import numpy
 
 @app.route('/api/files/',methods=['POST'])
 @auth.login_required
@@ -11,6 +11,7 @@ def new_file():
     user_id = g.user.id
     file = request.files['file']
     type = request.form['type']
+    track_name = request.form['track_name'] if request.form.has_key('track_name') else file.filename
 
     if not file:
         return jsonify(response="Can't create upload file! No file found in form data"),404
@@ -18,11 +19,53 @@ def new_file():
         return jsonify(response="Can't create upload file! {} is not a valid file type".format(type)),404
 
     if type == 'fasta':
-        return new_fasta(file)
+        fasta_id = new_fasta(file)
+        new_track = Track(
+            track_name = track_name,
+            user_id = user_id,
+            data_type = type,
+            data_id = fasta_id,
+            file_name = file.filename,
+        )
+        session.add(new_track)
+        session.commit()
+
+        return jsonify(track_id = new_track.id)
     
     elif type == 'wig':
-        return new_wigs(file)
-        
+        wig_ids = new_wigs(file)
+        new_tracks = []
+        count = 1
+        for wig_id in wig_ids:
+            curr_name = "{}-{}".format(track_name, count)
+            count += 1
+
+            new_track = Track(
+                track_name =  curr_name,
+                user_id = user_id,
+                data_type = type,
+                data_id = wig_id,
+                file_name = file.filename,
+            )
+
+            new_tracks.append(new_track)
+        session.add_all(new_tracks)
+        session.commit()
+        return jsonify(track_ids = [new_track.id for new_track in new_tracks])
+
+    elif type == 'gtf':
+        gtf_id = new_gtf(file)
+        new_track = Track(
+            track_name = track_name,
+            user_id = user_id,
+            data_type = type,
+            data_id = gtf_id,
+            file_name = file.filename,
+        )
+        session.add(new_track)
+        session.commit()
+        return jsonify(track_id = new_track.id)
+
 def valid_wig_header(header):
     if header.startswith("fixedStep"):
         return re.match(r"^fixedStep\schrom=\w+\sstart=\d+\sstep=\d+(\sspan=\d+$|$)", header)
@@ -75,8 +118,7 @@ def new_fasta(fasta_file):
     session.add_all(basepairs)
     session.commit()
 
-    return jsonify(fasta_id = fasta_id),200
-
+    return fasta_id
 
 def new_wigs(wig_file):
     current_id = -1
@@ -95,7 +137,7 @@ def new_wigs(wig_file):
                 return jsonify(response="Wig format incorrect"),404
 
             # get the values from the header
-            header_dict = parse_header(line)
+            header_dict = parse_wig_header(line)
 
             # commit the bases from the the previous wig
             if current_data:
@@ -163,4 +205,4 @@ def new_wigs(wig_file):
                     current_dict['start'] += current_dict['step']
     session.add_all(current_data)
     session.commit()
-    return jsonify(wig_ids = wig_ids),200
+    return wig_ids
