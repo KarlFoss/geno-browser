@@ -48,15 +48,15 @@ class GtfValue(db.Model):
     gtf = db.relationship("Gtf",backref=db.backref("values",order_by=start))
 
     def __init__(self, seqname, source, feature, start, end, score, strand, frame, attribute, gtf_id):
-        self.seqname = seqname,
-        self.source = source,
-        self.feature = feature,
-        self.start = start,
-        self.end = end,
-        self.score = score,
-        self.strand = strand,
-        self.frame = frame,
-        self.attribute = attribute,
+        self.seqname = seqname
+        self.source = source
+        self.feature = feature
+        self.start = start
+        self.end = end
+        self.score = score
+        self.strand = strand
+        self.frame = frame
+        self.attribute = attribute
         self.gtf_id = gtf_id
 
 class BedValue(db.Model):
