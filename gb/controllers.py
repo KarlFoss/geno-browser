@@ -29,6 +29,15 @@ def favicon():
 def page_not_found(e):
     return redirect('/static/index.html')
 
+@auth.verify_password
+def verify_password(token, password):
+    user = User.verify_token(token)
+    if not user:
+        return False
+
+    g.user_id = user.id
+    return True
+
 def check_headers(func):
     @wraps(func)
     def decorated_function(*args, **kwargs):   
