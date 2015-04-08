@@ -17,9 +17,7 @@ def get_token():
     username = request.headers.get("username")
     password = request.headers.get("password")
 
-    user = session.query(User).filter("")
-
-    token = g.user.generate_auth_token()
+    token = username #g.user.generate_auth_token()
     return jsonify({ 'token': token.decode('ascii') })
 
 @app.route('/favicon.ico')
@@ -29,7 +27,7 @@ def favicon():
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return render_template('404.html'), 404
+    return redirect('/static/index.html')
 
 def check_headers(func):
     @wraps(func)

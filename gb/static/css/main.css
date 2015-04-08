@@ -1,5 +1,23 @@
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
 body {
     background-color: #CCCCCC;
+}
+
+.navbar-absolute {
+    left: 0;
+    right: 0;
+    position: absolute;
+    margin: 0;
+
+    z-index: 1;
+}
+
+.navbar-absolute + div {
+    padding-top: 62px !important;
 }
 
 #navbar-menu > .row {
@@ -37,6 +55,10 @@ a.action-item {
     text-align: center;
     background-color: #FCFCFC;
     padding: 8px 0;
+}
+
+#data-viewer {
+    padding: 10px;
 }
 
 .plot {

@@ -1,4 +1,6 @@
-from gb import db, session
+from gb import app, db, session
+from passlib.apps import custom_app_context as pwd_context
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
 class Wig(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -120,17 +122,26 @@ class BasePair(db.Model):
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String)
+    username = db.Column(db.String, index = True)
+    password_hash = db.Column(db.String(128))
     email = db.Column(db.String)
 
-    def __init__(self,username,email):
+    def __init__(self, username, password, email):
         self.username = username
+        self.hash_password(password);
         self.email = email
 
     def __repr__(self):
         return self.username
 
-    def generate_token(self):
+    def hash_password(self, password):
+        self.password_hash = pwd_context.encrypt(password)
+
+    def verify_password(self, password):
+        return pwd_context.verify(password, self.password_hash)
+
+    def generate_token(self, expiration = 600):
+        s = Serializer(app.config['SECRET_KEY'], expires_in = expiration);
         return self.user_name
 
 class Track(db.Model):

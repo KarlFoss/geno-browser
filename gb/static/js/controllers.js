@@ -44,13 +44,15 @@
 
     }]);
 
-    genoBrowserControllers.controller('navBarController', ['$scope', 'userService', 'Users',
-        function($scope, userService, Users) {
+    genoBrowserControllers.controller('navBarController', ['$scope', 'userService', 'Token',
+        function($scope, userService, Token) {
             $scope.user = userService;
 
             $scope.login = function() {
-                Users.get(function(response) {
-
+                Token($scope.user.username, $scope.user.password).get(function(response) {
+                    console.log(response);
+                }, function(error) {
+                    console.log(error);
                 });
             }
         }]);
@@ -65,66 +67,23 @@
             }
         }]);
 
-    genoBrowserControllers.controller('navMenuController', ['$scope', 'Tracks',
-      function ($scope, Tracks) {
+    genoBrowserControllers.controller('navMenuController', ['$scope', 'Views', 'Tracks',
+      function ($scope, Views, Tracks) {
 
-          $scope.files = [
-            {'name': 'fasta_file',
-             'type': 'fa'},
-            {'name': 'wiggity_wack don\'t talk back',
-             'type': 'wig'},
-            {'name': 'beddy_byeeeeee',
-             'type': 'bed'},
-            {'name': 'fasta_file',
-             'type': 'fa'},
-            {'name': 'wiggity_wack',
-             'type': 'wig'},
-            {'name': 'beddy_byeeeeee',
-             'type': 'bed'},
-            {'name': 'fasta_file',
-             'type': 'fa'},
-            {'name': 'wiggity_wack',
-             'type': 'wig'},
-            {'name': 'beddy_byeeeeee',
-             'type': 'bed'}
-          ];
-
-          $scope.File = {
-              add: function() {
-
-              },
-
-              select: function(file) {
-                $scope.views = [
-                    {'name': 'my view'},
-                    {'name': 'your view'},
-                    {'name': 'our view'},
-                    {'name': 'a view?'}
-                ];
-              },
-
-              edit: function(file) {
-
-              },
-
-              delete: function(file) {
-
-              }
-          };
+          // Initialize menu with all user's views
+          Views.query(function(response) {
+              $scope.views = response.views;
+          });
 
           $scope.View = {
-              add: function() {
-
-              },
-
               select: function(view) {
-                  Tracks.query(function(response) {
-                      $scope.tracks = response.tracks;
+                  // Clear tracks
+                  $scope.tracks = [];
+
+                  // Get tracks associated with selected view
+                  angular.forEach(view.track_ids, function(value) {
+                      $scope.tracks.push(Tracks.get({track_id:value}));
                   });
-              },
-
-              edit: function(view) {
-
               },
 
               delete: function(view) {
@@ -133,15 +92,7 @@
           };
 
           $scope.Track = {
-              add: function() {
-
-              },
-
               select: function(track) {
-
-              },
-
-              edit: function(track) {
 
               },
 
@@ -150,4 +101,26 @@
               }
           };
       }]);
+
+    genoBrowserControllers.controller('addViewController', ['$scope', 'Views', 'Tracks',
+        function($scope, Views, Tracks) {
+            // Structure of view
+            $scope.view = {
+                view_name: '',
+                track_ids: []
+            };
+
+            // All tracks associated with user
+            Tracks.query(function(response) {
+                $scope.tracks = response.tracks;
+            });
+
+            // Add View
+            $scope.View = {
+                add: function(view) {
+                    view.track_ids = [view.track_ids.track_id];
+                    Views.save(view);
+                }
+            };
+        }]);
 })();
