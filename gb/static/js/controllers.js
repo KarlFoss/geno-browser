@@ -79,7 +79,6 @@
           // Initialize menu with all user's views
           Views.query(function(response) {
               $scope.views = response.views;
-              console.log($scope.views);
           });
 
           $scope.View = {
@@ -94,8 +93,7 @@
               },
 
               show: function(view) {
-                  console.log(view);
-                  //var path = '/view/' + view.id;
+                  var path = '/view/' + 'default';
               },
 
               delete: function(view) {
