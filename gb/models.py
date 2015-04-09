@@ -202,7 +202,7 @@ class View(db.Model):
             'view_name' : self.view_name,
             'view_tracks' : view_tracks,
             'user_id' : self.user_id,
-            'view_id' : self.view_id
+            'view_id' : self.id
         }
 
     def to_json(self):
@@ -213,7 +213,7 @@ class View(db.Model):
             'view_name' : self.view_name,
             'track_ids' : track_ids,
             'user_id' : self.user_id,
-            'view_id' : self.view_id
+            'view_id' : self.id
         }
 
 class ViewTrack(db.Model):
