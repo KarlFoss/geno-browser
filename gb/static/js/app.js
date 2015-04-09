@@ -10,6 +10,22 @@
         'genoBrowserDirectives'
     ]);
 
+    genoBrowser.config(['$routeProvider',
+        function($routeProvider) {
+            $routeProvider.
+                when('/view', {
+                    templateUrl: 'partials/view-frame.html',
+                    controller: 'ViewController'
+                }).
+                when('/view/:viewId', {
+                    templateUrl: 'partials/view-frame.html',
+                    controller: 'ViewController'
+                }).
+                otherwise({
+                    redirectTo: '/view'
+                });
+        }]);
+
     genoBrowser.config(function($httpProvider) {
         $httpProvider.interceptors.push(['$q', '$location', 'TokenHandler',
             function($q, $location, TokenHandler) {

@@ -59,7 +59,7 @@
                         </h4>
                         <div class="list-group">
                             <div ng-repeat="view in views" ng-click="View.select(view)" href="#" class="list-group-item">
-                                <input type="radio" name="selected-view">
+                                <span class="glyphicon glyphicon-star-empty"></span>
                                 <span>{{view.view_name}}</span>
                                 <a href="#" class="action-item pull-right" ng-click="View.delete(view); $event.stopPropagation()">
                                     <span class="glyphicon glyphicon-remove"></span>
@@ -105,8 +105,7 @@
         </div>
     </nav>
 
-    <div id="data-viewer" class="container">
-        <gb-wig-plot ng-controller="ExampleWigController"></gb-wig-plot>
+    <div ng-view>
     </div>
 
     <footer class="footer navbar-fixed-bottom">
