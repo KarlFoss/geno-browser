@@ -2,3 +2,7 @@ db.sh
 *.pyc
 gb/static/lib/
 gb/static/node_modules/
+.idea/
+flask/
+geno-browser.iml
+run.sh

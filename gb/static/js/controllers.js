@@ -94,7 +94,7 @@
 
               show: function($event, view) {
                   var span = $event.target;
-                  var path = '/view/' + '1';
+                  var path = '/view/' + view.view_id;
 
                   $('span.glyphicon.glyphicon-star').removeClass('glyphicon-star').addClass('glyphicon-star-empty');
                   $(span).removeClass('glyphicon-star-empty').addClass('glyphicon-star');
