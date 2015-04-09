@@ -1,8 +1,1 @@
-*.pyc
-flask/
-geno-browser.iml
-.idea/
-run.sh
-gb/.curl
-gb/static/lib/
-gb/static/node_modules/
+db.sh
