@@ -135,7 +135,7 @@ def new_wigs(wig_file):
                 return jsonify(response="Wig format incorrect"),404
 
             # get the values from the header
-            header_dict = parse_wig_header(line)
+            header_dict = parse_header(line)
 
             # commit the bases from the the previous wig
             if current_data:
