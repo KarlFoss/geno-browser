@@ -74,6 +74,7 @@
           // Initialize menu with all user's views
           Views.query(function(response) {
               $scope.views = response.views;
+              console.log($scope.views);
           });
 
           $scope.View = {
@@ -85,6 +86,11 @@
                   angular.forEach(view.track_ids, function(value) {
                       $scope.tracks.push(Tracks.get({track_id:value}));
                   });
+              },
+
+              show: function(view) {
+                  console.log(view);
+                  //var path = '/view/' + view.id;
               },
 
               delete: function(view) {
