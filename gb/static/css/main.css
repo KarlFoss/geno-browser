@@ -51,6 +51,10 @@ a.action-item {
     padding-left: 5px;
 }
 
+a[ng-click], a[data-toggle] {
+    cursor: pointer;
+}
+
 .footer {
     text-align: center;
     background-color: #FCFCFC;

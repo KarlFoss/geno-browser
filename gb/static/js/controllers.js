@@ -3,8 +3,8 @@
 
     var genoBrowserControllers = angular.module('genoBrowserControllers', ['genoBrowserServices']);
 
-    genoBrowserControllers.controller('ViewController', ['$scope',
-        function($scope) {
+    genoBrowserControllers.controller('ViewController', ['$scope', '$routeParams',
+        function($scope, $routeParams) {
 
         }]);
 
@@ -73,8 +73,8 @@
             }
         }]);
 
-    genoBrowserControllers.controller('navMenuController', ['$scope', 'Views', 'Tracks',
-      function ($scope, Views, Tracks) {
+    genoBrowserControllers.controller('navMenuController', ['$scope', '$location', '$routeParams', 'Views', 'Tracks',
+      function ($scope, $location, $routeParams, Views, Tracks) {
 
           // Initialize menu with all user's views
           Views.query(function(response) {
@@ -93,7 +93,8 @@
               },
 
               show: function(view) {
-                  var path = '/view/' + 'default';
+                  var path = '/view/' + '1';
+                  $location.path(path);
               },
 
               delete: function(view) {

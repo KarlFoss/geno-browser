@@ -31,7 +31,7 @@
     <nav class="navbar navbar-default navbar-absolute">
         <div class="container-fluid" ng-controller="navBarController">
             <div class="navbar-header">
-                <a class="navbar-brand" href="#" data-toggle="collapse" data-target="#navbar-menu">
+                <a class="navbar-brand" data-toggle="collapse" data-target="#navbar-menu">
                     <span class="glyphicon glyphicon-cog" aria-hidden="true" ></span>
                 </a>
                 <a class="navbar-brand" href="/">Geno-Browser</a>
@@ -54,17 +54,17 @@
                         <h4>
                             <span>Views</span>
                             <small class="pull-right">
-                                <a href="#" data-toggle="modal" data-target="#viewModal"><span class="glyphicon glyphicon-plus"></span></a>
+                                <a data-toggle="modal" data-target="#viewModal"><span class="glyphicon glyphicon-plus"></span></a>
                             </small>
                         </h4>
                         <div class="list-group">
-                            <div ng-repeat="view in views" ng-click="View.select(view)" href="#" class="list-group-item">
+                            <div ng-repeat="view in views" ng-click="View.select(view)" class="list-group-item">
                                 <span class="glyphicon glyphicon-star-empty" ng-click="View.show(view); $event.stopPropagation()"></span>
                                 <span>{{view.view_name}}</span>
-                                <a href="#" class="action-item pull-right" ng-click="View.delete(view); $event.stopPropagation()">
+                                <a class="action-item pull-right" ng-click="View.delete(view); $event.stopPropagation()">
                                     <span class="glyphicon glyphicon-remove"></span>
                                 </a>
-                                <a href="#" class="action-item pull-right" ng-click="View.edit(view); $event.stopPropagation()">
+                                <a class="action-item pull-right" ng-click="View.edit(view); $event.stopPropagation()">
                                     <span class="glyphicon glyphicon-edit"></span>
                                 </a>
                             </div>
@@ -76,16 +76,16 @@
                         <h4>
                             <span>Tracks</span>
                             <small class="pull-right">
-                                <a href="#" data-toggle="modal" data-target="#trackModal"><span class="glyphicon glyphicon-plus"></span></a>
+                                <a data-toggle="modal" data-target="#trackModal"><span class="glyphicon glyphicon-plus"></span></a>
                             </small>
                         </h4>
                         <div class="list-group">
-                            <div ng-repeat="track in tracks" ng-click="Track.select(track)" href="#" class="list-group-item">
+                            <div ng-repeat="track in tracks" ng-click="Track.select(track)" class="list-group-item">
                                 <span>{{track.track_name}}</span>
-                                <a href="#" class="action-item pull-right" ng-click="Track.delete(track); $event.stopPropagation()">
+                                <a class="action-item pull-right" ng-click="Track.delete(track); $event.stopPropagation()">
                                     <span class="glyphicon glyphicon-remove"></span>
                                 </a>
-                                <a href="#" class="action-item pull-right" ng-click="Track.edit(track); $event.stopPropagation()">
+                                <a class="action-item pull-right" ng-click="Track.edit(track); $event.stopPropagation()">
                                     <span class="glyphicon glyphicon-edit"></span>
                                 </a>
                             </div>
