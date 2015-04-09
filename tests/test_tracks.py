@@ -10,7 +10,7 @@ logging.basicConfig()
 LOG = logging.getLogger(__name__)
 
 class TrackTestCase(TestCase):
-    user_header = {"X-Userid":1}
+    user_header = [('Authorization','Basic a3lsZTpTRUNSRVQ=')]
 
     def create_app(self):
         app = Flask(__name__)
@@ -77,7 +77,7 @@ class TrackTestCase(TestCase):
 
     def testGetNonexistantTrack(self):
         response = self.app.get('/api/tracks/1',headers=self.user_header)
-        self.assert404(response)
+        self.assert401(response)
 
     def testPutTrack(self):
         LOG.info("Testing track endoint /api/tracks/<track_id> with PUT")
@@ -116,7 +116,7 @@ class TrackTestCase(TestCase):
 
         # Check if we can still GET
         response_get = self.app.get('/api/tracks/{}'.format(track_id))
-        self.assert404(response_get)
+        self.assert401(response_get)
 
     def createTestUser(self):
         response = self.app.post('/api/users', 

@@ -10,7 +10,7 @@ logging.basicConfig()
 LOG = logging.getLogger(__name__)
 
 class TrackTestCase(TestCase):
-    user_header = {"X-Userid":1}
+    user_header = [('Authorization','Basic a3lsZTpTRUNSRVQ=')]
 
     def create_app(self):
         app = Flask(__name__)
