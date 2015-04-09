@@ -3,6 +3,11 @@
 
     var genoBrowserControllers = angular.module('genoBrowserControllers', ['genoBrowserServices']);
 
+    genoBrowserControllers.controller('ViewController', ['$scope',
+        function($scope) {
+
+        }]);
+
     genoBrowserControllers.controller('BoundsController', ['$scope','PlotBounds', function($scope, PlotBounds){
         $scope.bounds = PlotBounds;
     }]);
