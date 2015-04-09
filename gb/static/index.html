@@ -59,7 +59,7 @@
                         </h4>
                         <div class="list-group">
                             <div ng-repeat="view in views" ng-click="View.select(view)" class="list-group-item">
-                                <span class="glyphicon glyphicon-star-empty" ng-click="View.show(view); $event.stopPropagation()"></span>
+                                <span class="glyphicon glyphicon-star-empty" ng-click="View.show($event, view); $event.stopPropagation()"></span>
                                 <span>{{view.view_name}}</span>
                                 <a class="action-item pull-right" ng-click="View.delete(view); $event.stopPropagation()">
                                     <span class="glyphicon glyphicon-remove"></span>
