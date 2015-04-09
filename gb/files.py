@@ -1,9 +1,7 @@
 from flask import Flask, request, Response, jsonify, g
 from gb import app, auth, db, session
 from models import *
-import pandas as pd
 import re
-import numpy
 
 @app.route('/api/files/',methods=['POST'])
 @auth.login_required
@@ -206,3 +204,42 @@ def new_wigs(wig_file):
     session.add_all(current_data)
     session.commit()
     return wig_ids
+    
+def new_gtf(gtf_file):
+    gtf_fields = ['seqname','source','feature','start','end','score','strand','frame','attribute']
+
+    # create the base record
+    gtf = Gtf()
+    session.add(gtf)
+    session.commit()
+
+    gtf_values = []
+    for line in gtf_file:
+
+        gtf_dict = dict(zip(gtf_fields, line.split("\t")))
+        gtf_dict['gtf_id'] = gtf.id
+
+        # handle the '.' in score and frame
+        if gtf_dict['score'] == '.':
+            gtf_dict['score'] = 0.0
+        if gtf_dict['frame'] == '.':
+            gtf_dict['frame'] = 0
+
+        # create each value record
+        gtf_val = GtfValue(
+            seqname = gtf_dict['seqname'],
+            source = gtf_dict['source'],
+            feature = gtf_dict['feature'],
+            start = int(gtf_dict['start']),
+            end = int(gtf_dict['end']),
+            score = gtf_dict['score'],
+            strand = gtf_dict['strand'],
+            frame = int(gtf_dict['frame']),
+            attribute = gtf_dict['attribute'],
+            gtf_id = gtf_dict['gtf_id']
+        )
+        gtf_values.append(gtf_val)
+
+    session.add_all(gtf_values)
+    session.commit()
+    return gtf.id
