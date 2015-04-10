@@ -118,11 +118,11 @@
                         <div class="input-group">
                             <span>Range: </span>
                             <div class="form-group">
-                                <input type="number" ng-model="bounds[0]" class="form-control" id="range-min" step="1000" placeholder="Position">
+                                <input type="number" ng-model="bounds[0]" class="form-control" id="range-min" min="0" ng-attr-max="{{bounds[1]}}" step="1000" placeholder="Position">
                             </div>
                             <span> thru </span>
                             <div class="form-group">
-                                <input type="number" ng-model="bounds[1]" class="form-control" id="range-max" step="1000" placeholder="Position">
+                                <input type="number" ng-model="bounds[1]" class="form-control" id="range-max" step="1000" min="0" placeholder="Position">
                             </div>
                         </div>
                     </form>
