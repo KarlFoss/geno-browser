@@ -72,64 +72,22 @@
                 Users.save($scope.user);
             }
         }]);
-
-    genoBrowserControllers.controller('navMenuController', ['$scope', '$location', '$routeParams', 'Views', 'Tracks',
-      function ($scope, $location, $routeParams, Views, Tracks) {
-
-
-          $scope.views = Views.query();
-          //$scope.tracks = Tracks.query();
-          //    select: function(view) {
-          //        // Clear tracks
-          //        $scope.tracks = [];
-          //
-          //        // Get tracks associated with selected view
-          //        angular.forEach(view.track_ids, function(value) {
-          //            $scope.tracks.push(Tracks.get({track_id:value}));
-          //        });
-          //    },
-          //
-          //    show: function($event, view) {
-          //        var span = $event.target;
-          //        var path = '/view/' + view.view_id;
-          //
-          //        $('span.glyphicon.glyphicon-star').removeClass('glyphicon-star').addClass('glyphicon-star-empty');
-          //        $(span).removeClass('glyphicon-star-empty').addClass('glyphicon-star');
-          //
-          //        $location.path(path);
-          //    },
-          //
-          //    delete: function(view) {
-          //
-          //    }
-          //};
-          //
-          //$scope.Track = {
-          //    select: function(track) {
-          //
-          //    },
-          //
-          //    delete: function(track) {
-          //
-          //    }
-          //};
-      }]);
-
-    genoBrowserControllers.controller('addViewController', ['$scope', 'Views', 'Tracks',
-        function($scope, Views, Tracks) {
-            // Structure of view
-            $scope.view = {
-                view_name: '',
-                track_ids: []
-            };
-
-            // All tracks associated with user
-            $scope.tracks = Tracks.query();
-
-            // Add View
-            $scope.submit = function(view) {
-                view.track_ids = [view.track_ids.track_id];
-                Views.save(view);
-            };
-        }]);
+    //
+    //genoBrowserControllers.controller('addViewController', ['$scope', 'Views', 'Tracks',
+    //    function($scope, Views, Tracks) {
+    //        // Structure of view
+    //        $scope.view = {
+    //            view_name: '',
+    //            track_ids: []
+    //        };
+    //
+    //        // All tracks associated with user
+    //        $scope.tracks = Tracks.query();
+    //
+    //        // Add View
+    //        $scope.submit = function(view) {
+    //            view.track_ids = [view.track_ids.track_id];
+    //            Views.save(view);
+    //        };
+    //    }]);
 })();

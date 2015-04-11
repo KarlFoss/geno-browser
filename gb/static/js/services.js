@@ -45,8 +45,9 @@
         return $resource('/api/tracks/:track_id', {track_id: '@track_id'}, {
             query: { method:'GET',
                 isArray: true,
-                transformResponse:[angular.fromJson, function(data){console.log(data); return data.tracks;}]
+                transformResponse:[angular.fromJson, function(data){console.log(data); return data.tracks;}],
             },
+            get: { method:'GET' },
             update: { method:'PUT' },
             save: { method: 'POST'},
             delete: {method: 'DELETE'}

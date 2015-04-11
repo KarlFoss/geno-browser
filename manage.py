@@ -61,6 +61,9 @@ def seed_db():
         session.add(fasta_track)
         session.commit()
 
+        db.session.add(ViewTrack(fasta_track.id,view.id))
+        db.session.commit()
+
 
 def main():
     parser = argparse.ArgumentParser(description='Manage this Flask application.')

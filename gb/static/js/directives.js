@@ -27,56 +27,54 @@
         };
     }]);
 
-    genoBrowserDirectives.directive('viewList',['$location', 'Views', function($location, Views){
+    genoBrowserDirectives.directive('viewList',['$location', 'Views', 'Tracks', function($location, Views, Tracks){
         return {
             restrict: 'E',
             templateUrl: 'partials/views.html',
-            controller: function () {
-                this.views = Views.query();
-                this.selected_view = null;
-                this.loaded_view = parseInt($location.path().slice(-1)[0]);
-                this.selectView = function (view) {
-                    this.selected_view = view;
-                    var tracks = new Array(view.track_ids.length);
-                    view.track_ids.forEach(function(element, index){
-                        tracks[index] = Tracks.get({track_id:element.track_id});
-                    });
-                    this.tracks = tracks;
-                    console.log(tracks);
-                };
-                this.isSelected = function (view) {
-                    return this.selected_view === view;
+            link: function (scope, element, attrs) {
+                var location_view_id = parseInt($location.path().slice(-1)[0]);
+                scope.views = Views.query(function(views){
+                    console.log(views);
+                    var loaded_view = views.filter(function(element){
+                        return element.view_id === location_view_id;
+                    })[0];
+                    console.log(loaded_view);
+                    scope.loaded_view = loaded_view;
+                });
+                scope.selected_view = null;
+
+                scope.selectView = function (view) {
+                    scope.selected_view = view;
+                    scope.track_ids = view.track_ids;
                 };
 
-                this.isLoaded = function (view) {
-                    return view.view_id === this.loaded_view;
+                scope.isSelectedView = function (view) {
+                    return scope.selected_view === view;
                 };
 
-                this.remove = function (view) {
-                    view.$delete();
-                    var scope = this;
-                    var views = Views.query({}, function (success) {
-                        console.log('success');
-                        scope.views = views;
-                    }, function(response){
-                        if(response.status == 404) {
-                            scope.views = [];
+                scope.isLoaded = function (view) {
+                    return view === scope.loaded_view;
+                };
+
+                scope.remove = function (view) {
+                    view.$delete(function() {
+                        console.log('Running delete');
+                        scope.views = Views.query();
+                        if(scope.isSelectedView(view)){
+                            scope.track_ids = [];
                         }
                     });
 
                 };
-                this.edit = function(view){
+                scope.edit = function(view){
 
                 };
-                this.load = function (view) {
+                scope.load = function (view) {
                     $location.path('/view/' + view.view_id);
-                    this.loaded_view = parseInt(view.view_id);
+                    scope.loaded_view = view;
                 };
             },
-            scope:{
-                onCreate:'&'
-            },
-            controllerAs:"viewList"
+            scope:{}
         };
     }]);
 
@@ -91,23 +89,43 @@
        return {
            restrict: 'E',
            templateUrl: 'partials/tracks.html',
-           controller: function(){
-               this.selected_track = null;
-               this.selectTrack = function(track){
-                   this.selected_track = track.track_id;
-               };
-               this.isSelected = function(track){
-                   return track === selectedTrack;
-               }
-               this.edit = function(track){
+           link: function(scope,element,attr){
+               scope.selected_track = null;
+               scope.$watch('track_ids',function(newValue){
+                   if(newValue) {
+                       scope.selected_track = null;
+                       scope.tracks = [];
+                       newValue.forEach(function (track_id, index) {
+                           Tracks.get({track_id: track_id},function(data){
+                               scope.tracks.push(data);
+                           }, function(response){
+                               if(response.status === 404){
 
-               }
-               this.delete = function(track){
-                   track.$delete();
-               }
+                               }
+                           });
+                       });
+                   }
+               }, true);
+               scope.selectTrack = function(track){
+                   scope.selected_track = track;
+               };
+               scope.isSelectedTrack = function(track){
+                   return track === scope.selected_track;
+               };
+               scope.edit = function(track){
+
+               };
+               scope.delete = function(track){
+                   track.$delete(function() {
+                       scope.tracks.splice(scope.tracks.indexOf(track));
+                       if(scope.isSelectedTrack(track)){
+                           scope.selected_track = null;
+                       }
+                   });
+               };
            },
-           controllerAs:'trackList'
-       }
+           scope:true
+       };
     }]);
 
 })();

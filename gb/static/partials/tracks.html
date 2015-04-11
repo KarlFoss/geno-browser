@@ -7,15 +7,27 @@
             </small>
         </h4>
         <div class="list-group">
-            <div ng-repeat="track in tracks" ng-click="trackList.selectTrack(track)" ng-class="{active:trackList.isSelected(track)}" class="list-group-item">
+            <div ng-repeat="track in tracks" ng-click="selectTrack(track)" ng-class="{active:isSelectedTrack(track)}" class="list-group-item">
                 <span>{{track.track_name}}</span>
-                <a class="action-item pull-right" ng-click="trackList.deleteTrack(track)">
+                <a class="action-item pull-right" ng-click="delete(track)">
                     <span class="glyphicon glyphicon-remove"></span>
                 </a>
-                <a class="action-item pull-right" ng-click="trackList.edit(track)">
+                <a class="action-item pull-right" ng-click="edit(track)">
                     <span class="glyphicon glyphicon-edit"></span>
                 </a>
             </div>
+        </div>
+    </div>
+</div>
+<div class="col-md-6" ng-hide="selected_track==null">
+    <div class="well well-sm">
+        <h4>
+            <span>Track Information</span>
+        </h4>
+        <p>Name: {{selected_track.track_name}}<br/>
+        Datatype: {{selected_track.data_type}}<br/>
+        Filename: {{selected_track.file_name}}</p>
+        <div class="list-group">
         </div>
     </div>
 </div>
