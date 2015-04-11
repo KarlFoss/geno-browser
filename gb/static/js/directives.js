@@ -78,6 +78,10 @@
                             view.$update();
                         })
                 };
+                scope.removeTrackFromView = function(track){
+                    scope.track_ids.splice(scope.track_ids.indexOf(track.track_id),1);
+                    scope.selected_view.$update();
+                };
                 scope.load = function (view) {
                     $location.path('/view/' + view.view_id);
                     scope.loaded_view = view;

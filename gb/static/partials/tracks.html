@@ -9,11 +9,14 @@
         <div class="list-group">
             <div ng-repeat="track in tracks" ng-click="selectTrack(track)" ng-class="{active:isSelectedTrack(track)}" class="list-group-item">
                 <span>{{track.track_name}}</span>
-                <a class="action-item pull-right" ng-click="delete(track)">
+                <a class="action-item pull-right" ng-click="removeTrackFromView(track)">
                     <span class="glyphicon glyphicon-remove"></span>
                 </a>
                 <a class="action-item pull-right" ng-click="edit(track)">
                     <span class="glyphicon glyphicon-edit"></span>
+                </a>
+                <a class="action-item pull-right" ng-click="delete(track)">
+                    <span class="glyphicon glyphicon-trash"></span>
                 </a>
             </div>
         </div>
