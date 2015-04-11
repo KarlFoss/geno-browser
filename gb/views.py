@@ -102,15 +102,16 @@ def update_view(view_id):
         view.view_name = view_name
 
     # update the viewtracks if given
-    track_ids = set(json.get('track_ids',[]))
-    if track_ids:
+    track_ids = json.get('track_ids')
+    if track_ids is not None:
+        track_ids = set(track_ids)
         existing_ids = set(view_track.track_id for view_track in view.view_tracks)
         for new_track_id in track_ids.difference(existing_ids):
             app.logger.warning('Adding track {}'.format(new_track_id))
             session.add(ViewTrack(track_id=new_track_id, view_id=view.id))
         for stale_track_id in existing_ids.difference(track_ids):
             app.logger.warning('Removing track {}'.format(stale_track_id))
-            session.delete(stale_track_id)
+            session.delete(session.query(ViewTrack).filter_by(track_id=stale_track_id,view_id=view.id).first())
         
         session.commit()
     return jsonify(view.to_json())
