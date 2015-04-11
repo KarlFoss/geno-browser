@@ -3,7 +3,7 @@
     <h4 class="modal-title" id="viewModalLabel">Add New View</h4>
 </div>
 <div class="modal-body">
-    <form name="addViewForm" ng-click="addViewForm.$valid && $close({initial_track:new_initial_track, view_name:new_view_name})" novalidate>
+    <form name="addViewForm" ng-submit="addViewForm.$valid && $close({initial_track:new_initial_track, view_name:new_view_name})" novalidate>
         <div class="form-group">
             <label for="view-name">View Name</label>
             <input type="text" class="form-control" ng-model="new_view_name" id="view-name" placeholder="View Name" required>

@@ -7,7 +7,7 @@
     genoBrowserDirectives.directive('gbWigPlot', function(){
         return {
             restrict:'E',
-            templateUrl:'partials/wig-plot.html',
+            templateUrl:'partials/wig-plot.html'
         };
     });
 
@@ -90,7 +90,8 @@
                         templateUrl:'partials/add_view_modal.html',
                         scope:scope
                     }).result.then(function(result){
-                            console.log(result);
+                            Views.create({track_ids:[result.initial_track.track_id], view_name:result.view_name});
+                            scope.views = Views.query();
                         });
                 }
             },
