@@ -42,14 +42,14 @@
 
     genoBrowserServices.factory('Tracks', ['$resource',
       function($resource) {
-        return $resource('/api/tracks/:track_id', {}, {
-            query: { isArray: false },
+        return $resource('/api/tracks/:track_id', {track_id: '@track_id'}, {
+            query: { method:'GET',
+                isArray: true,
+                transformResponse:[angular.fromJson, function(data){console.log(data); return data.tracks;}]
+            },
             update: { method:'PUT' },
-            save: {
-                method: 'POST',
-                transformRequest: angular.identity,
-                headers: {'Content-Type': undefined}
-            }
+            save: { method: 'POST'},
+            delete: {method: 'DELETE'}
         });
       }]);
 
@@ -63,9 +63,15 @@
 
     genoBrowserServices.factory('Views', ['$resource',
       function($resource) {
-        return $resource('/api/views/:view_id', {}, {
-            query: { isArray: false },
-            update: { method:'PUT' }
+        return $resource('/api/views/:view_id', {view_id: '@view_id'}, {
+            query: { method:'GET',
+                isArray: true,
+                transformResponse:[angular.fromJson, function(data){return data.views;}]
+            },
+            get:   { method:'GET'},
+            create: { method:'POST'},
+            update: { method:'PUT' },
+            delete: { method: 'DELETE'}
         });
       }]);
 

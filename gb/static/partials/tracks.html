@@ -1,0 +1,21 @@
+<div class="col-md-3">
+    <div class="well well-sm">
+        <h4>
+            <span>Tracks</span>
+            <small class="pull-right">
+                <a data-toggle="modal" data-target="#trackModal"><span class="glyphicon glyphicon-plus"></span></a>
+            </small>
+        </h4>
+        <div class="list-group">
+            <div ng-repeat="track in tracks" ng-click="trackList.selectTrack(track)" ng-class="{active:trackList.isSelected(track)}" class="list-group-item">
+                <span>{{track.track_name}}</span>
+                <a class="action-item pull-right" ng-click="trackList.deleteTrack(track)">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </a>
+                <a class="action-item pull-right" ng-click="trackList.edit(track)">
+                    <span class="glyphicon glyphicon-edit"></span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

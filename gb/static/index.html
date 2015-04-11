@@ -49,49 +49,8 @@
         </div>
         <div id="navbar-menu" class="container-fluid collapse" ng-controller="navMenuController">
             <div class="row">
-                <div class="col-md-3">
-                    <div class="well well-sm">
-                        <h4>
-                            <span>Views</span>
-                            <small class="pull-right">
-                                <a data-toggle="modal" data-target="#viewModal"><span class="glyphicon glyphicon-plus"></span></a>
-                            </small>
-                        </h4>
-                        <div class="list-group">
-                            <div ng-repeat="view in views" ng-click="View.select(view)" class="list-group-item">
-                                <span class="glyphicon glyphicon-star-empty" ng-click="View.show($event, view); $event.stopPropagation()"></span>
-                                <span>{{view.view_name}}</span>
-                                <a class="action-item pull-right" ng-click="View.delete(view); $event.stopPropagation()">
-                                    <span class="glyphicon glyphicon-remove"></span>
-                                </a>
-                                <a class="action-item pull-right" ng-click="View.edit(view); $event.stopPropagation()">
-                                    <span class="glyphicon glyphicon-edit"></span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="well well-sm">
-                        <h4>
-                            <span>Tracks</span>
-                            <small class="pull-right">
-                                <a data-toggle="modal" data-target="#trackModal"><span class="glyphicon glyphicon-plus"></span></a>
-                            </small>
-                        </h4>
-                        <div class="list-group">
-                            <div ng-repeat="track in tracks" ng-click="Track.select(track)" class="list-group-item">
-                                <span>{{track.track_name}}</span>
-                                <a class="action-item pull-right" ng-click="Track.delete(track); $event.stopPropagation()">
-                                    <span class="glyphicon glyphicon-remove"></span>
-                                </a>
-                                <a class="action-item pull-right" ng-click="Track.edit(track); $event.stopPropagation()">
-                                    <span class="glyphicon glyphicon-edit"></span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <view-list></view-list>
+
                 <div class="col-md-6">
                     <div class="well well-sm">
                         <h4>
@@ -142,7 +101,6 @@
     </footer>
 
 	<ng-include src="'partials/register-modal.html'"></ng-include>
-    <ng-include src="'partials/view-modal.html'"></ng-include>
     <ng-include src="'partials/track-modal.html'"></ng-include>
 </body>
 </html>
