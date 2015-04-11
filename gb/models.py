@@ -187,7 +187,6 @@ class Track(db.Model):
 class View(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     view_name = db.Column(db.String)
-    view_tracks = db.relationship('ViewTrack', backref="view")
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __init__(self, view_name, user_id):
@@ -220,6 +219,8 @@ class ViewTrack(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     track_id = db.Column(db.Integer, db.ForeignKey('track.id'))
     view_id = db.Column(db.Integer, db.ForeignKey('view.id'))
+    view = db.relationship('View', backref='view_tracks')
+    track = db.relationship('Track', backref='view_tracks')
 
     def __init__(self, track_id, view_id):
         self.track_id = track_id
