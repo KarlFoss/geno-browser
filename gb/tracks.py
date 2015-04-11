@@ -11,7 +11,7 @@ def get_all_tracks():
     tracks = session.query(Track).filter_by(user_id=user_id).all()
 
     if not tracks:
-        return jsonify(response="user {} has no tracks").format(user_id),404
+        return jsonify(response="user {} has no tracks".format(user_id)),404
 
     return jsonify(tracks=[ track.to_json() for track in tracks])
 
