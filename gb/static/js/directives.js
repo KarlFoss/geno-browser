@@ -2,7 +2,7 @@
 'use strict';
 
 /* Directives */
-    var genoBrowserDirectives = angular.module('genoBrowserDirectives', ['genoBrowserControllers','genoBrowserServices']);
+    var genoBrowserDirectives = angular.module('genoBrowserDirectives', ['genoBrowserControllers','genoBrowserServices', 'ui.bootstrap']);
 
     genoBrowserDirectives.directive('gbWigPlot', function(){
         return {
@@ -27,18 +27,16 @@
         };
     }]);
 
-    genoBrowserDirectives.directive('viewList',['$location', 'Views', 'Tracks', function($location, Views, Tracks){
+    genoBrowserDirectives.directive('viewList',['$location', 'Views', 'Tracks', '$modal', function($location, Views, Tracks, $modal){
         return {
             restrict: 'E',
             templateUrl: 'partials/views.html',
             link: function (scope, element, attrs) {
                 var location_view_id = parseInt($location.path().slice(-1)[0]);
                 scope.views = Views.query(function(views){
-                    console.log(views);
                     var loaded_view = views.filter(function(element){
                         return element.view_id === location_view_id;
                     })[0];
-                    console.log(loaded_view);
                     scope.loaded_view = loaded_view;
                 });
                 scope.selected_view = null;
@@ -56,7 +54,7 @@
                     return view === scope.loaded_view;
                 };
 
-                scope.remove = function (view) {
+                scope.removeView = function (view) {
                     view.$delete(function() {
                         console.log('Running delete');
                         scope.views = Views.query();
@@ -66,24 +64,39 @@
                     });
 
                 };
-                scope.edit = function(view){
-
+                scope.editView = function(view){
+                    //scope.views.push();
+                    scope.selectView(view);
+                    scope.edit_view_name = view.view_name;
+                    scope.all_tracks = Tracks.query();
+                    $modal.open({
+                        templateUrl:'partials/edit_view_modal.html',
+                        scope:scope
+                    }).result.then(function(result){
+                            view.view_name = result.view_name;
+                            view.track_ids = [result.initial_track.track_id];
+                            view.$update();
+                        })
                 };
                 scope.load = function (view) {
                     $location.path('/view/' + view.view_id);
                     scope.loaded_view = view;
                 };
+
+                scope.addView = function(){
+                    scope.selected_view = null;
+                    scope.all_tracks = Tracks.query();
+                    $modal.open({
+                        templateUrl:'partials/add_view_modal.html',
+                        scope:scope
+                    }).result.then(function(result){
+                            console.log(result);
+                        });
+                }
             },
             scope:{}
         };
     }]);
-
-    genoBrowserDirectives.directive('viewModal', function(){
-       return {
-           restrict: 'E',
-           templateUrl: 'partials/view-modal.html'
-       };
-    });
 
     genoBrowserDirectives.directive('trackList', ['Tracks', function(Tracks){
        return {

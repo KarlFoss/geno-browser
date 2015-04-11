@@ -3,17 +3,17 @@
         <h4>
             <span>Views</span>
             <small class="pull-right">
-                <a data-toggle="modal" data-target="#viewModal"><span class="glyphicon glyphicon-plus"></span></a>
+                <a ng-click="addView()"><span class="glyphicon glyphicon-plus"></span></a>
             </small>
         </h4>
         <div class="list-group">
             <div ng-repeat="view in views" class="list-group-item" ng-click="selectView(view)" ng-class="{active:isSelectedView(view)}">
                 <span class="glyphicon" ng-class="{'glyphicon-star-empty':!isLoaded(view),'glyphicon-star':isLoaded(view)}" ng-click="load(view)"></span>
                 <span>{{view.view_name}}</span>
-                <a class="action-item pull-right" ng-click="remove(view)">
+                <a class="action-item pull-right" ng-click="removeView(view)">
                     <span class="glyphicon glyphicon-remove"></span>
                 </a>
-                <a class="action-item pull-right" ng-click="edit(view)">
+                <a class="action-item pull-right" ng-click="editView(view)">
                     <span class="glyphicon glyphicon-edit"></span>
                 </a>
             </div>

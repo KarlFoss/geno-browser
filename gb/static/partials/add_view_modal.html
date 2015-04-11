@@ -1,0 +1,23 @@
+<div class="modal-header">
+    <button type="button" class="close" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title" id="viewModalLabel">Add New View</h4>
+</div>
+<div class="modal-body">
+    <form name="addViewForm" ng-click="addViewForm.$valid && $close({initial_track:new_initial_track, view_name:new_view_name})" novalidate>
+        <div class="form-group">
+            <label for="view-name">View Name</label>
+            <input type="text" class="form-control" ng-model="new_view_name" id="view-name" placeholder="View Name" required>
+        </div>
+        <div class="form-group">
+            <label for="view-track">Initial Track</label>
+            <select class="form-control" id="view-track"
+                    ng-model="new_initial_track"
+                    ng-options="track as track.track_name for track in all_tracks" required>
+            </select>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" ng-click="$dismiss()">Close</button>
+            <button type="submit" class="btn btn-primary">Add View</button>
+        </div>
+    </form>
+</div>
