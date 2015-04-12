@@ -49,19 +49,6 @@
 
     }]);
 
-    genoBrowserControllers.controller('navBarController', ['$scope', 'userService', 'Token',
-        function($scope, userService, Token) {
-            $scope.user = userService;
-
-            $scope.login = function() {
-                Token.get($scope.user,
-                    function(response) {
-                        console.log(response);
-                    }, function(error) {
-                        console.log(error);
-                    });
-            }
-        }]);
 
     genoBrowserControllers.controller('registerModalController', ['$scope', 'userService', 'Users',
         function($scope, userService, Users) {
@@ -72,22 +59,4 @@
                 Users.save($scope.user);
             }
         }]);
-    //
-    //genoBrowserControllers.controller('addViewController', ['$scope', 'Views', 'Tracks',
-    //    function($scope, Views, Tracks) {
-    //        // Structure of view
-    //        $scope.view = {
-    //            view_name: '',
-    //            track_ids: []
-    //        };
-    //
-    //        // All tracks associated with user
-    //        $scope.tracks = Tracks.query();
-    //
-    //        // Add View
-    //        $scope.submit = function(view) {
-    //            view.track_ids = [view.track_ids.track_id];
-    //            Views.save(view);
-    //        };
-    //    }]);
 })();
