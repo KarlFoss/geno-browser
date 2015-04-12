@@ -3,7 +3,7 @@
         <h4>
             <span>Tracks</span>
             <small class="pull-right">
-                <a data-toggle="modal" data-target="#trackModal"><span class="glyphicon glyphicon-plus"></span></a>
+                <a ng-click="addTrack()"><span class="glyphicon glyphicon-plus"></span></a>
             </small>
         </h4>
         <div class="list-group">
@@ -12,10 +12,10 @@
                 <a class="action-item pull-right" ng-click="removeTrackFromView(track)">
                     <span class="glyphicon glyphicon-remove"></span>
                 </a>
-                <a class="action-item pull-right" ng-click="edit(track)">
+                <a class="action-item pull-right" ng-click="editTrack(track)">
                     <span class="glyphicon glyphicon-edit"></span>
                 </a>
-                <a class="action-item pull-right" ng-click="delete(track)">
+                <a class="action-item pull-right" ng-click="deleteTrack(track)">
                     <span class="glyphicon glyphicon-trash"></span>
                 </a>
             </div>
