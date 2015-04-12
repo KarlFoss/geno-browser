@@ -92,6 +92,7 @@
                     // Remove the track from the list of track_ids watched by the trackList directive
                     scope.track_ids.splice(scope.track_ids.indexOf(track.track_id),1);
                     // Send PUT request with track_ids minus the removed one
+                    scope.selected_view.track_ids = scope.track_ids;
                     scope.selected_view.$update();
                 };
 
@@ -100,6 +101,7 @@
                     // Add the id to the list of track_ids watched by the trackList directive
                     scope.track_ids.push(track.track_id);
                     // PUT the new track_ids to the view
+                    scope.selected_view.track_ids = scope.track_ids;
                     scope.selected_view.$update();
                 };
 
