@@ -3,13 +3,14 @@ from gb import app, auth, db, session
 from models import *
 import re
 
-@app.route('/api/files/',methods=['POST'])
+@app.route('/api/files',methods=['POST'])
 @auth.login_required
 def new_file():
     user_id = g.user.id
     file = request.files['file']
     type = request.form['type']
     track_name = request.form['track_name'] if request.form.has_key('track_name') else file.filename
+    app.logger.warning('got here')
 
     if not file:
         return jsonify(response="Can't create upload file! No file found in form data"),404

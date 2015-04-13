@@ -49,19 +49,6 @@
 
     }]);
 
-    genoBrowserControllers.controller('navBarController', ['$scope', 'userService', 'Token',
-        function($scope, userService, Token) {
-            $scope.user = userService;
-
-            $scope.login = function() {
-                Token.get($scope.user,
-                    function(response) {
-                        console.log(response);
-                    }, function(error) {
-                        console.log(error);
-                    });
-            }
-        }]);
 
     genoBrowserControllers.controller('registerModalController', ['$scope', 'userService', 'Users',
         function($scope, userService, Users) {
@@ -71,72 +58,5 @@
                 console.log($scope.user);
                 Users.save($scope.user);
             }
-        }]);
-
-    genoBrowserControllers.controller('navMenuController', ['$scope', '$location', '$routeParams', 'Views', 'Tracks',
-      function ($scope, $location, $routeParams, Views, Tracks) {
-
-          // Initialize menu with all user's views
-          Views.query(function(response) {
-              $scope.views = response.views;
-          });
-
-          $scope.View = {
-              select: function(view) {
-                  // Clear tracks
-                  $scope.tracks = [];
-
-                  // Get tracks associated with selected view
-                  angular.forEach(view.track_ids, function(value) {
-                      $scope.tracks.push(Tracks.get({track_id:value}));
-                  });
-              },
-
-              show: function($event, view) {
-                  var span = $event.target;
-                  var path = '/view/' + view.view_id;
-
-                  $('span.glyphicon.glyphicon-star').removeClass('glyphicon-star').addClass('glyphicon-star-empty');
-                  $(span).removeClass('glyphicon-star-empty').addClass('glyphicon-star');
-
-                  $location.path(path);
-              },
-
-              delete: function(view) {
-
-              }
-          };
-
-          $scope.Track = {
-              select: function(track) {
-
-              },
-
-              delete: function(track) {
-
-              }
-          };
-      }]);
-
-    genoBrowserControllers.controller('addViewController', ['$scope', 'Views', 'Tracks',
-        function($scope, Views, Tracks) {
-            // Structure of view
-            $scope.view = {
-                view_name: '',
-                track_ids: []
-            };
-
-            // All tracks associated with user
-            Tracks.query(function(response) {
-                $scope.tracks = response.tracks;
-            });
-
-            // Add View
-            $scope.View = {
-                add: function(view) {
-                    view.track_ids = [view.track_ids.track_id];
-                    Views.save(view);
-                }
-            };
         }]);
 })();
