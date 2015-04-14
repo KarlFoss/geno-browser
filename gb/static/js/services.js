@@ -29,17 +29,18 @@
 
     genoBrowserServices.factory('Tracks', ['$resource',
       function($resource) {
-        return $resource('/api/tracks/:track_id', {}, {
+        return $resource('/api/tracks/2', {}, {
             query: { isArray: false }
         });
       }]);
 
-    genoBrowserServices.factory('DataTrack', ['$resource',
+    genoBrowserServices.factory('DataTracks', ['$resource',
       function($resource) {
         return $resource('/api/tracks/data/:track_id', {}, {
           query: { isArray: false }
-        })
+        });
       }]);
+
     genoBrowserServices.factory('Files', ['$resource',
       function($resource) {
         return $resource('/api/files/:type/:user_id/:file_id', {}, {

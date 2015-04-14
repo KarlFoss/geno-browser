@@ -44,6 +44,20 @@
 
     }]);
 
+    genoBrowserControllers.controller('wigController', ['$scope', 'PlotBounds', 'Tracks', function($scope, PlotBounds, Tracks){
+        $scope.boundedData = [
+            {
+                key: "Wig",
+                values: []
+            }
+        ]
+        Tracks.get(function(response){
+            console.log(response);
+            $scope.boundedData.values = response.values;
+        });
+
+    }]);
+
     genoBrowserControllers.controller('navBarController', ['$scope', 'userService', 'Users',
         function($scope, userService, Users) {
             $scope.user = userService;
