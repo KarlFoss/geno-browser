@@ -55,12 +55,12 @@
         });
       }]);
 
-    genoBrowserServices.factory('DataTracks', ['$resource',
+/*    genoBrowserServices.factory('DataTracks', ['$resource',
       function($resource) {
         return $resource('/api/tracks/data/:track_id', {}, {
           query: { isArray: false }
         });
-      }]);
+      }]);*/
 
     genoBrowserServices.factory('Files', ['$resource',
       function($resource) {

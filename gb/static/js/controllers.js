@@ -2,6 +2,16 @@
     'use strict';
 
     var genoBrowserControllers = angular.module('genoBrowserControllers', ['genoBrowserServices']);
+    var changeBounds = function( newValue){
+            // We have to make a copy because the library
+            // we are using only tells angular to watch for changes in reference pointer
+            var newBoundedData = angular.copy(boundedData);
+            // Bound the example data and put it in values
+            newBoundedData[0]["values"] = $scope.exampleData.filter(function(element){
+                return (element[0] >= newValue[0]) && (element[0] <= newValue[1]);
+            });
+            $scope.boundedData = newBoundedData;
+        }
 
     genoBrowserControllers.controller('ViewController', ['$scope', '$routeParams',
         function($scope, $routeParams) {
@@ -60,6 +70,8 @@
             console.log(response);
             $scope.boundedData.values = response.values;
         });
+
+        $scope.$watch('bounds', changeBounds(newValue), true);
 
     }]);
 
