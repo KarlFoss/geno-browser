@@ -10,7 +10,6 @@ logging.basicConfig()
 LOG = logging.getLogger(__name__)
 
 class UserTestCase(TestCase):
-    STATUS_OK = "200 OK"
 
     def create_app(self):
         app = Flask(__name__)
@@ -36,42 +35,45 @@ class UserTestCase(TestCase):
 
         # Send post request
         response = self.app.post('/api/users', 
-            data=json.dumps({'username': 'kyle', 'email': 'kyle@email.com'}), 
+            data=json.dumps({'username': 'kyle', 'email': 'kyle@email.com','password':'SECRET'}), 
             content_type='application/json')
 
         self.assert200(response)
         self.assertEqual(json.loads(response.get_data()).get('user_id'),1)
 
     def testGetUser(self):
-        LOG.info("Testing user endpoint /api/users/<user_id> with GET")
+        LOG.info("Testing user endpoint /api/users/ with GET")
 
         # Helper to create a user (has already been tested above)
         self.createTestUser()
 
         # Check the user json returned
-        response = self.app.get('/api/users/1')
+        response = self.app.get('/api/users/', headers=[('Authorization','Basic a3lsZTpTRUNSRVQ=')])
         self.assert200(response)
 
         # Make sure the user dict has the right fields
         user = json.loads(response.get_data())
         self.assertDictContainsSubset({'username':'kyle','email':'kyle@email.com'},user)
 
-    def test_get_nonexistant_user(self):
+    def test_get_user_no_auth(self):
         """
         Try to GET a user by an invalid id
         """
-        response = self.app.get('/api/users/1')
-        self.assert404(response)
+        response = self.app.get('/api/users/')
+        self.assert401(response)
 
     def testPutUser(self):
-        LOG.info("Testing user endoint /api/users/<user_id> with PUT")
+        LOG.info("Testing user endoint /api/users/ with PUT")
         self.createTestUser()
-        user = self.getTestUser()
-        user['username'] = "KYLES NEW NAME"
+        user = self.get_user()
+
+        #Don't change the name because then I need to base64 encode <user:pass> again
+        user['email'] = "kyle@hotmail.com"
 
         # Handle put request
         updated_json = json.dumps(user)
-        response = self.app.put('/api/users/'+str(user.get('user_id')), 
+        response = self.app.put('/api/users/', 
+            headers=[('Authorization','Basic a3lsZTpTRUNSRVQ=')],
             data=updated_json, 
             content_type='application/json')
         self.assert200(response)
@@ -81,28 +83,28 @@ class UserTestCase(TestCase):
         self.assertEqual(user,json_up)
 
         # Check that changes are still there when we GET
-        user_refresh = self.getTestUser()
+        user_refresh = self.get_user()
         self.assertEqual(user_refresh,json_up)
 
     def testDeleteUser(self):
-        LOG.info("Testing user endpoint /api/users/<user_id> with DELETE")
+        LOG.info("Testing user endpoint /api/users/ with DELETE")
         self.createTestUser()
-        user = self.getTestUser()
+        user = self.get_user()
         user_id = str(user.get('user_id'))
-        response = self.app.delete('/api/users/'+user_id)
+        response = self.app.delete('/api/users', headers=[('Authorization','Basic a3lsZTpTRUNSRVQ=')])
         self.assert200(response)
 
         # Check if we can still GET
-        response_get = self.app.get('/api/users/{uid}'.format(uid=user_id))
-        self.assert404(response_get)
+        response_get = self.app.get('/api/users', headers=[('Authorization','Basic a3lsZTpTRUNSRVQ=')])
+        self.assert401(response_get)
 
     def createTestUser(self):
         response = self.app.post('/api/users', 
-            data=json.dumps({'username': 'kyle', 'email': 'kyle@email.com'}), 
+            data=json.dumps({'username': 'kyle', 'email': 'kyle@email.com', 'password':'SECRET'}), 
             content_type='application/json')
 
-    def getTestUser(self):
-        response = self.app.get('/api/users/1')
+    def get_user(self):
+        response = self.app.get('/api/users', headers=[('Authorization','Basic a3lsZTpTRUNSRVQ=')])
         self.assert200(response)
         user = json.loads(response.get_data())
         return user
@@ -110,4 +112,3 @@ class UserTestCase(TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-

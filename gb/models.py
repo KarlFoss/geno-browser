@@ -1,4 +1,7 @@
-from gb import db, session
+from gb import app, db, session
+from passlib.apps import custom_app_context as pwd_context
+from itsdangerous import (TimedJSONWebSignatureSerializer
+                          as Serializer, BadSignature, SignatureExpired)
 
 class Wig(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -29,8 +32,37 @@ class WigValue(db.Model):
 class Gtf(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
+class GtfValue(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
 
-class Bed(db.Model):
+    # actal atters
+    seqname = db.Column(db.String)
+    source = db.Column(db.String)
+    feature = db.Column(db.String)
+    start = db.Column(db.Integer)
+    end = db.Column(db.Integer)
+    score = db.Column(db.Float)
+    strand = db.Column(db.Enum("+","-","."))
+    frame = db.Column(db.Integer)
+    attribute = db.Column(db.String)
+
+    # relationship
+    gtf_id = db.Column(db.Integer, db.ForeignKey("gtf.id"))
+    gtf = db.relationship("Gtf",backref=db.backref("values",order_by=start))
+
+    def __init__(self, seqname, source, feature, start, end, score, strand, frame, attribute, gtf_id):
+        self.seqname = seqname
+        self.source = source
+        self.feature = feature
+        self.start = start
+        self.end = end
+        self.score = score
+        self.strand = strand
+        self.frame = frame
+        self.attribute = attribute
+        self.gtf_id = gtf_id
+
+class BedValue(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     chrom = db.Column(db.String)
     chromStart = db.Column(db.Integer)
@@ -91,18 +123,41 @@ class BasePair(db.Model):
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String)
+    username = db.Column(db.String, index = True)
+    password_hash = db.Column(db.String(128))
     email = db.Column(db.String)
 
-    def __init__(self,username,email):
+    def __init__(self, username, password, email):
         self.username = username
+        self.hash_password(password);
         self.email = email
 
     def __repr__(self):
         return self.username
 
-    def generate_token(self):
-        return self.user_name
+    def hash_password(self, password):
+        self.password_hash = pwd_context.encrypt(password)
+
+    def verify_password(self, password):
+        return pwd_context.verify(password, self.password_hash)
+
+    def generate_token(self, expiration = 600):
+        s = Serializer(app.config['SECRET_KEY'], expires_in = expiration)
+        return s.dumps({ 'id': self.id })
+
+    @staticmethod
+    def verify_token(token):
+        s = Serializer(app.config['SECRET_KEY'])
+
+        try:
+            data = s.loads(token)
+        except SignatureExpired:
+            return None # valid token, but expired
+        except BadSignature:
+            return None # invalid token
+
+        user = User.query.get(data['id'])
+        return user
 
 class Track(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -132,7 +187,6 @@ class Track(db.Model):
 class View(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     view_name = db.Column(db.String)
-    view_tracks = db.relationship('ViewTrack', backref="view")
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __init__(self, view_name, user_id):
@@ -146,7 +200,8 @@ class View(db.Model):
         return {
             'view_name' : self.view_name,
             'view_tracks' : view_tracks,
-            'user_id' : self.user_id
+            'user_id' : self.user_id,
+            'view_id' : self.id
         }
 
     def to_json(self):
@@ -156,13 +211,16 @@ class View(db.Model):
         return {
             'view_name' : self.view_name,
             'track_ids' : track_ids,
-            'user_id' : self.user_id
+            'user_id' : self.user_id,
+            'view_id' : self.id
         }
 
 class ViewTrack(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     track_id = db.Column(db.Integer, db.ForeignKey('track.id'))
     view_id = db.Column(db.Integer, db.ForeignKey('view.id'))
+    view = db.relationship('View', backref='view_tracks')
+    track = db.relationship('Track', backref='view_tracks')
 
     def __init__(self, track_id, view_id):
         self.track_id = track_id

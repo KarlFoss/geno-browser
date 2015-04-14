@@ -1,18 +1,16 @@
-from flask import Flask, request, Response, jsonify
-from gb import app, db, session
+from flask import Flask, request, Response, jsonify, g
+from gb import app, auth, db, session
 from models import *
-from controllers import check_headers
-import pandas as pd
 import re
-import pprint
 
-@app.route('/api/files/',methods=['POST'])
-@check_headers
+@app.route('/api/files',methods=['POST'])
+@auth.login_required
 def new_file():
-
-    user_id = request.user_id
+    user_id = g.user.id
     file = request.files['file']
     type = request.form['type']
+    track_name = request.form['track_name'] if request.form.has_key('track_name') else file.filename
+    app.logger.warning('got here')
 
     if not file:
         return jsonify(response="Can't create upload file! No file found in form data"),404
@@ -20,11 +18,53 @@ def new_file():
         return jsonify(response="Can't create upload file! {} is not a valid file type".format(type)),404
 
     if type == 'fasta':
-        return new_fasta(file)
+        fasta_id = new_fasta(file)
+        new_track = Track(
+            track_name = track_name,
+            user_id = user_id,
+            data_type = type,
+            data_id = fasta_id,
+            file_name = file.filename,
+        )
+        session.add(new_track)
+        session.commit()
+
+        return jsonify(track_id = new_track.id)
     
     elif type == 'wig':
-        return new_wigs(file)
-        
+        wig_ids = new_wigs(file)
+        new_tracks = []
+        count = 1
+        for wig_id in wig_ids:
+            curr_name = "{}-{}".format(track_name, count)
+            count += 1
+
+            new_track = Track(
+                track_name =  curr_name,
+                user_id = user_id,
+                data_type = type,
+                data_id = wig_id,
+                file_name = file.filename,
+            )
+
+            new_tracks.append(new_track)
+        session.add_all(new_tracks)
+        session.commit()
+        return jsonify(track_ids = [new_track.id for new_track in new_tracks])
+
+    elif type == 'gtf':
+        gtf_id = new_gtf(file)
+        new_track = Track(
+            track_name = track_name,
+            user_id = user_id,
+            data_type = type,
+            data_id = gtf_id,
+            file_name = file.filename,
+        )
+        session.add(new_track)
+        session.commit()
+        return jsonify(track_id = new_track.id)
+
 def valid_wig_header(header):
     if header.startswith("fixedStep"):
         return re.match(r"^fixedStep\schrom=\w+\sstart=\d+\sstep=\d+(\sspan=\d+$|$)", header)
@@ -77,8 +117,7 @@ def new_fasta(fasta_file):
     session.add_all(basepairs)
     session.commit()
 
-    return jsonify(fasta_id = fasta_id),200
-
+    return fasta_id
 
 def new_wigs(wig_file):
     current_id = -1
@@ -165,4 +204,43 @@ def new_wigs(wig_file):
                     current_dict['start'] += current_dict['step']
     session.add_all(current_data)
     session.commit()
-    return jsonify(wig_ids = wig_ids),200
+    return wig_ids
+    
+def new_gtf(gtf_file):
+    gtf_fields = ['seqname','source','feature','start','end','score','strand','frame','attribute']
+
+    # create the base record
+    gtf = Gtf()
+    session.add(gtf)
+    session.commit()
+
+    gtf_values = []
+    for line in gtf_file:
+
+        gtf_dict = dict(zip(gtf_fields, line.split("\t")))
+        gtf_dict['gtf_id'] = gtf.id
+
+        # handle the '.' in score and frame
+        if gtf_dict['score'] == '.':
+            gtf_dict['score'] = 0.0
+        if gtf_dict['frame'] == '.':
+            gtf_dict['frame'] = 0
+
+        # create each value record
+        gtf_val = GtfValue(
+            seqname = gtf_dict['seqname'],
+            source = gtf_dict['source'],
+            feature = gtf_dict['feature'],
+            start = int(gtf_dict['start']),
+            end = int(gtf_dict['end']),
+            score = gtf_dict['score'],
+            strand = gtf_dict['strand'],
+            frame = int(gtf_dict['frame']),
+            attribute = gtf_dict['attribute'],
+            gtf_id = gtf_dict['gtf_id']
+        )
+        gtf_values.append(gtf_val)
+
+    session.add_all(gtf_values)
+    session.commit()
+    return gtf.id

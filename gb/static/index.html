@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en" ng-app="genoBrowser">
 <head>
 	<meta charset="utf-8">
@@ -20,19 +20,20 @@
     <script src="lib/d3/d3.js"></script>
     <script src="lib/nvd3/nv.d3.js"></script>
     <script src="lib/angularjs-nvd3-directives/dist/angularjs-nvd3-directives.js"></script>
+    <script src="lib/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="lib/ng-file-upload/angular-file-upload.js"></script>
     <!-- endbower -->
 
     <script src="js/app.js"></script>
     <script src="js/services.js"></script>
-    <script src="js/constants.js"></script>
 	<script src="js/controllers.js"></script>
     <script src="js/directives.js"></script>
 </head>
 <body>
-    <nav class="navbar navbar-default">
-        <div class="container-fluid" ng-controller="navBarController">
+    <nav class="navbar navbar-default navbar-absolute">
+        <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="#" data-toggle="collapse" data-target="#navbar-menu">
+                <a class="navbar-brand" data-toggle="collapse" data-target="#navbar-menu">
                     <span class="glyphicon glyphicon-cog" aria-hidden="true" ></span>
                 </a>
                 <a class="navbar-brand" href="/">Geno-Browser</a>
@@ -45,80 +46,17 @@
                     <input type="password" placeholder="Password" ng-model="user.password" class="form-control">
                 </div>
                 <button type="submit" class="btn btn-default" ng-click="login()">Login</button>
-                <button type="submit" class="btn btn-default" data-toggle="modal" data-target="#registerModal">Sign Up</button>
+                <button type="submit" class="btn btn-default">Sign Up</button>
             </form>
         </div>
-        <div id="navbar-menu" class="container-fluid collapse" ng-controller="navMenuController">
+        <div id="navbar-menu" class="container-fluid collapse">
             <div class="row">
-                <div class="col-md-6">
-                    <div class="well well-sm">
-                        <h4>
-                            <span>Files</span>
-                            <small class="pull-right">
-                                <a href="#" data-toggle="modal" data-target="#fileModal"><span class="glyphicon glyphicon-plus"></span></a>
-                            </small>
-                        </h4>
-                        <div class="list-group">
-                            <div ng-repeat="file in files" ng-click="File.select(file)" href="#" class="list-group-item">
-                                <span>{{file.name}}</span>
-                                <a href="#" class="action-item pull-right" ng-click="File.delete(file); $event.stopPropagation()">
-                                    <span class="glyphicon glyphicon-remove"></span>
-                                </a>
-                                <a href="#" class="action-item pull-right" ng-click="File.edit(file); $event.stopPropagation()">
-                                    <span class="glyphicon glyphicon-edit"></span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="well well-sm">
-                        <h4>
-                            <span>Views</span>
-                            <small class="pull-right">
-                                <a href="#" data-toggle="modal" data-target="#viewModal"><span class="glyphicon glyphicon-plus"></span></a>
-                            </small>
-                        </h4>
-                        <div class="list-group">
-                            <div ng-repeat="view in views" ng-click="View.select(view)" href="#" class="list-group-item">
-                                <span>{{view.name}}</span>
-                                <a href="#" class="action-item pull-right" ng-click="View.delete(view); $event.stopPropagation()">
-                                    <span class="glyphicon glyphicon-remove"></span>
-                                </a>
-                                <a href="#" class="action-item pull-right" ng-click="View.edit(view); $event.stopPropagation()">
-                                    <span class="glyphicon glyphicon-edit"></span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>                 
-                </div>
-                <div class="col-md-3">
-                    <div class="well well-sm">
-                        <h4>
-                            <span>Tracks</span>
-                            <small class="pull-right">
-                                <a href="#" data-toggle="modal" data-target="#trackModal"><span class="glyphicon glyphicon-plus"></span></a>
-                            </small>
-                        </h4>
-                        <div class="list-group">
-                            <div ng-repeat="track in tracks" ng-click="Track.select(track)" href="#" class="list-group-item">
-                                <span>{{track.track_name}}</span>
-                                <a href="#" class="action-item pull-right" ng-click="Track.delete(track); $event.stopPropagation()">
-                                    <span class="glyphicon glyphicon-remove"></span>
-                                </a>
-                                <a href="#" class="action-item pull-right" ng-click="Track.edit(track); $event.stopPropagation()">
-                                    <span class="glyphicon glyphicon-edit"></span>
-                                </a>
-                            </div>
-                        </div>
-                    </div> 
-                </div>
+                <view-list></view-list>
             </div>
         </div>
     </nav>
 
-    <div id="data-viewer" class="container">
-    <gb-wig-plot ng-controller="ExampleWigController"></gb-wig-plot>
+    <div ng-view>
     </div>
 
     <div id="data-viewer-test" class="container">
@@ -135,11 +73,11 @@
                         <div class="input-group">
                             <span>Range: </span>
                             <div class="form-group">
-                                <input type="number" ng-model="bounds[0]" class="form-control" id="range-min" step="1000" placeholder="Position">
+                                <input type="number" ng-model="bounds[0]" class="form-control" id="range-min" min="0" ng-attr-max="{{bounds[1]}}" step="1000" placeholder="Position">
                             </div>
                             <span> thru </span>
                             <div class="form-group">
-                                <input type="number" ng-model="bounds[1]" class="form-control" id="range-max" step="1000" placeholder="Position">
+                                <input type="number" ng-model="bounds[1]" class="form-control" id="range-max" step="1000" min="0" placeholder="Position">
                             </div>
                         </div>
                     </form>
@@ -157,10 +95,5 @@
             </div>
         </div>
     </footer>
-
-	<ng-include src="'partials/register-modal.html'"></ng-include>
-    <ng-include src="'partials/file-modal.html'"></ng-include>
-    <ng-include src="'partials/view-modal.html'"></ng-include>
-    <ng-include src="'partials/track-modal.html'"></ng-include>
 </body>
 </html>

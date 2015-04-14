@@ -10,7 +10,7 @@ logging.basicConfig()
 LOG = logging.getLogger(__name__)
 
 class TrackTestCase(TestCase):
-    user_header = {"X-Userid":1}
+    user_header = [('Authorization','Basic a3lsZTpTRUNSRVQ=')]
 
     def create_app(self):
         app = Flask(__name__)
@@ -139,7 +139,7 @@ class TrackTestCase(TestCase):
 
     def createTestUser(self):
         response = self.app.post('/api/users', 
-            data=json.dumps({'username': 'kyle', 'email': 'kyle@email.com'}), 
+            data=json.dumps({'username': 'kyle', 'email': 'kyle@email.com','password':'SECRET'}), 
             content_type='application/json')
     
     def createTestTrack(self):

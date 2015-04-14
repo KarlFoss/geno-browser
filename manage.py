@@ -25,7 +25,7 @@ def seed_db():
     user_ids = []
     users = ["default","kyle","karl","coda","max","goof"]
     for name in users:
-        new_user = User(username=name,email="{}@email.com".format(name))
+        new_user = User(username=name,email="{}@email.com".format(name),password="SECRET")
         session.add(new_user)
         session.commit()
         user_ids.append(new_user.id)
@@ -60,6 +60,9 @@ def seed_db():
 
         session.add(fasta_track)
         session.commit()
+
+        db.session.add(ViewTrack(fasta_track.id,view.id))
+        db.session.commit()
 
 
 def main():
