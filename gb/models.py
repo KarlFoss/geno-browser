@@ -96,7 +96,7 @@ class BedValue(db.Model):
     bed_id = db.Column(db.Integer, db.ForeignKey("bed.id"))
     bed = db.relationship("Bed",backref=db.backref("values",order_by=start))
 
-    def __init__(self, chrom, start, end, name, score, strand, thick_start, thick_end, item_rgb, block_count):
+    def __init__(self, chrom, start, end, name, score, strand, thick_start, thick_end, item_rgb, block_count, bed_id):
         self.chrom = chrom
         self.start = start
         self.end = end
@@ -104,9 +104,26 @@ class BedValue(db.Model):
         self.score = score
         self.strand = strand
         self.thick_start = thick_start
-        self.thick_end = thick_end,
+        self.thick_end = thick_end
         self.item_rgb = item_rgb
         self.block_count = block_count
+        self.bed_id = bed_id
+
+    def to_json(self):
+        return {
+            'chrom' : self.chrom, 
+            'start' : self.start, 
+            'end' : self.end, 
+            'name' : self.name, 
+            'score' : self.score, 
+            'strand' : self.strand, 
+            'thick_start' : self.thick_start, 
+            'thick_end' : self.thick_end, 
+            'item_rgb' : self.item_rgb,
+            'block_count' : self.block_count,
+            'block_sizes' : [size.value for size in self.block_sizes],
+            'block_starts' : [start.value for start in self.block_starts] 
+        }
 
 class BedBlockSize(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -299,6 +316,11 @@ class ViewTrack(db.Model):
             gtf = session.query(Gtf).get(track.data_id)
             for gtf_val in gtf.values:
                 data.append(gtf_val.to_json())
+
+        elif track.data_type == 'bed':
+            bed = session.query(Bed).get(track.data_id)
+            for bed_value in bed.values:
+                data.append(bed_value.to_json())
 
         return {
             'track_name' : track.track_name,

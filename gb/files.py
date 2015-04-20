@@ -104,7 +104,6 @@ def parse_header(header):
 
     return values
 
-# TODO implement support for multi fasta files
 def new_fasta(fasta_file):
     position = 0
     basepairs = []
@@ -257,3 +256,49 @@ def new_gtf(gtf_file):
     session.add_all(gtf_values)
     session.commit()
     return gtf.id
+
+def new_bed(bed_file):
+
+    # create the base record
+    bed = Bed()
+    session.add(bed)
+    session.commit()
+
+    bed_vals = []
+    for line in bed_file:
+        
+        # skip the header
+        if line.startswith("#"):
+            continue
+
+        line_vals = line.split("\t")
+
+        if len(line_vals) != 12:
+            app.logger.warning('Invalid bed line - skipping')
+            continue
+
+        [chrom, start, stop, name, score, strand, thick_start, 
+        thick_end, item_rgb, block_count, bed_block_sizes, 
+        bed_block_starts] = line_vals
+
+        bed_val = BedValue(chrom, int(start), int(stop), name, int(score), strand, int(thick_start), int(thick_end), int(item_rgb), int(block_count), bed.id)
+        session.add(bed_val)
+        session.commit()
+
+        index = 0
+        bed_block_sizes = bed_block_sizes.rstrip(",").split(",")
+        for size in bed_block_sizes:
+            bed_block_size = BedBlockSize(index, size, bed_val.id)
+            index += 1
+            bed_vals.append(bed_block_size)
+
+        index = 0
+        bed_block_starts = bed_block_starts.rstrip("\n").split(",")
+        for start in bed_block_starts:
+            bed_block_start = BedBlockStart(index, start, bed_val.id)
+            index += 1
+            bed_vals.append(bed_block_start)
+
+    session.add_all(bed_vals)
+    session.commit()
+    return bed.id
