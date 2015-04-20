@@ -64,6 +64,20 @@ def new_file():
         session.commit()
         return jsonify(track_id = new_track.id)
 
+    elif type == 'bed':
+        bed_id = new_bed(file)
+        new_track = Track(
+            track_name = track_name,
+            user_id = user_id,
+            data_type = type,
+            data_id = bed_id,
+            file_name = file.filename,
+        )
+        session.add(new_track)
+        session.commit()
+        return jsonify(track_id = new_track.id)
+
+
 def valid_wig_header(header):
     if header.startswith("fixedStep"):
         return re.match(r"^fixedStep\schrom=\w+\sstart=\d+\sstep=\d+(\sspan=\d+$|$)", header)
