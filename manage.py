@@ -4,7 +4,9 @@ import argparse
 import requests
 import random
 
-from gb import app,db,session
+from flask import g
+
+from gb import app, db, session
 from gb.models import BasePair
 from gb.models import *
 
@@ -21,9 +23,14 @@ def drop_db():
 
 def seed_db():
 
+    # Setup default user #
+    default_user = User(username="default", email="default@gb.com", password="default")
+    session.add(default_user)
+    session.commit()
+
     # add the users
     user_ids = []
-    users = ["default","kyle","karl","coda","max","goof"]
+    users = ["kyle","karl","coda","max","goof"]
     for name in users:
         new_user = User(username=name,email="{}@email.com".format(name),password="SECRET")
         session.add(new_user)
