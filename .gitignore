@@ -6,4 +6,4 @@ gb/static/node_modules/
 flask/
 geno-browser.iml
 run.sh
-gb/gb.bg
+gb.db
