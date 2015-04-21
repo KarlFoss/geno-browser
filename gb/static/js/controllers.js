@@ -2,16 +2,6 @@
     'use strict';
 
     var genoBrowserControllers = angular.module('genoBrowserControllers', ['genoBrowserServices']);
-    var changeBounds = function( newValue){
-            // We have to make a copy because the library
-            // we are using only tells angular to watch for changes in reference pointer
-            var newBoundedData = angular.copy(boundedData);
-            // Bound the example data and put it in values
-            newBoundedData[0]["values"] = $scope.exampleData.filter(function(element){
-                return (element[0] >= newValue[0]) && (element[0] <= newValue[1]);
-            });
-            $scope.boundedData = newBoundedData;
-        }
 
     genoBrowserControllers.controller('ViewController', ['$scope', '$routeParams',
         function($scope, $routeParams) {
@@ -22,7 +12,7 @@
         $scope.bounds = PlotBounds;
     }]);
 
-    genoBrowserControllers.controller('ExampleWigController', ['$scope', 'PlotBounds', function($scope, PlotBounds){
+    /*genoBrowserControllers.controller('ExampleWigController', ['$scope', 'PlotBounds', function($scope, PlotBounds){
         // Default data to get passed to plot, none
         $scope.boundedData = [
             {
@@ -57,21 +47,41 @@
 
         $scope.sticky = false;
 
-    }]);
+    }]);*/
 
-    genoBrowserControllers.controller('wigController', ['$scope', 'PlotBounds', 'Tracks', function($scope, PlotBounds, Tracks){
+    genoBrowserControllers.controller('ExampleWigController', ['$scope', '$routeParams', 'PlotBounds', 'DataViews', function($scope, $routeParams, PlotBounds, DataViews){
         $scope.boundedData = [
             {
                 key: "Wig",
                 values: []
             }
-        ]
-        Tracks.get(function(response){
-            console.log(response);
-            $scope.boundedData.values = response.values;
-        });
+        ];
+        var _view = DataViews.get({view_id: 6}, function(){
+            for(var i = 0; i < _view.view_tracks.length; i++ ){
+                var track_data = _view.view_tracks[i].data;
+                for(var j = 0; j < track_data[0].length; j++){
+                    $scope.boundedData[i].values.push([track_data[0][j], track_data[1][j]]);
+                }
+            }
 
-        $scope.$watch('bounds', changeBounds(newValue), true);
+            PlotBounds[0] = $scope.boundedData[0].values[0][0];
+            PlotBounds[1] = $scope.boundedData[0].values.slice(-1)[0][0];
+
+            // Bind the bounds to the scope
+            $scope.bounds = PlotBounds;
+            $scope.$watch('bounds', function( newValue){
+                // We have to make a copy because the library
+                // we are using only tells angular to watch for changes in reference pointer
+                var newBoundedData = angular.copy($scope.boundedData);
+                // Bound the example data and put it in values
+                newBoundedData[0]["values"] = $scope.boundedData[0].values.filter(function(element){
+                    return (element[0] >= newValue[0]) && (element[0] <= newValue[1]);
+                });
+                $scope.boundedData = newBoundedData;
+            }, true);
+            $scope.hidden = false;
+            $scope.sticky = false;
+        });
 
     }]);
 

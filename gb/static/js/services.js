@@ -84,6 +84,20 @@
         });
       }]);
 
+      genoBrowserServices.factory('DataViews', ['$resource',
+      function($resource) {
+        return $resource('/api/views/data/:view_id', {view_id: '@view_id'}, {
+            query: { method:'GET',
+                isArray: true,
+                transformResponse:[angular.fromJson, function(data){return data.view_tracks;}]
+            },
+            get:   { method:'GET'},
+            create: { method:'POST'},
+            update: { method:'PUT' },
+            delete: { method: 'DELETE'}
+        });
+      }]);
+
     genoBrowserServices.factory('userService',
       function() {
         return {
