@@ -24,7 +24,9 @@ def new_user():
     
     # Ensure username and email were passed
     if not u_name:
-        return jsonify(response="Could not create user, username field is required"),404
+        return jsonify(response="Could not create user, username field is required"), 404
+    elif u_name == "default":
+        return jsonify(response="Invalid username."), 400
 
     if not email:
         return jsonify(response="Could not create user. email field is required"),404
