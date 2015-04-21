@@ -76,6 +76,10 @@
         });
       }]);
 
+    genoBrowserServices.factory('AuthService', function ($http, Session) {
+        var authService = {};
+    });
+
     genoBrowserServices.factory('userService',
       function() {
         return {

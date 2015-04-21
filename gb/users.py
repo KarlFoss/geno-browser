@@ -31,7 +31,7 @@ def new_user():
     if not email:
         return jsonify(response="Could not create user. email field is required"),404
 
-    # Crete user and commit 
+    # Create user and commit
     new_user = User(username=json.get('username'),email=json.get('email'),password=json.get('password'))
     session.add(new_user)
     session.commit()
