@@ -1,1 +1,8 @@
 gb/gb.bg
+db.sh
+*.pyc
+gb/static/lib/
+gb/static/node_modules/
+.idea/
+geno-browser.iml
+run.sh
