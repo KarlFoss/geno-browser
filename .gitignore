@@ -1,3 +1,4 @@
+gb/gb.db
 db.sh
 *.pyc
 gb/static/lib/
@@ -7,3 +8,5 @@ flask/
 geno-browser.iml
 run.sh
 gb/gb.bg
+geno-browser.iml
+run.sh

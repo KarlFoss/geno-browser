@@ -304,13 +304,8 @@ class ViewTrack(db.Model):
 
         elif track.data_type == 'wig':
             wig = session.query(Wig).get(track.data_id)
-            pos = []
-            scores = []
-            for wigVal in wig.values:
-                pos.append(wigVal.position)
-                scores.append(wigVal.value)
-            data.append(pos)
-            data.append(scores)
+            for wig_val in wig.values:
+                data.append([wig_val.position, wig_val.value])
 
         elif track.data_type == 'gtf':
             gtf = session.query(Gtf).get(track.data_id)
