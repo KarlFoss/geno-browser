@@ -5,12 +5,12 @@
 
     genoBrowserControllers.controller('ViewController', ['$scope', '$location', '$routeParams', 'DataViews',
         function($scope, $location, $routeParams, DataViews) {
-            /*var view_id = parseInt($location.path().slice(-1)[0]) || '';
+            var view_id = parseInt($location.path().slice(-1)[0]) || '';
             if(view_id !== ''){
                 var data_view = DataViews.get({view_id: view_id}, function(){
                     $scope.trackData = [];
                     $scope.boundedData = [];
-                    for(var i = 0; i < data_view.view_tracks.length; i++ ){
+/*                    for(var i = 0; i < data_view.view_tracks.length; i++ ){
                         var track_data = data_view.view_tracks[i].data;
                         $scope.trackData.push([]);
                         $scope.trackData[i].push({key: "Wig " + (i+1), values: []});
@@ -18,12 +18,20 @@
                             $scope.trackData[i][0].values.push([track_data[0][j], track_data[1][j]]);
                         }
                         $scope.boundedData.push($scope.trackData[i]);
+                    }*/
+                    console.log(data_view);
+                    for(var i = 0; i < data_view.view_tracks.length; i++){
+                        var view = data_view.view_tracks[i];
+                        if(view.data_type === 'wig'){
+                            $scope.trackData.push([{key: view.track_name, values:view.data}]);
+                        }
                     }
+                    $scope.boundedData = $scope.trackData;
                     console.log($scope.boundedData);
                 });
             } else {
-
-            }*/
+                $scope.boundedData = null;
+            }
         }]);
 
     genoBrowserControllers.controller('BoundsController', ['$scope','PlotBounds', function($scope, PlotBounds){
