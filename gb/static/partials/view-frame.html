@@ -1,3 +1,5 @@
 <div id="data-viewer" class="container">
-    <gb-wig-plot ng-controller="ExampleWigController"></gb-wig-plot>
+    <div ng-repeat="track in boundedData">
+        <gb-wig-plot ng-controller="wigController"></gb-wig-plot>
+    </div>
 </div>

@@ -74,6 +74,6 @@ a[ng-click], a[data-toggle] {
 }
 
 .track {
-    min-height: 400px;
+    min-height: 300px;
     min-width: 500px;
 }
