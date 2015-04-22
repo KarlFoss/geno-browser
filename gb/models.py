@@ -62,24 +62,92 @@ class GtfValue(db.Model):
         self.attribute = attribute
         self.gtf_id = gtf_id
 
+    def to_json(self):
+        return {
+            'seqname' : self.seqname, 
+            'source' : self.source, 
+            'feature' : self.feature, 
+            'start' : self.start, 
+            'end' : self.end, 
+            'score' : self.score, 
+            'strand' : self.strand, 
+            'frame' : self.frame, 
+            'attribute' : self.attribute, 
+        }
+
+
+class Bed(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+
 class BedValue(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     chrom = db.Column(db.String)
-    chromStart = db.Column(db.Integer)
-    chromEnd = db.Column(db.Integer)
+    start = db.Column(db.Integer)
+    end = db.Column(db.Integer)
     name = db.Column(db.String)
     score = db.Column(db.Integer)
-    strand = db.Column(db.Boolean)
+    strand = db.Column(db.Enum("+","-","."))
     thick_start = db.Column(db.Integer)
     thick_end = db.Column(db.Integer)
-    item_RGB = db.Column(db.Integer)
-    item_RGB = db.Column(db.Integer)
-    blockCount = db.Column(db.Integer)
-    blockSizes = db.Column(db.Integer)
-    blockStarts = db.Column(db.Integer)
+    item_rgb = db.Column(db.Integer)
+    block_count = db.Column(db.Integer)
 
-    def __repr__(self):
-            return "{}".format(self.name)
+    # relationship
+    bed_id = db.Column(db.Integer, db.ForeignKey("bed.id"))
+    bed = db.relationship("Bed",backref=db.backref("values",order_by=start))
+
+    def __init__(self, chrom, start, end, name, score, strand, thick_start, thick_end, item_rgb, block_count, bed_id):
+        self.chrom = chrom
+        self.start = start
+        self.end = end
+        self.name = name
+        self.score = score
+        self.strand = strand
+        self.thick_start = thick_start
+        self.thick_end = thick_end
+        self.item_rgb = item_rgb
+        self.block_count = block_count
+        self.bed_id = bed_id
+
+    def to_json(self):
+        return {
+            'chrom' : self.chrom, 
+            'start' : self.start, 
+            'end' : self.end, 
+            'name' : self.name, 
+            'score' : self.score, 
+            'strand' : self.strand, 
+            'thick_start' : self.thick_start, 
+            'thick_end' : self.thick_end, 
+            'item_rgb' : self.item_rgb,
+            'block_count' : self.block_count,
+            'block_sizes' : [size.value for size in self.block_sizes],
+            'block_starts' : [start.value for start in self.block_starts] 
+        }
+
+class BedBlockSize(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    index = db.Column(db.Integer)
+    value = db.Column(db.Integer)
+    bed_value_id = db.Column(db.Integer, db.ForeignKey("bed_value.id"))
+    bed_value = db.relationship("BedValue",backref=db.backref("block_sizes",order_by=index))
+
+    def __init__(self, index, value, bed_value_id):
+        self.index = index
+        self.value = value
+        self.bed_value_id = bed_value_id
+
+class BedBlockStart(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    index = db.Column(db.Integer)
+    value = db.Column(db.Integer)
+    bed_value_id = db.Column(db.Integer, db.ForeignKey("bed_value.id"))
+    bed_value = db.relationship("BedValue",backref=db.backref("block_starts",order_by=index))
+
+    def __init__(self, index, value, bed_value_id):
+        self.index = index
+        self.value = value
+        self.bed_value_id = bed_value_id
 
 class Annotation(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -236,13 +304,19 @@ class ViewTrack(db.Model):
 
         elif track.data_type == 'wig':
             wig = session.query(Wig).get(track.data_id)
-            pos = []
-            scores = []
-            for wigVal in wig.values:
-                pos.append(wigVal.position)
-                scores.append(wigVal.value)
-            data.append(pos)
-            data.append(scores)
+            for wig_val in wig.values:
+                data.append([wig_val.position, wig_val.value])
+
+        elif track.data_type == 'gtf':
+            gtf = session.query(Gtf).get(track.data_id)
+            for gtf_val in gtf.values:
+                data.append(gtf_val.to_json())
+
+        elif track.data_type == 'bed':
+            bed = session.query(Bed).get(track.data_id)
+            for bed_value in bed.values:
+                data.append(bed_value.to_json())
+
         return {
             'track_name' : track.track_name,
             'track_id' : self.track_id,
