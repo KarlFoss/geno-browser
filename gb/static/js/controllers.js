@@ -10,16 +10,6 @@
                 var data_view = DataViews.get({view_id: view_id}, function(){
                     $scope.trackData = [];
                     $scope.boundedData = [];
-/*                    for(var i = 0; i < data_view.view_tracks.length; i++ ){
-                        var track_data = data_view.view_tracks[i].data;
-                        $scope.trackData.push([]);
-                        $scope.trackData[i].push({key: "Wig " + (i+1), values: []});
-                        for(var j = 0; j < track_data[0].length; j++){
-                            $scope.trackData[i][0].values.push([track_data[0][j], track_data[1][j]]);
-                        }
-                        $scope.boundedData.push($scope.trackData[i]);
-                    }*/
-                    console.log(data_view);
                     for(var i = 0; i < data_view.view_tracks.length; i++){
                         var view = data_view.view_tracks[i];
                         if(view.data_type === 'wig'){
