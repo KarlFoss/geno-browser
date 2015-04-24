@@ -88,6 +88,7 @@ def main():
 
     elif args.command == 'seed_db':
         seed_db()
+        print "DB seeded!"
 
 if __name__ == '__main__':
     main()
