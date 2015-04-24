@@ -6,7 +6,7 @@ from flask import render_template, send_from_directory, url_for
 from flask.ext.httpauth import HTTPBasicAuth
 from flask.ext.sqlalchemy import SQLAlchemy
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path="")
 
 app.config.from_object('gb.settings')
 db = SQLAlchemy(app)
