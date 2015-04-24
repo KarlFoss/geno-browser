@@ -8,6 +8,7 @@
             var view_id = parseInt($location.path().slice(-1)[0]) || '';
             if(view_id !== ''){
                 var data_view = DataViews.get({view_id: view_id}, function(){
+                    console.log(data_view);
                     $scope.trackData = [];
                     $scope.boundedData = [];
                     for(var i = 0; i < data_view.view_tracks.length; i++){

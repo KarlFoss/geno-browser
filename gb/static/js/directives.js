@@ -9,7 +9,9 @@
             restrict:'E',
             templateUrl:'partials/wig-plot.html',
             link: function(scope, element, attrs){
+                scope.plotBounds = function(){
 
+                }
             }
         };
     });
