@@ -19,7 +19,6 @@ def new_view():
     session.add(new_view)
     session.commit()
 
-
     view_tracks = []
     for track_id in track_ids:
         track = session.query(Track).get(track_id)

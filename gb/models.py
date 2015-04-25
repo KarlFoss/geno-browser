@@ -287,12 +287,21 @@ class ViewTrack(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     track_id = db.Column(db.Integer, db.ForeignKey('track.id'))
     view_id = db.Column(db.Integer, db.ForeignKey('view.id'))
+    
+    # display parameters
+    sticky = db.Column(db.Boolean)
+    hidden = db.Column(db.Boolean)
+    y_max = db.Column(db.Integer)
+
     view = db.relationship('View', backref='view_tracks')
     track = db.relationship('Track', backref='view_tracks')
-
+    
     def __init__(self, track_id, view_id):
         self.track_id = track_id
         self.view_id = view_id
+        self.sticky = False
+        self.hidden = False
+        self.y_max = -1
 
     def to_json(self):
         track = session.query(Track).get(self.track_id)
