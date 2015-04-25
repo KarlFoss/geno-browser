@@ -18,7 +18,7 @@
             link: function (scope, element, attrs) {
                 // First see if the route indicates a loaded view
                 var location_view_id = parseInt($location.path().slice(-1)[0]);
-                scope.views = Views.query(function(views){
+                scope.views = Views.query(function(views) {
                     // Find the view with a matching id and set it as loaded
                     var loaded_view = views.filter(function(element){
                         return element.view_id === location_view_id;

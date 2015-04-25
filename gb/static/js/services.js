@@ -10,12 +10,25 @@
 
     genoBrowserServices.factory('api', function ($http, $cookies) {
         return {
-            authenticate: function (jwt) {
+            init: function (jwt) {
                 $http.defaults.headers.common['Authorization'] =
                     'Bearer ' + jwt;
             }
         };
     });
+
+    genoBrowserServices.factory('Auth', function(){
+        var token;
+
+        return{
+            setUser : function(aUser){
+                user = aUser;
+            },
+            isLoggedIn : function(){
+                return(user)? user : false;
+            }
+        }
+    })
 
     genoBrowserServices.factory('Users', ['$resource',
       function($resource) {
