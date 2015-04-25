@@ -11,6 +11,37 @@
         };
     });
 
+    genoBrowserDirectives.directive("userToolbar", ['$window', 'API',
+        function ($window, API) {
+            return {
+                restrict: "E",
+                templateUrl: "/partials/user_toolbar.html",
+                link: function (scope, element, attrs) {
+                    scope.user = {
+                        'username':'',
+                        'password':''
+                    };
+
+                    scope.isAuthenticated = function() {
+                        return $window.sessionStorage.token ? true : false;
+                    };
+
+                    scope.login = function() {
+                        API.authenticate(scope.user, function(data) {
+                            $window.sessionStorage.token = data.token;
+                        }, function (response) {
+                            delete $window.sessionStorage.token;
+                        });
+                    };
+
+                    scope.logout = function() {
+                        delete $window.sessionStorage.token;
+                    };
+                }
+            };
+        }
+    ]);
+
     genoBrowserDirectives.directive('viewList',['$location', 'Views', 'Tracks', '$modal', function($location, Views, Tracks, $modal){
         return {
             restrict: 'E',
