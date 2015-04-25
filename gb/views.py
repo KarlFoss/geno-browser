@@ -76,9 +76,10 @@ def get_data_view(view_id):
     return jsonify(view.to_data())
 
 @app.route('/api/views/data/<int:view_id>',methods=['PUT'])
-@auth.login_required
 def update_data_view(view_id):
-    user_id = g.user.id
+    verify_jwt()
+
+    user_id = current_user.id
     view = session.query(View).get(view_id)
     
     # make sure the view was found
