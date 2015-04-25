@@ -1,6 +1,7 @@
 from flask.ext.testing import TestCase
 import unittest, os
 import gb
+import copy
 from flask import Flask, json, jsonify
 from gb import app, db, session
 from gb.models import User,Track
@@ -64,6 +65,31 @@ class TrackTestCase(TestCase):
         self.assertEqual(data.get('view_name'), 'TEST-VIEW')
         self.assertEqual(data.get('user_id'), 1)
         self.assertTrue(data.has_key('view_tracks'))
+
+    def testPutDataView(self):
+        LOG.info("Testing updating data view endpoint /views/data with PUT")
+        self.createTestUser()
+        self.uploadTestWig()
+        self.createTestTrack()
+        self.createTestView()
+
+        data = self.getTestDataView()
+        data_copy = copy.deepcopy(data)
+
+        for view_track in data.get('view_tracks'):
+            display_array = view_track.get('display_params')
+            display_array['sticky'] = True
+            display_array['hidden'] = True
+            display_array['y_max'] = 100
+
+        response = self.app.put('/api/views/data/1',
+            headers = self.user_header,
+            data = json.dumps(data),
+            content_type='application/json'
+        )
+
+        self.assert200(response)
+        self.assertNotEqual(json.loads(response.get_data()),data_copy)
 
     def testCreateView(self):
         LOG.info("Testing create view endpoint /views with POST")
@@ -200,6 +226,13 @@ class TrackTestCase(TestCase):
         view = json.loads(response.get_data())
         return view
 
+    def getTestDataView(self):
+        response = self.app.get('/api/views/data/1',
+            headers=self.user_header
+        )
+        self.assert200(response)
+        data = json.loads(response.get_data())
+        return data
 
 if __name__ == '__main__':
     unittest.main()

@@ -23,7 +23,6 @@ def new_view():
     session.add(new_view)
     session.commit()
 
-
     view_tracks = []
     for track_id in track_ids:
         track = session.query(Track).get(track_id)
@@ -74,6 +73,41 @@ def get_data_view(view_id):
         return jsonify(response="Cannot return view {0} it does not belong to user {1}".format(view_id,user_id)),404
 
     # otherwise return it
+    return jsonify(view.to_data())
+
+@app.route('/api/views/data/<int:view_id>',methods=['PUT'])
+@auth.login_required
+def update_data_view(view_id):
+    user_id = g.user.id
+    view = session.query(View).get(view_id)
+    
+    # make sure the view was found
+    if not view:
+        return jsonify(response="Cannot update data for view {0} from user {1} - view not found".format(view_id,user_id)),404
+
+    # make sure the view belongs to the userid
+    if not view.user_id == int(user_id):
+        return jsonify(response="Cannot update data view {0} it does not belong to user {1}".format(view_id,user_id)),404
+
+    view_json = request.get_json()
+
+    # we are only checking the view_track display params
+    # other updates need to happen through the other end points
+    view_tracks = view_json.get('view_tracks')
+    for view_track in view_tracks:
+        view_track_obj = session.query(ViewTrack).get(view_track.get('view_track_id'))
+        if not view_track_obj:
+            return jsonify(response="Cannot update display parameters for view_track {0} it does not exist".format(view_track_id)),404
+
+        param_array = view_track.get('display_params')
+        for param in ['sticky','hidden','y_max']:
+            val = param_array.get(param)
+            if val:
+                setattr(view_track_obj,param,val)
+        
+        session.add(view_track_obj)
+
+    session.commit()
     return jsonify(view.to_data())
 
 @app.route('/api/views/',methods=['GET'])
