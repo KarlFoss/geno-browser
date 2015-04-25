@@ -1,10 +1,9 @@
 from flask import Flask, request, Response, jsonify, g
-from gb import app, auth, db, session
+from gb import app, db, session
 from models import *
 import re
 
 @app.route('/api/files',methods=['POST'])
-@auth.login_required
 def new_file():
     user_id = g.user.id
     file = request.files['file']

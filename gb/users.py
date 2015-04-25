@@ -1,14 +1,18 @@
-from flask import Flask, request, Response, jsonify, g
-from gb import app, auth, db, session
+from flask import Flask, request, Response, jsonify
+from flask_jwt import verify_jwt
+from flask.ext.jwt import current_user
+
+from gb import app, session
 from gb.models import User
 
 @app.route('/api/users/',methods=['GET'])
-@auth.login_required
 def get_user():
-    user_id = g.user.id
+    verify_jwt()
+
+    user_id = current_user.id
     user = session.query(User).get(user_id)
 
-    if(user):
+    if user:
         return jsonify( username=user.username, user_id=user.id, email=user.email )
     else:
         return jsonify(response="Can't fetch user with id: {}".format(user_id)),404
@@ -44,9 +48,10 @@ def new_user():
     return jsonify(user_id=new_user.id)
 
 @app.route('/api/users/',methods=['PUT'])
-@auth.login_required
 def update_user():
-    user_id = g.user.id
+    verify_jwt()
+
+    user_id = current_user.id
     json = request.get_json()
     user = session.query(User).get(user_id)
 
@@ -63,9 +68,10 @@ def update_user():
     return jsonify(username=user.username, user_id=user.id, email=user.email)
 
 @app.route('/api/users/',methods=['DELETE'])
-@auth.login_required
 def delete_user():
-    user_id = g.user.id
+    verify_jwt()
+
+    user_id = current_user.id
     user = session.query(User).get(user_id)
 
     if not user:

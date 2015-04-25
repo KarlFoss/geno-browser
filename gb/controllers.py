@@ -1,19 +1,24 @@
 import os
 
-from flask import Flask, request, Response
 from flask import render_template, url_for, redirect, send_from_directory, jsonify
-from gb import app, jwt, session
+from gb import jwt
 from gb.models import *
+
+class UserObj(object):
+    def __init__(self, **kwargs):
+        for k, v in kwargs.items():
+            setattr(self, k, v)
 
 @jwt.authentication_handler
 def authenticate(username, password):
-    if username == 'joe' and password == 'pass':
-        return User(id=1, username='joe')
+    user = User.query.filter_by(username = username).first()
+    if user and user.verify_password(password):
+        return UserObj(id=user.id, username=user.username)
 
 @jwt.user_handler
 def load_user(payload):
-    if payload['user_id'] == 1:
-        return User(id=1, username='joe')
+    user = User.query.filter_by(id = payload['user_id']).first()
+    return UserObj(id=user.id, username=user.username)
 
 # routing for basic pages (pass routing onto the Angular app)
 @app.route('/')
@@ -27,3 +32,5 @@ def favicon():
 @app.errorhandler(404)
 def page_not_found(e):
     return jsonify(response="Invalid Request"), 404
+
+from gb import users, tracks, views, files
