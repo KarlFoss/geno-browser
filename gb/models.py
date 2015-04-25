@@ -330,5 +330,7 @@ class ViewTrack(db.Model):
             'track_name' : track.track_name,
             'track_id' : self.track_id,
             'data_type' : track.data_type,
-            'data' : data
+            'data' : data,
+            'view_track_id' : self.id,
+            'display_params': {'sticky': self.sticky, 'hidden': self.hidden, 'y_max' : self.y_max }
         }
