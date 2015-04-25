@@ -24,7 +24,7 @@ def page_not_found(e):
 @auth.login_required
 def get_token():
     token = g.user.generate_token()
-    return jsonify({ 'token': token.decode('ascii') })
+    return jsonify({ 'X-Access-Token': token.decode('ascii') })
 
 @app.route('/gene_test',methods=['GET','POST'])
 def gene():

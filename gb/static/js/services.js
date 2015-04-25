@@ -8,30 +8,14 @@
         return bounds;
     });
 
-    genoBrowserServices.factory('TokenHandler', function() {
-        var token = "";
-
+    genoBrowserServices.factory('api', function ($http, $cookies) {
         return {
-            get: function() {
-                return token;
-            },
-
-            set: function(newToken) {
-                token = newToken;
+            authenticate: function (jwt) {
+                $http.defaults.headers.common['Authorization'] =
+                    'Bearer ' + jwt;
             }
-        }
+        };
     });
-
-    genoBrowserServices.factory('Token', ['$resource',
-        function($resource) {
-            return $resource('/api/token/', {}, {
-                get: {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                }
-            });
-        }]);
 
     genoBrowserServices.factory('Users', ['$resource',
       function($resource) {
@@ -75,10 +59,6 @@
             delete: { method: 'DELETE'}
         });
       }]);
-
-    genoBrowserServices.factory('AuthService', function ($http, Session) {
-        var authService = {};
-    });
 
     genoBrowserServices.factory('userService',
       function() {
