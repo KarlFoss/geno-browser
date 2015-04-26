@@ -13,16 +13,17 @@
     genoBrowser.config(['$routeProvider',
         function($routeProvider) {
             $routeProvider.
-                when('/view', {
-                    templateUrl: 'partials/view-frame.html',
-                    controller: 'ViewController'
-                }).
                 when('/view/:viewId', {
                     templateUrl: 'partials/view-frame.html',
-                    controller: 'ViewController'
+                    resolve:{'$routeParams':'$routeParams','Views':'Views'},
+                    controller: function($routeParams, Views){
+                        this.view_id = $routeParams.viewId;
+                        this.view = Views.get({view_id:this.view_id});
+                    },
+                    controllerAs:'view'
                 }).
                 otherwise({
-                    redirectTo: '/view'
+                    redirectTo: '/'
                 });
         }]);
 

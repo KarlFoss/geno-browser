@@ -306,4 +306,24 @@
        };
     }]);
 
+    genoBrowserDirectives.directive('gbTrack', ['Tracks', function(Tracks){
+        return {
+            restrict:'E',
+            templateUrl:'partials/track.html',
+            scope:{
+                trackId:'@'
+            },
+            link: function(scope, element, attrs){
+                scope.track = Tracks.get({track_id:attrs.trackId});
+            }
+        }
+    }]);
+
+    genoBrowserDirectives.directive('gbBedPlot', function(){
+        return {
+            restrict:'E',
+            templateUrl:'partials/bed-plot.html'
+        };
+    });
+
 })();
