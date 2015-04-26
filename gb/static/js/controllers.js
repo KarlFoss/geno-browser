@@ -15,6 +15,8 @@
                         var view = data_view.view_tracks[i];
                         if(view.data_type === 'wig'){
                             $scope.trackData.push([{key: view.track_name, values:view.data}]);
+                        } else if (view.data_type === 'fasta'){
+                            $scope.trackData.push([{key: view.track_name, values:view.data}]);
                         }
                     }
                     $scope.boundedData = $scope.trackData;
@@ -32,6 +34,11 @@
     genoBrowserControllers.controller('wigController', ['$scope', '$routeParams', 'PlotBounds', function($scope, $routeParams, PlotBounds){
 
     }]);
+
+    genoBrowserControllers.controller('fastaController', ['$scope', '$routeParams', 'PlotBounds', function($scope, $routeParams, PlotBounds){
+
+    }]);
+
 
     genoBrowserControllers.controller('navBarController', ['$scope', 'userService', 'Users',
         function($scope, userService, Users) {

@@ -349,4 +349,27 @@
         };
     }]);
 
+    genoBrowserDirectives.directive('gbFastaPlot', ['PlotBounds', function(PlotBounds){
+        return {
+            restrict:'E',
+            templateUrl:'partials/fasta-plot.html',
+            scope:true,
+            link: function(scope, element, attrs){
+                // Set bounds from first x value and last x value in data.
+                PlotBounds[0] = 0;
+                PlotBounds[1] = scope.track.data[1].length;
+
+                // Bind the bounds to the scope
+                scope.bounds = PlotBounds;
+                scope.$watch('bounds', function(){
+                    scope.boundedData = [{
+                        key:'Fasta',
+                        values: scope.track.data[1].slice(PlotBounds[0],PlotBounds[1]+1)
+                    }];
+                }, true);
+                scope.hidden = false;
+                scope.sticky = false;
+            }
+        };
+    }]);
 })();
