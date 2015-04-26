@@ -349,4 +349,57 @@
         };
     }]);
 
+    genoBrowserDirectives.directive('gbGtfPlot', ['PlotBounds', function(PlotBounds){
+        return {
+            restrict:'E',
+            template:'<div style="height:230px" class="well track"><svg viewBox="0 0 1000 200"></svg></div>',
+            scope:true,
+            link: function(scope, element, attrs){
+                var svg = d3.select(element[0]).select('svg');
+                var xscale = d3.scale.linear().domain([0,scope.track.data.slice(-1)[0].end]).range([0,1000]);
+                var yscale = d3.scale.linear().domain([0,scope.track.data.length]).range([0,175]);
+                //svg.attr('viewBox','0 0 100 100')
+                   // .attr('preserveAspectRatio','none');
+                var blocks = svg.append('g');
+                var axis = svg.append('g').attr('transform','translate(0,180)');
+                axis.call(d3.svg.axis().scale(xscale));
+                scope.render = function(data){
+                    var d = svg.selectAll('rect').data(data);
+                    d
+                        .attr('x', function(e){
+                            return e.start;
+                        })
+                        .attr('y', 0)
+                        .attr('height', 1)
+                        .attr('width', function(e){
+                            return xscale(e.end) - xscale(e.start);
+                        })
+                        .attr('fill', 'steelblue')
+                        .attr('stroke-width','.1')
+                        .attr('stroke','black');
+                    d.enter()
+                        .append('rect')
+                        .attr('x', function(e){
+                            return xscale(e.start);
+                        })
+                        .attr('y',function(e,i){
+                            return yscale(i);
+                        })
+                        .attr('height', 10)
+                        .attr('width', function(e){
+                            return xscale(e.end) - xscale(e.start);
+                        })
+                        .attr('fill',function(e) {
+                            return {exon:'steelblue',CDS:'red'}[e.feature] || 'brown';
+                        })
+                        .attr('stroke-width','.1')
+                        .attr('stroke','black');
+                    d.exit().remove();
+                };
+                scope.render(scope.track.data);
+
+            }
+        }
+    }]);
+
 })();
