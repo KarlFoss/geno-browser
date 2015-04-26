@@ -3,9 +3,9 @@
 
     var genoBrowserControllers = angular.module('genoBrowserControllers', ['genoBrowserServices']);
 
-    genoBrowserControllers.controller('ViewController', ['$scope', '$routeParams',
-        function($scope, $routeParams) {
-
+    genoBrowserControllers.controller('ViewController', ['$scope', '$routeParams', 'Views',
+        function($scope, $routeParams, Views) {
+            $scope.view = Views.get({view_id:$routeParams.viewId});
         }]);
 
     genoBrowserControllers.controller('BoundsController', ['$scope','PlotBounds', function($scope, PlotBounds){
