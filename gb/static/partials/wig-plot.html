@@ -15,11 +15,12 @@
     </div>
     <div class="col-xs-11 plot">
         <nvd3-line-chart
-                data="boundedData"
-                id="example"
-                height="350"
+                data="track"
+                id="{{ track.key }}"
+                height="230"
                 showxaxis="true"
                 showyaxis="true"
+                isArea="true"
                 >
             <svg></svg>
         </nvd3-line-chart>

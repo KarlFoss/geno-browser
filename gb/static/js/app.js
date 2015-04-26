@@ -16,10 +16,10 @@
                 when('/view/:viewId', {
                     templateUrl: 'partials/view-frame.html',
                     resolve:{'$routeParams':'$routeParams','Views':'Views'},
-                    controller: function($routeParams, Views){
+                    controller: /*function($routeParams, Views){
                         this.view_id = $routeParams.viewId;
                         this.view = Views.get({view_id:this.view_id});
-                    },
+                    },*/ 'ViewController',
                     controllerAs:'view'
                 }).
                 otherwise({

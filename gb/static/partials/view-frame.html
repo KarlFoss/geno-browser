@@ -1,3 +1,5 @@
 <div id="data-viewer" class="container">
-    <gb-track ng-repeat="track_id in view.view.track_ids" track_id="{{track_id}}"></gb-track>
+    <div ng-repeat="track in boundedData">
+        <gb-wig-plot ng-controller="wigController"></gb-wig-plot>
+    </div>
 </div>

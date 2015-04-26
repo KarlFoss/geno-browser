@@ -4,10 +4,15 @@
 /* Directives */
     var genoBrowserDirectives = angular.module('genoBrowserDirectives', ['genoBrowserControllers','genoBrowserServices', 'ui.bootstrap', 'angularFileUpload']);
 
-    genoBrowserDirectives.directive('gbWigPlot', function(){
+    genoBrowserDirectives.directive('gbWigPlot', function($compile){
         return {
             restrict:'E',
-            templateUrl:'partials/wig-plot.html'
+            templateUrl:'partials/wig-plot.html',
+            link: function(scope, element, attrs){
+                scope.plotBounds = function(){
+
+                }
+            }
         };
     });
 
@@ -147,6 +152,7 @@
                     $route.reload();
                     // Remember which view was loaded so we can quickly check
                     scope.loaded_view = view;
+
                 };
 
                 // This is called when the user clicks the add view button +
