@@ -4,8 +4,8 @@
 /* Directives */
     var genoBrowserDirectives = angular.module('genoBrowserDirectives', ['genoBrowserControllers','genoBrowserServices', 'ui.bootstrap', 'angularFileUpload']);
 
-    genoBrowserDirectives.directive("userToolbar", ['$window', 'API',
-        function ($window, API) {
+    genoBrowserDirectives.directive("userToolbar", ['$window', 'API', '$location',
+        function ($window, API, $location) {
             return {
                 restrict: "E",
                 templateUrl: "/partials/user_toolbar.html",
@@ -25,11 +25,13 @@
                         }, function (response) {
                             delete $window.sessionStorage.token;
                         });
+                        $location.path('/');
                         $window.location.reload();
                     };
 
                     scope.logout = function() {
                         delete $window.sessionStorage.token;
+                        $location.path('/');
                         $window.location.reload();
                     };
                 }
