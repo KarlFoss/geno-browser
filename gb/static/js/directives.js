@@ -355,6 +355,7 @@
             templateUrl:'partials/fasta-plot.html',
             scope:true,
             link: function(scope, element, attrs){
+
                 // Set bounds from first x value and last x value in data.
                 PlotBounds[0] = 0;
                 PlotBounds[1] = scope.track.data[1].length;
@@ -369,7 +370,22 @@
                 }, true);
                 scope.hidden = false;
                 scope.sticky = false;
+
+                // render the bases for now
+                console.log(element);
+                var svg = d3.select(element[0].children[0]).append('svg');
+                console.log(scope.track.data[1]);
+                svg.append('text')
+                  .attr({
+                    "x":1,
+                    "y":20
+                  })
+                  .style({
+                    "font-size" : "30px"
+                  })
+                  .text(scope.track.data[1]);
             }
         };
     }]);
+
 })();
