@@ -1,15 +1,13 @@
-from flask import Flask, request, Response, jsonify
-from flask_jwt import verify_jwt
-from flask.ext.jwt import current_user
+from flask import Flask, request, Response, jsonify, g
 
 from gb import app, session
 from gb.models import User
+from controllers import protected
 
 @app.route('/api/users/',methods=['GET'])
+@protected
 def get_user():
-    verify_jwt()
-
-    user_id = current_user.id
+    user_id = g.current_user_id
     user = session.query(User).get(user_id)
 
     if user:
@@ -48,10 +46,9 @@ def new_user():
     return jsonify(user_id=new_user.id)
 
 @app.route('/api/users/',methods=['PUT'])
+@protected
 def update_user():
-    verify_jwt()
-
-    user_id = current_user.id
+    user_id = g.current_user_id
     json = request.get_json()
     user = session.query(User).get(user_id)
 
@@ -68,10 +65,9 @@ def update_user():
     return jsonify(username=user.username, user_id=user.id, email=user.email)
 
 @app.route('/api/users/',methods=['DELETE'])
+@protected
 def delete_user():
-    verify_jwt()
-
-    user_id = current_user.id
+    user_id = g.current_user_id
     user = session.query(User).get(user_id)
 
     if not user:

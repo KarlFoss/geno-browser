@@ -1,16 +1,14 @@
-from flask import Flask, request, Response, jsonify
-from flask_jwt import verify_jwt
-from flask.ext.jwt import current_user
+from flask import Flask, request, Response, jsonify, g
 
 from gb import app, db, session
 from models import *
+from controllers import protected
 import re
 
 @app.route('/api/files',methods=['POST'])
+@protected
 def new_file():
-    verify_jwt()
-
-    user_id = current_user.id
+    user_id = g.current_user_id
     file = request.files['file']
     type = request.form['type']
     track_name = request.form['track_name'] if request.form.has_key('track_name') else file.filename

@@ -1,6 +1,10 @@
 import os
+from functools import wraps
 
-from flask import render_template, url_for, redirect, send_from_directory, jsonify
+from flask import Flask, request, Response
+from flask import render_template, url_for, redirect, send_from_directory, jsonify, g
+from flask_jwt import verify_jwt
+from flask.ext.jwt import current_user
 from gb import jwt
 from gb.models import *
 
@@ -20,6 +24,28 @@ def load_user(payload):
     user = User.query.filter_by(id = payload['user_id']).first()
     if user:
         return UserObj(id=user.id, username=user.username)
+
+def protected(func):
+    @wraps(func)
+    def decorated_function(*args, **kwargs):
+        # check if authorization header is set
+        auth = request.headers.get('Authorization', None)
+
+        # if it is, verify jwt
+        if auth:
+            verify_jwt()
+            g.current_user_id = current_user.id
+
+        # if not, use the default user
+        else:
+            user = session.query(User).filter_by(username="default").first()
+            if user:
+                g.current_user_id = user.id
+            else:
+                return jsonify(response="No default user defined!"), 401
+
+        return func(*args, **kwargs)
+    return decorated_function
 
 # routing for basic pages (pass routing onto the Angular app)
 @app.route('/')

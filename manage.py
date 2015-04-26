@@ -29,7 +29,7 @@ def seed_db():
     session.commit()
 
     # add the users
-    user_ids = []
+    user_ids = [default_user.id]
     users = ["kyle","karl","coda","max","goof"]
     for name in users:
         new_user = User(username=name,email="{}@email.com".format(name),password="SECRET")

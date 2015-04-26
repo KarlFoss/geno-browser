@@ -1,15 +1,13 @@
-from flask import Flask, request, Response, jsonify
-from flask_jwt import verify_jwt
-from flask.ext.jwt import current_user
+from flask import Flask, request, Response, jsonify, g
 
 from gb import app, session
 from models import *
+from controllers import protected
 
-@app.route('/api/views/',methods=['POST'])
+@app.route('/api/views/', methods=['POST'])
+@protected
 def new_view():
-    verify_jwt()
-
-    user_id = current_user.id
+    user_id = g.current_user_id
     json = request.get_json()
 
     track_ids = json.get('track_ids')
@@ -40,10 +38,9 @@ def new_view():
     return jsonify(view_id=new_view.id),200
 
 @app.route('/api/views/<int:view_id>',methods=['GET'])
+@protected
 def get_view(view_id):
-    verify_jwt()
-
-    user_id = current_user.id
+    user_id = g.current_user_id
     view = session.query(View).get(view_id)
 
     # make sure the view was found
@@ -58,10 +55,9 @@ def get_view(view_id):
     return jsonify(view.to_json())
 
 @app.route('/api/views/data/<int:view_id>',methods=['GET'])
+@protected
 def get_data_view(view_id):
-    verify_jwt()
-
-    user_id = current_user.id
+    user_id = g.current_user_id
     view = session.query(View).get(view_id)
 
     # make sure the view was found
@@ -76,10 +72,9 @@ def get_data_view(view_id):
     return jsonify(view.to_data())
 
 @app.route('/api/views/data/<int:view_id>',methods=['PUT'])
+@protected
 def update_data_view(view_id):
-    verify_jwt()
-
-    user_id = current_user.id
+    user_id = g.current_user_id
     view = session.query(View).get(view_id)
     
     # make sure the view was found
@@ -112,10 +107,9 @@ def update_data_view(view_id):
     return jsonify(view.to_data())
 
 @app.route('/api/views/',methods=['GET'])
+@protected
 def get_views():
-    verify_jwt()
-
-    user_id = current_user.id
+    user_id = g.current_user_id
     views = session.query(View).filter_by(user_id=user_id).all()
 
     # make sure the view was found
@@ -126,10 +120,9 @@ def get_views():
     return jsonify(views=[ view.to_json() for view in views])
 
 @app.route('/api/views/<int:view_id>',methods=['PUT'])
+@protected
 def update_view(view_id):
-    verify_jwt()
-
-    user_id = current_user.id
+    user_id = g.current_user_id
     json = request.get_json()
     view = session.query(View).get(view_id)
 
@@ -160,10 +153,9 @@ def update_view(view_id):
     return jsonify(view.to_json())
 
 @app.route('/api/views/<int:view_id>',methods=['DELETE'])
+@protected
 def delete_view(view_id):
-    verify_jwt()
-
-    user_id = current_user.id
+    user_id = g.current_user_id
     view = session.query(View).get(view_id)
 
     if not view:

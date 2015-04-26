@@ -78,8 +78,9 @@ class TrackTestCase(TestCase):
         )
 
     def testGetNonexistantTrack(self):
-        response = self.app.get('/api/tracks/1',headers=self.user_header)
-        self.assert401(response)
+        self.createTestUser()
+        response = self.app.get('/api/tracks/1', headers=self.user_header)
+        self.assert404(response)
 
     def testPutTrack(self):
         LOG.info("Testing track endoint /api/tracks/<track_id> with PUT")
@@ -117,8 +118,11 @@ class TrackTestCase(TestCase):
         self.assert200(response)
 
         # Check if we can still GET
-        response_get = self.app.get('/api/tracks/{}'.format(track_id))
-        self.assert401(response_get)
+        response_get = self.app.get('/api/tracks/{}'.format(track_id),
+            headers=self.user_header
+        )
+
+        self.assert404(response_get)
 
     def createTestUser(self):
         response = self.app.post('/api/users', 

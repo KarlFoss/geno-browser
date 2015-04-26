@@ -1,15 +1,13 @@
-from flask import Flask, request, Response, jsonify
-from flask_jwt import verify_jwt
-from flask.ext.jwt import current_user
+from flask import Flask, request, Response, jsonify, g
 
 from gb import app, session
 from gb.models import Track
+from controllers import protected
 
 @app.route('/api/tracks',methods=['GET'])
+@protected
 def get_all_tracks():
-    verify_jwt()
-
-    user_id = current_user.id
+    user_id = g.current_user_id
 
     # look up all the tracks
     tracks = session.query(Track).filter_by(user_id=user_id).all()
@@ -20,10 +18,9 @@ def get_all_tracks():
     return jsonify(tracks=[ track.to_json() for track in tracks])
 
 @app.route('/api/tracks/<int:track_id>',methods=['GET'])
+@protected
 def get_one_track(track_id):
-    verify_jwt()
-
-    user_id = current_user.id
+    user_id = g.current_user_id
     
     # get the track
     track = session.query(Track).get(track_id)
@@ -40,10 +37,9 @@ def get_one_track(track_id):
     return jsonify(track.to_json())
 
 @app.route('/api/tracks',methods=['POST'])
+@protected
 def new_track():
-    verify_jwt()
-
-    user_id = current_user.id
+    user_id = g.current_user_id
 
     # Get json
     json = request.get_json()
@@ -78,10 +74,9 @@ def new_track():
     return jsonify(track_id=new_track.id)
 
 @app.route('/api/tracks/<int:track_id>',methods=['PUT'])
+@protected
 def update_track(track_id):
-    verify_jwt()
-
-    user_id = current_user.id
+    user_id = g.current_user_id
 
     if not track_id:
         return jsonify(response="Can't fetch track, track_id required"),404
@@ -104,11 +99,9 @@ def update_track(track_id):
     return jsonify(track.to_json())
 
 @app.route('/api/tracks/<int:track_id>',methods=['DELETE'])
+@protected
 def delete_track(track_id):
-    verify_jwt()
-
-    user_id = current_user.id
-    
+    user_id = g.current_user_id
     track = session.query(Track).get(track_id)
 
     if not track:
