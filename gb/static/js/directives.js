@@ -37,10 +37,12 @@
                         }, function (response) {
                             delete $window.sessionStorage.token;
                         });
+                        $window.location.reload();
                     };
 
                     scope.logout = function() {
                         delete $window.sessionStorage.token;
+                        $window.location.reload();
                     };
                 }
             };
