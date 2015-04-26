@@ -349,10 +349,17 @@
         };
     }]);
 
+    genoBrowserDirectives.directive('plotControls', function(){
+        return {
+            restrict:'E',
+            templateUrl:'partials/plot_controls.html'
+        };
+    });
+
     genoBrowserDirectives.directive('gbGtfPlot', ['PlotBounds', function(PlotBounds){
         return {
             restrict:'E',
-            template:'<div style="height:230px" class="well track"><svg viewBox="0 0 1000 200"></svg></div>',
+            template:'<div style="height:230px" class="well track"><plot-controls></plot-controls><div class="col-xs-11 plot"><svg viewBox="0 0 1000 200"></svg></div>',
             scope:true,
             link: function(scope, element, attrs){
                 scope.bounds = PlotBounds;
