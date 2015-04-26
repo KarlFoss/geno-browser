@@ -4,8 +4,8 @@
 /* Directives */
     var genoBrowserDirectives = angular.module('genoBrowserDirectives', ['genoBrowserControllers','genoBrowserServices', 'ui.bootstrap', 'angularFileUpload']);
 
-    genoBrowserDirectives.directive("userToolbar", ['$window', 'API', '$location',
-        function ($window, API, $location) {
+    genoBrowserDirectives.directive("userToolbar", ['$window', '$location', 'API', 'Users',
+        function ($window, $location, API, Users) {
             return {
                 restrict: "E",
                 templateUrl: "/partials/user_toolbar.html",
@@ -18,6 +18,12 @@
                     scope.isAuthenticated = function() {
                         return $window.sessionStorage.token;
                     };
+
+                    if (scope.isAuthenticated()) {
+                        Users.get({}, function(data) {
+                            scope.logged_user = data;
+                        });
+                    }
 
                     scope.login = function() {
                         API.authenticate(scope.user, function(data) {
