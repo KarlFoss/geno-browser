@@ -37,10 +37,9 @@
 
                 return config;
             },
-            response: function (response) {
-                if (response.status === 401) {
-                    // handle the case where the user is not authenticated
-                    // this should not happen
+            responseError: function (response) {
+                if (response.status === 401 || response.status === 403) {
+                    delete $window.sessionStorage.token;
                 }
 
                 return response || $q.when(response);

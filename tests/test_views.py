@@ -11,7 +11,6 @@ logging.basicConfig()
 LOG = logging.getLogger(__name__)
 
 class TrackTestCase(TestCase):
-    user_header = [('Authorization','Basic a3lsZTpTRUNSRVQ=')]
 
     def create_app(self):
         app = Flask(__name__)
@@ -27,6 +26,9 @@ class TrackTestCase(TestCase):
         # we set self to the app instance
         self.app = app.test_client()
         db.create_all()
+
+        #
+        user_header = []
 
     def tearDown(self):
     	db.session.remove()
@@ -167,7 +169,15 @@ class TrackTestCase(TestCase):
         response = self.app.post('/api/users', 
             data=json.dumps({'username': 'kyle', 'email': 'kyle@email.com','password':'SECRET'}), 
             content_type='application/json')
-    
+
+        response = self.app.post('api/auth',
+                                 data=json.dumps({'username':'kyle', 'password':'SECRET'}),
+                                 content_type='application/json')
+
+        JSON = json.loads(response.get_data())
+        token = str(JSON.get('token'))
+        self.user_header = [('Authorization','Bearer ' + token)]
+
     def createTestTrack(self):
         response = self.app.post('/api/tracks', 
             data=json.dumps({
