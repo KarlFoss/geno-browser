@@ -26,6 +26,9 @@ class UserTestCase(TestCase):
         self.app = app.test_client()
         db.create_all()
 
+        # setup token
+        self.token = ''
+
     def tearDown(self):
     	db.session.remove()
         db.drop_all()
@@ -39,7 +42,7 @@ class UserTestCase(TestCase):
             content_type='application/json')
 
         self.assert200(response)
-        self.assertEqual(json.loads(response.get_data()).get('user_id'),1)
+        self.assertEqual(json.loads(response.get_data()).get('user_id'), 1)
 
     def testGetUser(self):
         LOG.info("Testing user endpoint /api/users/ with GET")
@@ -48,7 +51,7 @@ class UserTestCase(TestCase):
         self.createTestUser()
 
         # Check the user json returned
-        response = self.app.get('/api/users/', headers=[('Authorization','Basic a3lsZTpTRUNSRVQ=')])
+        response = self.app.get('/api/users/', headers=[('Authorization','Bearer ' + self.token)])
         self.assert200(response)
 
         # Make sure the user dict has the right fields
@@ -73,7 +76,7 @@ class UserTestCase(TestCase):
         # Handle put request
         updated_json = json.dumps(user)
         response = self.app.put('/api/users/', 
-            headers=[('Authorization','Basic a3lsZTpTRUNSRVQ=')],
+            headers=[('Authorization','Bearer ' + self.token)],
             data=updated_json, 
             content_type='application/json')
         self.assert200(response)
@@ -91,20 +94,27 @@ class UserTestCase(TestCase):
         self.createTestUser()
         user = self.get_user()
         user_id = str(user.get('user_id'))
-        response = self.app.delete('/api/users', headers=[('Authorization','Basic a3lsZTpTRUNSRVQ=')])
+        response = self.app.delete('/api/users', headers=[('Authorization','Bearer ' + self.token)])
         self.assert200(response)
 
         # Check if we can still GET
-        response_get = self.app.get('/api/users', headers=[('Authorization','Basic a3lsZTpTRUNSRVQ=')])
-        self.assert401(response_get)
+        response_get = self.app.get('/api/users', headers=[('Authorization','Bearer ' + self.token)])
+        self.assert400(response_get)
 
     def createTestUser(self):
         response = self.app.post('/api/users', 
             data=json.dumps({'username': 'kyle', 'email': 'kyle@email.com', 'password':'SECRET'}), 
             content_type='application/json')
 
+        response = self.app.post('api/auth',
+            data=json.dumps({'username':'kyle', 'password':'SECRET'}),
+            content_type='application/json')
+
+        JSON = json.loads(response.get_data())
+        self.token = str(JSON.get('token'))
+
     def get_user(self):
-        response = self.app.get('/api/users', headers=[('Authorization','Basic a3lsZTpTRUNSRVQ=')])
+        response = self.app.get('/api/users', headers=[('Authorization','Bearer ' + self.token)])
         self.assert200(response)
         user = json.loads(response.get_data())
         return user

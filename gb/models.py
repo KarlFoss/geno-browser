@@ -1,7 +1,5 @@
 from gb import app, db, session
 from passlib.apps import custom_app_context as pwd_context
-from itsdangerous import (TimedJSONWebSignatureSerializer
-                          as Serializer, BadSignature, SignatureExpired)
 
 class Wig(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -197,7 +195,7 @@ class User(db.Model):
 
     def __init__(self, username, password, email):
         self.username = username
-        self.hash_password(password);
+        self.hash_password(password)
         self.email = email
 
     def __repr__(self):
@@ -208,24 +206,6 @@ class User(db.Model):
 
     def verify_password(self, password):
         return pwd_context.verify(password, self.password_hash)
-
-    def generate_token(self, expiration = 600):
-        s = Serializer(app.config['SECRET_KEY'], expires_in = expiration)
-        return s.dumps({ 'id': self.id })
-
-    @staticmethod
-    def verify_token(token):
-        s = Serializer(app.config['SECRET_KEY'])
-
-        try:
-            data = s.loads(token)
-        except SignatureExpired:
-            return None # valid token, but expired
-        except BadSignature:
-            return None # invalid token
-
-        user = User.query.get(data['id'])
-        return user
 
 class Track(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -287,12 +267,21 @@ class ViewTrack(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     track_id = db.Column(db.Integer, db.ForeignKey('track.id'))
     view_id = db.Column(db.Integer, db.ForeignKey('view.id'))
+    
+    # display parameters
+    sticky = db.Column(db.Boolean)
+    hidden = db.Column(db.Boolean)
+    y_max = db.Column(db.Integer)
+
     view = db.relationship('View', backref='view_tracks')
     track = db.relationship('Track', backref='view_tracks')
-
+    
     def __init__(self, track_id, view_id):
         self.track_id = track_id
         self.view_id = view_id
+        self.sticky = False
+        self.hidden = False
+        self.y_max = -1
 
     def to_json(self):
         track = session.query(Track).get(self.track_id)
@@ -321,5 +310,7 @@ class ViewTrack(db.Model):
             'track_name' : track.track_name,
             'track_id' : self.track_id,
             'data_type' : track.data_type,
-            'data' : data
+            'data' : data,
+            'view_track_id' : self.id,
+            'display_params': {'sticky': self.sticky, 'hidden': self.hidden, 'y_max' : self.y_max }
         }

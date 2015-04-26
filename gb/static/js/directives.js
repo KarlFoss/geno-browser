@@ -16,14 +16,45 @@
         };
     });
 
-    genoBrowserDirectives.directive('viewList',['$location', 'Views', 'Tracks', '$modal', function($location, Views, Tracks, $modal){
+    genoBrowserDirectives.directive("userToolbar", ['$window', 'API',
+        function ($window, API) {
+            return {
+                restrict: "E",
+                templateUrl: "/partials/user_toolbar.html",
+                link: function (scope, element, attrs) {
+                    scope.user = {
+                        'username':'',
+                        'password':''
+                    };
+
+                    scope.isAuthenticated = function() {
+                        return $window.sessionStorage.token;
+                    };
+
+                    scope.login = function() {
+                        API.authenticate(scope.user, function(data) {
+                            $window.sessionStorage.token = data.token;
+                        }, function (response) {
+                            delete $window.sessionStorage.token;
+                        });
+                    };
+
+                    scope.logout = function() {
+                        delete $window.sessionStorage.token;
+                    };
+                }
+            };
+        }
+    ]);
+
+    genoBrowserDirectives.directive('viewList',['$location', 'Views', 'Tracks', '$modal', '$route', function($location, Views, Tracks, $modal, $route){
         return {
             restrict: 'E',
             templateUrl: 'partials/views.html',
             link: function (scope, element, attrs) {
                 // First see if the route indicates a loaded view
                 var location_view_id = parseInt($location.path().slice(-1)[0]);
-                scope.views = Views.query(function(views){
+                scope.views = Views.query(function(views) {
                     // Find the view with a matching id and set it as loaded
                     var loaded_view = views.filter(function(element){
                         return element.view_id === location_view_id;
@@ -89,6 +120,7 @@
                             view.track_ids = [result.initial_track.track_id];
                             // Send PUT request with new values
                             view.$update();
+                            $route.reload();
                         })
                 };
 
@@ -99,6 +131,7 @@
                     // Send PUT request with track_ids minus the removed one
                     scope.selected_view.track_ids = scope.track_ids;
                     scope.selected_view.$update();
+                    $route.reload();
                 };
 
                 // This is called when a user submits the add track modal
@@ -108,6 +141,7 @@
                     // PUT the new track_ids to the view
                     scope.selected_view.track_ids = scope.track_ids;
                     scope.selected_view.$update();
+                    $route.reload();
                 };
 
                 // This is called when the user clicks on the star
@@ -115,6 +149,7 @@
                     // Set the view_id to be loaded in the URL
                     // This change will be detected by the plotting controllers
                     $location.path('/view/' + view.view_id);
+                    $route.reload();
                     // Remember which view was loaded so we can quickly check
                     scope.loaded_view = view;
 
@@ -137,6 +172,7 @@
                                 // After confirmation that the view has been created
                                 // Refresh the list of views
                                 scope.views = Views.query();
+                                $route.reload();
                             });
                         });
                 };
@@ -280,5 +316,32 @@
            scope:true
        };
     }]);
+
+    genoBrowserDirectives.directive('gbTrack', ['Tracks', function(Tracks){
+        return {
+            restrict:'E',
+            templateUrl:'partials/track.html',
+            scope:{
+                trackId:'@'
+            },
+            link: function(scope, element, attrs){
+                scope.track = Tracks.get({track_id:attrs.trackId});
+            }
+        }
+    }]);
+
+    genoBrowserDirectives.directive('gbBedPlot', function(){
+        return {
+            restrict:'E',
+            templateUrl:'partials/bed-plot.html'
+        };
+    });
+
+    //genoBrowserDirectives.directive('gbBedPlot', function(){
+    //    return {
+    //        restrict:'E',
+    //        templateUrl:'partials/bed-plot.html'
+    //    };
+    //});
 
 })();
