@@ -337,4 +337,11 @@
         };
     });
 
+    //genoBrowserDirectives.directive('gbBedPlot', function(){
+    //    return {
+    //        restrict:'E',
+    //        templateUrl:'partials/bed-plot.html'
+    //    };
+    //});
+
 })();
