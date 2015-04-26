@@ -30,22 +30,7 @@
     }]);
 
     genoBrowserControllers.controller('wigController', ['$scope', '$routeParams', 'PlotBounds', function($scope, $routeParams, PlotBounds){
-        /*PlotBounds[0] = $scope.trackData[0].values[0][0];
-        PlotBounds[1] = $scope.trackData[0].values.slice(-1)[0][0];
-        // Bind the bounds to the scope
-        $scope.bounds = PlotBounds;
-        $scope.$watch('bounds', function(newValue){
-            // We have to make a copy because the library
-            // we are using only tells angular to watch for changes in reference pointer
-            var newBoundedData = angular.copy($scope.trackData);
-            // Bound the example data and put it in values
-            newBoundedData[0]["values"] = $scope.trackData[0].values.filter(function(element){
-                return (element[0] >= newValue[0]) && (element[0] <= newValue[1]);
-            });
-            $scope.boundedData = newBoundedData;
-        }, true);
-        $scope.hidden = false;
-        $scope.sticky = false;*/
+
     }]);
 
     genoBrowserControllers.controller('navBarController', ['$scope', 'userService', 'Users',

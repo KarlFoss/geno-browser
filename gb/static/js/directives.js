@@ -4,18 +4,6 @@
 /* Directives */
     var genoBrowserDirectives = angular.module('genoBrowserDirectives', ['genoBrowserControllers','genoBrowserServices', 'ui.bootstrap', 'angularFileUpload']);
 
-    genoBrowserDirectives.directive('gbWigPlot', function($compile){
-        return {
-            restrict:'E',
-            templateUrl:'partials/wig-plot.html',
-            link: function(scope, element, attrs){
-                scope.plotBounds = function(){
-
-                }
-            }
-        };
-    });
-
     genoBrowserDirectives.directive("userToolbar", ['$window', 'API',
         function ($window, API) {
             return {
@@ -323,12 +311,7 @@
         return {
             restrict:'E',
             templateUrl:'partials/track.html',
-            scope:{
-                trackId:'@'
-            },
-            link: function(scope, element, attrs){
-                scope.track = Tracks.get({track_id:attrs.trackId});
-            }
+            scope:true,
         }
     }]);
 
@@ -339,11 +322,29 @@
         };
     });
 
-    //genoBrowserDirectives.directive('gbBedPlot', function(){
-    //    return {
-    //        restrict:'E',
-    //        templateUrl:'partials/bed-plot.html'
-    //    };
-    //});
+    genoBrowserDirectives.directive('gbWigPlot', ['PlotBounds', function(PlotBounds){
+        return {
+            restrict:'E',
+            templateUrl:'partials/wig-plot.html',
+            scope:true,
+            link: function(scope, element, attrs){
+                // Set bounds from first x value and last x value in data.
+                PlotBounds[0] = scope.track.data[0][0];
+                PlotBounds[1] = scope.track.data.slice(-1)[0][0];
+                // Bind the bounds to the scope
+                scope.bounds = PlotBounds;
+                scope.$watch('bounds', function(){
+                    scope.boundedData = [{
+                        key:'Wig',
+                        values:scope.track.data.filter(function(element){
+                            return (element[0] >= scope.bounds[0]) && (element[0] <= scope.bounds[1]);
+                        })
+                    }];
+                }, true);
+                scope.hidden = false;
+                scope.sticky = false;
+            }
+        };
+    }]);
 
 })();

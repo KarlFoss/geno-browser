@@ -15,12 +15,12 @@
             $routeProvider.
                 when('/view/:viewId', {
                     templateUrl: 'partials/view-frame.html',
-                    resolve:{'$routeParams':'$routeParams','Views':'Views'},
-                    controller: /*function($routeParams, Views){
+                    resolve:{'$routeParams':'$routeParams','DataViews':'DataViews'},
+                    controller: function($routeParams, DataViews){
                         this.view_id = $routeParams.viewId;
-                        this.view = Views.get({view_id:this.view_id});
-                    },*/ 'ViewController',
-                    controllerAs:'view'
+                        this.data_view = DataViews.get({view_id:this.view_id});
+                    },
+                    controllerAs:'view_frame'
                 }).
                 otherwise({
                     redirectTo: '/'
