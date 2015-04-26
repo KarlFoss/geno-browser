@@ -18,7 +18,8 @@ def authenticate(username, password):
 @jwt.user_handler
 def load_user(payload):
     user = User.query.filter_by(id = payload['user_id']).first()
-    return UserObj(id=user.id, username=user.username)
+    if user:
+        return UserObj(id=user.id, username=user.username)
 
 # routing for basic pages (pass routing onto the Angular app)
 @app.route('/')
