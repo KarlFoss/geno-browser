@@ -23,7 +23,7 @@
                     };
 
                     scope.isAuthenticated = function() {
-                        return $window.sessionStorage.token ? true : false;
+                        return $window.sessionStorage.token;
                     };
 
                     scope.login = function() {
