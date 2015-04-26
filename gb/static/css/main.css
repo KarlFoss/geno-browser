@@ -77,3 +77,8 @@ a[ng-click], a[data-toggle] {
     min-height: 250px;
     min-width: 500px;
 }
+
+.modal-content {
+    overflow: auto;
+    padding-bottom: 15px;
+}

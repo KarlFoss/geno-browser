@@ -1,5 +1,4 @@
 <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
     <h4 class="modal-title" id="trackModalLabel">Add New Track</h4>
 </div>
 <div class="modal-body">
@@ -10,6 +9,9 @@
                     <label for="existing_track">Existing tracks</label>
                     <select class="form-control" id="existing_track" ng-model="existing_track" ng-options="track as track.track_name for track in all_tracks">
                     </select>
+                </div>
+                <div class="form-group pull-right">
+                    <button type="button" class="btn btn-default" ng-click="$dismiss()">Close</button>
                     <button type="submit" class="btn btn-primary">Add Track</button>
                 </div>
             </form>
@@ -22,7 +24,7 @@
                 </div>
                 <div class="form-group">
                     <label for="track_file">Select Track File</label>
-                    <input type="file" ng-file-select ng-model="track_file" id="track_file" class="form-control" required></button>
+                    <input type="file" ng-file-select ng-model="track_file" id="track_file" class="form-control" required></input>
                 </div>
                 <div class="form-group">
                     <label for="track_type">Type</label>
@@ -33,8 +35,8 @@
                         <option value="bed">BED</option>
                     </select>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" ng-click="$dismiss">Close</button>
+                <div class="form-group pull-right">
+                    <button type="button" class="btn btn-default" ng-click="$dismiss()">Close</button>
                     <button type="submit" class="btn btn-primary">Add Track</button>
                 </div>
             </form>
