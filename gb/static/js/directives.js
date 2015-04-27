@@ -261,6 +261,12 @@
                // Deselect tracks
                scope.selected_track = null;
 
+               scope.new_track = {
+                   'type':'',
+                   'name':'',
+                   'file':''
+               };
+
                // Watch the track_ids attribute, controlled mostly by viewList
                scope.$watch('track_ids',function(newValue){
                    // On change of a view's tracks

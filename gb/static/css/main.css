@@ -44,11 +44,11 @@ body {
     font-weight: bold;
 }
 
-.active a {
+.active a.action-item {
     color: #FFFFFF;
 }
 
-.active a:hover {
+.active a.action-item:hover {
     color: #E0E0E0;
 }
 
@@ -100,4 +100,8 @@ a[ng-click], a[data-toggle] {
 
 .form-reset {
     margin-right: 10px;
+}
+
+.nav-pills {
+    margin-bottom: 15px;
 }
