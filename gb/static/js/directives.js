@@ -1,7 +1,6 @@
 (function(){
 'use strict';
 
-/* Directives */
     var genoBrowserDirectives = angular.module('genoBrowserDirectives', ['genoBrowserControllers','genoBrowserServices', 'ui.bootstrap', 'angularFileUpload']);
 
     genoBrowserDirectives.directive("userToolbar", ['$window', '$location', '$rootScope', '$modal', 'API', 'Users', 'AppAlert',
@@ -85,7 +84,7 @@
         }
     ]);
 
-    genoBrowserDirectives.directive('viewList',['$location', 'Views', 'Tracks', '$modal', '$route', function($location, Views, Tracks, $modal, $route){
+    genoBrowserDirectives.directive('viewList', ['$location', 'Views', 'Tracks', '$modal', '$route', function($location, Views, Tracks, $modal, $route){
         return {
             restrict: 'E',
             templateUrl: 'partials/views.html',
