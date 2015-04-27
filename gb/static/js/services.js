@@ -4,7 +4,8 @@
     var genoBrowserServices = angular.module('genoBrowserServices', ['ngResource']);
 
     genoBrowserServices.factory('PlotBounds', function(){
-        var bounds = [0,-1];
+        // curr_min, curr_max, min, max
+        var bounds = [0, 0, 0, 0];
         return bounds;
     });
 

@@ -25,7 +25,11 @@
             }
         }]);
 
-    genoBrowserControllers.controller('BoundsController', ['$scope','PlotBounds', function($scope, PlotBounds){
+    genoBrowserControllers.controller('manualBoundsController', ['$scope','PlotBounds', function($scope, PlotBounds){
+        $scope.bounds = PlotBounds;
+    }]);
+
+    genoBrowserControllers.controller('sliderBoundsController', ['$scope','PlotBounds', function($scope, PlotBounds){
         $scope.bounds = PlotBounds;
     }]);
 

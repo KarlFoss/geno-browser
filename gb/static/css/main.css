@@ -91,3 +91,7 @@ a[ng-click], a[data-toggle] {
 .glyphicon.glyphicon-unchecked, .glyphicon.glyphicon-expand {
     font-size: 15px;
 }
+
+.ngrs-range-slider {
+    margin-bottom: 0;
+}

@@ -7,6 +7,7 @@
     <!-- bower:css -->
     <link rel="stylesheet" href="lib/bootstrap-css/css/bootstrap.min.css" />
     <link rel="stylesheet" href="lib/nvd3/src/nv.d3.css" />
+    <link rel="stylesheet" href="lib/angular-rangeslider/angular.rangeSlider.css" />
     <!-- endbower -->
 	<link rel="stylesheet" href="css/main.css">
 
@@ -22,6 +23,7 @@
     <script src="lib/angularjs-nvd3-directives/dist/angularjs-nvd3-directives.js"></script>
     <script src="lib/angular-bootstrap/ui-bootstrap-tpls.js"></script>
     <script src="lib/ng-file-upload/angular-file-upload.js"></script>
+    <script src="lib/angular-rangeslider/angular.rangeSlider.js"></script>
     <!-- endbower -->
 
     <script src="js/app.js"></script>
@@ -60,7 +62,7 @@
                 <div class="col-md-1">
                 </div>
                 <div class="col-md-10">
-                    <form class="form-inline" ng-controller="BoundsController">
+                    <form class="form-inline" ng-controller="manualBoundsController">
                         <div class="input-group">
                             <span>Range: </span>
                             <div class="form-group">
@@ -79,7 +81,8 @@
             <div class="row">
                 <div class="col-md-1">
                 </div>
-                <div class="col-md-10">
+                <div class="col-md-10" ng-controller="manualBoundsController">
+                    <div range-slider min="bounds[2]" max="bounds[3]" model-min="bounds[0]" model-max="bounds[1]"></div>
                 </div>
                 <div class="col-md-1">
                 </div>

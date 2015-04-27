@@ -379,6 +379,8 @@
                 // Set bounds from first x value and last x value in data.
                 PlotBounds[0] = scope.track.data[0][0];
                 PlotBounds[1] = scope.track.data.slice(-1)[0][0];
+                PlotBounds[2] = scope.track.data[0][0];
+                PlotBounds[3] = scope.track.data.slice(-1)[0][0];
                 // Bind the bounds to the scope
                 scope.bounds = PlotBounds;
                 scope.$watch('bounds', function(){
