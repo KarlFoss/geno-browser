@@ -4,15 +4,35 @@
 /* Directives */
     var genoBrowserDirectives = angular.module('genoBrowserDirectives', ['genoBrowserControllers','genoBrowserServices', 'ui.bootstrap', 'angularFileUpload']);
 
-    genoBrowserDirectives.directive("userToolbar", ['$window', '$location', 'API', 'Users',
-        function ($window, $location, API, Users) {
+    genoBrowserDirectives.directive('notification', function($rootScope, $timeout){
+        return {
+            restrict: 'E',
+            replace: true,
+            scope: {
+                ngModel: '='
+            },
+            template: '<div class="alert fade" bs-alert="ngModel"></div>',
+            link: function(scope, element, attrs) {
+                $rootScope.$watch('alertMsg', function() {
+                    element.show();
+                    $timeout(function(){
+                        element.hide();
+                    }, 3000);
+                });
+            }
+        }
+    });
+
+    genoBrowserDirectives.directive("userToolbar", ['$window', '$location', '$rootScope', '$modal', 'API', 'Users',
+        function ($window, $location, $rootScope, $modal, API, Users) {
             return {
                 restrict: "E",
                 templateUrl: "/partials/user_toolbar.html",
                 link: function (scope, element, attrs) {
                     scope.user = {
                         'username':'',
-                        'password':''
+                        'password':'',
+                        'email':''
                     };
 
                     scope.isAuthenticated = function() {
@@ -26,11 +46,12 @@
                     }
 
                     scope.login = function() {
-                        API.authenticate(scope.user, function(data) {
+                        API.authenticate({'username':scope.user.username,'password':scope.user.password}, function(data) {
                             $window.sessionStorage.token = data.token;
                         }, function (response) {
                             delete $window.sessionStorage.token;
                         });
+
                         $location.path('/');
                         $window.location.reload();
                     };
@@ -43,11 +64,25 @@
 
                     scope.editAccount = function() {
 
-                    }
+                    };
 
                     scope.registerAccount = function() {
+                        $modal.open({
+                            templateUrl:'partials/register-modal.html',
+                            scope:scope
+                        }).result.then(
+                            function() {
+                                Users.save(scope.user, function(data) {
+                                    $rootScope.alertMsg = {
+                                        "type": "info",
+                                        "title": "Success!",
+                                        "content": "alert directive is working pretty well with 3 sec timeout"
+                                    };
+                                }, function(response) {
 
-                    }
+                                })
+                            });
+                    };
                 }
             };
         }
