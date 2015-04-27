@@ -60,6 +60,9 @@ def update_user():
 
     if json.get('email'):
         user.email = json.get('email')
+
+    if json.get('password'):
+        user.password = user.hash_password(json.get('password'))
     
     session.commit()
     return jsonify(username=user.username, user_id=user.id, email=user.email)
