@@ -47,7 +47,9 @@
         </div>
     </nav>
 
-    <notification ng-model="alertMsg"></notification>
+    <div class="container text-center">
+        <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="alert.close()">{{alert.msg}}</alert>
+    </div>
 
     <div ng-view>
     </div>

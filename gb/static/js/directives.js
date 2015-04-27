@@ -4,27 +4,8 @@
 /* Directives */
     var genoBrowserDirectives = angular.module('genoBrowserDirectives', ['genoBrowserControllers','genoBrowserServices', 'ui.bootstrap', 'angularFileUpload']);
 
-    genoBrowserDirectives.directive('notification', function($rootScope, $timeout){
-        return {
-            restrict: 'E',
-            replace: true,
-            scope: {
-                ngModel: '='
-            },
-            template: '<div class="alert fade" bs-alert="ngModel"></div>',
-            link: function(scope, element, attrs) {
-                $rootScope.$watch('alertMsg', function() {
-                    element.show();
-                    $timeout(function(){
-                        element.hide();
-                    }, 3000);
-                });
-            }
-        }
-    });
-
-    genoBrowserDirectives.directive("userToolbar", ['$window', '$location', '$rootScope', '$modal', 'API', 'Users',
-        function ($window, $location, $rootScope, $modal, API, Users) {
+    genoBrowserDirectives.directive("userToolbar", ['$window', '$location', '$rootScope', '$modal', 'API', 'Users', 'AppAlert',
+        function ($window, $location, $rootScope, $modal, API, Users, AppAlert) {
             return {
                 restrict: "E",
                 templateUrl: "/partials/user_toolbar.html",
@@ -73,13 +54,9 @@
                         }).result.then(
                             function() {
                                 Users.save(scope.user, function(data) {
-                                    $rootScope.alertMsg = {
-                                        "type": "info",
-                                        "title": "Success!",
-                                        "content": "alert directive is working pretty well with 3 sec timeout"
-                                    };
+                                    AppAlert.add("success", "Account created!");
                                 }, function(response) {
-
+                                    AppAlert.add("error", "There was an error creating your account.");
                                 })
                             });
                     };
