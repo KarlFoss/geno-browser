@@ -22,7 +22,7 @@
                         _this.data_view = DataViews.get({view_id:_this.view_id}, function(){
                             for(var track in _this.data_view.view_tracks){
                                 if(track.data_type === 'fasta'){
-                                    _this.fastaTrack = track;
+                                    _this.fastaTrack = [track];
                                     return;
                                 }
                             }
