@@ -368,22 +368,16 @@
                         values: scope.track.data[1].slice(PlotBounds[0],PlotBounds[1]+1)
                     }];
                 }, true);
+
                 scope.hidden = false;
                 scope.sticky = false;
 
                 // render the bases for now
-                console.log(element);
                 var svg = d3.select(element[0].children[0]).append('svg');
-                console.log(scope.track.data[1]);
-                svg.append('text')
-                  .attr({
-                    "x":1,
-                    "y":20
-                  })
-                  .style({
-                    "font-size" : "30px"
-                  })
-                  .text(scope.track.data[1]);
+                console.log(scope.bounds);
+                var axisScale = d3.scale.linear().domain(scope.bounds).range([0,700]);
+                var axis = d3.svg.axis().scale(axisScale);
+                svg.append('g').call(axis);
             }
         };
     }]);
