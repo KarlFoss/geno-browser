@@ -3,6 +3,40 @@
 
     var genoBrowserDirectives = angular.module('genoBrowserDirectives', ['genoBrowserControllers','genoBrowserServices', 'ui.bootstrap', 'angularFileUpload']);
 
+    genoBrowserDirectives.directive("resettableForm", ['$parse',
+        function($parse) {
+            return {
+                restrict: "A",
+                require: "form",
+                link: function (scope, element, attr) {
+                    var fn = $parse( attr.resettableForm );
+                    var masterModel = angular.copy( fn( scope ) );
+
+                    // Error check to see if expression returned a model
+                    if ( !fn.assign ) {
+                        throw Error( 'Expression is required to be a model: ' + attr.resettableForm );
+                    }
+
+                    $('.form-reset', element).on('click', function (event) {
+                        scope.$broadcast('show-errors-reset');
+                        scope.$apply( function () {
+                            fn.assign( scope, angular.copy( masterModel ) );
+                            scope.form.$setPristine();
+                        });
+
+                        // TODO: memoize prevention method
+                        if ( event.preventDefault ) {
+                            return event.preventDefault();
+                        }
+                        else {
+                            return false;
+                        }
+                    });
+                }
+            };
+        }
+    ]);
+
     genoBrowserDirectives.directive("userToolbar", ['$window', '$location', '$rootScope', '$modal', 'API', 'Users', 'AppAlert',
         function ($window, $location, $rootScope, $modal, API, Users, AppAlert) {
             return {

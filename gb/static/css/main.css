@@ -87,7 +87,7 @@ a[ng-click], a[data-toggle] {
 
 .modal-content {
     overflow: auto;
-    padding-bottom: 15px;
+    padding-bottom: 0;
 }
 
 .glyphicon.glyphicon-unchecked, .glyphicon.glyphicon-expand {
@@ -96,4 +96,8 @@ a[ng-click], a[data-toggle] {
 
 .ngrs-range-slider {
     margin-bottom: 0;
+}
+
+.form-reset {
+    margin-right: 10px;
 }
