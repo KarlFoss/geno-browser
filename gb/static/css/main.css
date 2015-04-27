@@ -74,8 +74,9 @@ a[ng-click], a[data-toggle] {
     background-color: #f5f5f5;
 }
 
-#plot_controls button {
-    width:100%
+.plot_controls button {
+    display:block;
+    width:100%;
 }
 
 .track {
