@@ -358,14 +358,14 @@
 
                 // Set bounds from first x value and last x value in data.
                 PlotBounds[0] = 0;
-                PlotBounds[1] = scope.track.data[1].length;
+                PlotBounds[1] = scope.fastaTrack.data[1].length;
 
                 // Bind the bounds to the scope
                 scope.bounds = PlotBounds;
                 scope.$watch('bounds', function(){
                     scope.boundedData = [{
                         key:'Fasta',
-                        values: scope.track.data[1].slice(PlotBounds[0],PlotBounds[1]+1)
+                        values: scope.fastaTrack.data[1].slice(PlotBounds[0],PlotBounds[1]+1)
                     }];
                 }, true);
 
@@ -373,7 +373,7 @@
                 scope.sticky = false;
 
                 // render the bases for now
-                var svg = d3.select(element[0].children[0]).append('svg');
+                var svg = d3.select(element[0]).append('svg');
                 console.log(scope.bounds);
                 var axisScale = d3.scale.linear().domain(scope.bounds).range([0,700]);
                 var axis = d3.svg.axis().scale(axisScale);
