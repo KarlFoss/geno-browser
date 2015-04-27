@@ -63,7 +63,7 @@ a[ng-click], a[data-toggle] {
 
 #data-viewer {
     padding: 10px 0 50px 0;
-    background-color: #f5f5f5;
+    /*background-color: #f5f5f5;*/
 }
 
 #plot_controls button {

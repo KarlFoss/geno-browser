@@ -19,13 +19,14 @@
                     controller: function($routeParams, DataViews){
                         var _this = this;
                         _this.view_id = $routeParams.viewId;
+                        _this.fasta_track = {data_type: "fasta", data:[">EBV1", 'ACTGACTG']};
                         _this.data_view = DataViews.get({view_id:_this.view_id}, function(){
-                            _this.data_view.view_tracks.forEach(function(element) {
-                                if(element.data_type === 'fasta') {
-                                    _this.fastaTrack = [element];
-                                    return;
+                            for(var i = 0; i < _this.data_view.view_tracks.length; i++){
+                                if(_this.data_view.view_tracks[i].data_type === 'fasta'){
+                                    _this.data_view.view_tracks.push(_this.data_view.view_tracks.splice(i, 1)[0]);
                                 }
-                            });
+                            }
+                            console.log(_this.data_view.view_tracks);
                         });
                     },
                     controllerAs:'view_frame'

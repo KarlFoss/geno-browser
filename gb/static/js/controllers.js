@@ -35,7 +35,7 @@
 
     }]);
 
-    genoBrowserControllers.controller('fastaController', ['$scope', '$routeParams', 'PlotBounds', function($scope, $routeParams, PlotBounds){
+    genoBrowserControllers.controller('fastaController', ['$scope', '$rootScope', '$routeParams', 'PlotBounds', function($scope, $rootScope, $routeParams, PlotBounds){
 
     }]);
 

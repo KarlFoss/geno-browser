@@ -342,6 +342,9 @@
                             return (element[0] >= scope.bounds[0]) && (element[0] <= scope.bounds[1]);
                         })
                     }];
+                    scope.boundsFunc = function(){
+                        return scope.bounds;
+                    }
                 }, true);
                 scope.hidden = false;
                 scope.sticky = false;
@@ -353,19 +356,18 @@
         return {
             restrict:'E',
             templateUrl:'partials/fasta-plot.html',
-            scope:true,
+            scope:{track: '='},
             link: function(scope, element, attrs){
-
                 // Set bounds from first x value and last x value in data.
                 PlotBounds[0] = 0;
-                PlotBounds[1] = scope.fastaTrack.data[1].length;
+                PlotBounds[1] = scope.track.data[1].length;
 
                 // Bind the bounds to the scope
                 scope.bounds = PlotBounds;
                 scope.$watch('bounds', function(){
                     scope.boundedData = [{
                         key:'Fasta',
-                        values: scope.fastaTrack.data[1].slice(PlotBounds[0],PlotBounds[1]+1)
+                        values: scope.track.data[1].slice(PlotBounds[0],PlotBounds[1]+1)
                     }];
                 }, true);
 
