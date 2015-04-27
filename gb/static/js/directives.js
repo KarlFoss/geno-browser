@@ -40,6 +40,14 @@
                         $location.path('/');
                         $window.location.reload();
                     };
+
+                    scope.editAccount = function() {
+
+                    }
+
+                    scope.registerAccount = function() {
+
+                    }
                 }
             };
         }
