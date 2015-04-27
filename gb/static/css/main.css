@@ -74,3 +74,8 @@ a[ng-click], a[data-toggle] {
     min-height: 250px;
     min-width: 500px;
 }
+
+.fasta {
+    min-height: 50px;
+    min-width: 500px;
+}
