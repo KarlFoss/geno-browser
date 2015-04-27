@@ -82,3 +82,7 @@ a[ng-click], a[data-toggle] {
     overflow: auto;
     padding-bottom: 15px;
 }
+
+.glyphicon.glyphicon-unchecked, .glyphicon.glyphicon-expand {
+    font-size: 15px;
+}
