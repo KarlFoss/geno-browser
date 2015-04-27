@@ -1,3 +1,10 @@
 <div id="data-viewer" class="container">
     <gb-track ng-repeat="track in view_frame.data_view.view_tracks"></gb-track>
+    <div class="row">
+        <div class="col-xs-1"></div>
+        <div class="col-xs-10">
+            <gb-fasta-plot ng-controller="fastaController" track="fastaTrack"></gb-fasta-plot>
+        </div>
+        <div class="col-xs-1"></div>
+    </div>
 </div>
