@@ -17,8 +17,16 @@
                     templateUrl: 'partials/view-frame.html',
                     resolve:{'$routeParams':'$routeParams','DataViews':'DataViews'},
                     controller: function($routeParams, DataViews){
-                        this.view_id = $routeParams.viewId;
-                        this.data_view = DataViews.get({view_id:this.view_id});
+                        var _this = this;
+                        _this.view_id = $routeParams.viewId;
+                        _this.data_view = DataViews.get({view_id:_this.view_id}, function(){
+                            for(var track in _this.data_view.view_tracks){
+                                if(track.data_type === 'fasta'){
+                                    _this.fastaTrack = track;
+                                    return;
+                                }
+                            }
+                        });
                     },
                     controllerAs:'view_frame'
                 }).
