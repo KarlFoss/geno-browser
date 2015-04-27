@@ -4,27 +4,39 @@
 /* Directives */
     var genoBrowserDirectives = angular.module('genoBrowserDirectives', ['genoBrowserControllers','genoBrowserServices', 'ui.bootstrap', 'angularFileUpload']);
 
-    genoBrowserDirectives.directive("userToolbar", ['$window', 'API', '$location',
-        function ($window, API, $location) {
+    genoBrowserDirectives.directive("userToolbar", ['$window', '$location', '$rootScope', '$modal', 'API', 'Users', 'AppAlert',
+        function ($window, $location, $rootScope, $modal, API, Users, AppAlert) {
             return {
                 restrict: "E",
                 templateUrl: "/partials/user_toolbar.html",
                 link: function (scope, element, attrs) {
                     scope.user = {
                         'username':'',
-                        'password':''
+                        'password':'',
+                        'email':''
                     };
 
                     scope.isAuthenticated = function() {
                         return $window.sessionStorage.token;
                     };
 
+                    if (scope.isAuthenticated()) {
+                        Users.get({}, function(data) {
+                            scope.logged_user = data;
+                        });
+                    }
+
                     scope.login = function() {
-                        API.authenticate(scope.user, function(data) {
-                            $window.sessionStorage.token = data.token;
+                        API.authenticate({'username':scope.user.username,'password':scope.user.password}, function(data) {
+                            if (data.token)
+                                $window.sessionStorage.token = data.token;
+                            else
+                                delete $window.sessionStorage.token;
+
                         }, function (response) {
                             delete $window.sessionStorage.token;
                         });
+
                         $location.path('/');
                         $window.location.reload();
                     };
@@ -33,6 +45,40 @@
                         delete $window.sessionStorage.token;
                         $location.path('/');
                         $window.location.reload();
+                    };
+
+                    scope.editAccount = function() {
+                        Users.get({}, function(data) {
+                            scope.user = data;
+                        }, function(response) {
+
+                        });
+
+                        $modal.open({
+                            templateUrl:'partials/edit_account_modal.html',
+                            scope:scope
+                        }).result.then(
+                            function() {
+                                Users.update(scope.user, function(data) {
+                                    AppAlert.add("success", "Account updated!");
+                                }, function(response) {
+                                    AppAlert.add("error", "There was an error updating your account.");
+                                })
+                            });
+                    };
+
+                    scope.registerAccount = function() {
+                        $modal.open({
+                            templateUrl:'partials/add_account_modal.html',
+                            scope:scope
+                        }).result.then(
+                            function() {
+                                Users.save(scope.user, function(data) {
+                                    AppAlert.add("success", "Account created!");
+                                }, function(response) {
+                                    AppAlert.add("error", "There was an error creating your account.");
+                                })
+                            });
                     };
                 }
             };
@@ -333,6 +379,8 @@
                 // Set bounds from first x value and last x value in data.
                 PlotBounds[0] = scope.track.data[0][0];
                 PlotBounds[1] = scope.track.data.slice(-1)[0][0];
+                PlotBounds[2] = scope.track.data[0][0];
+                PlotBounds[3] = scope.track.data.slice(-1)[0][0];
                 // Bind the bounds to the scope
                 scope.bounds = PlotBounds;
                 scope.$watch('bounds', function(){

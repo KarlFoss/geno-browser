@@ -7,6 +7,11 @@ body {
     background-color: #CCCCCC;
 }
 
+.alert {
+    width: 300px;
+    margin: 0 auto;
+}
+
 .navbar-absolute {
     left: 0;
     right: 0;
@@ -63,6 +68,7 @@ a[ng-click], a[data-toggle] {
 
 #data-viewer {
     padding: 10px 0 50px 0;
+    margin-bottom: 62px;
 }
 
 .plot {
@@ -77,4 +83,17 @@ a[ng-click], a[data-toggle] {
 .track {
     min-height: 250px;
     min-width: 500px;
+}
+
+.modal-content {
+    overflow: auto;
+    padding-bottom: 15px;
+}
+
+.glyphicon.glyphicon-unchecked, .glyphicon.glyphicon-expand {
+    font-size: 15px;
+}
+
+.ngrs-range-slider {
+    margin-bottom: 0;
 }

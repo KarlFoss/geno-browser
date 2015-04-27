@@ -7,7 +7,8 @@
         'genoBrowserControllers',
         'genoBrowserServices',
         'nvd3ChartDirectives',
-        'genoBrowserDirectives'
+        'genoBrowserDirectives',
+        'ui-rangeSlider'
     ]);
 
     genoBrowser.config(['$routeProvider',
