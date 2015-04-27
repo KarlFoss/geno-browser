@@ -28,7 +28,11 @@
 
                     scope.login = function() {
                         API.authenticate({'username':scope.user.username,'password':scope.user.password}, function(data) {
-                            $window.sessionStorage.token = data.token;
+                            if (data.token)
+                                $window.sessionStorage.token = data.token;
+                            else
+                                delete $window.sessionStorage.token;
+
                         }, function (response) {
                             delete $window.sessionStorage.token;
                         });
@@ -44,12 +48,28 @@
                     };
 
                     scope.editAccount = function() {
+                        Users.get({}, function(data) {
+                            scope.user = data;
+                        }, function(response) {
 
+                        });
+
+                        $modal.open({
+                            templateUrl:'partials/edit_account_modal.html',
+                            scope:scope
+                        }).result.then(
+                            function() {
+                                Users.update(scope.user, function(data) {
+                                    AppAlert.add("success", "Account updated!");
+                                }, function(response) {
+                                    AppAlert.add("error", "There was an error updating your account.");
+                                })
+                            });
                     };
 
                     scope.registerAccount = function() {
                         $modal.open({
-                            templateUrl:'partials/register-modal.html',
+                            templateUrl:'partials/add_account_modal.html',
                             scope:scope
                         }).result.then(
                             function() {
