@@ -5,9 +5,9 @@
 <div class="modal-body">
     <tabset type="pills">
         <tab heading="Choose existing track">
-            <form name="form" novalidate
+            <form name="existingForm" novalidate
                   resettable-form="existing_track"
-                  ng-submit="form.$valid && $close({track:existing_track})">
+                  ng-submit="existingForm.$valid && $close({track:existing_track})">
                 <div class="form-group" show-errors>
                     <label for="existing_track">Existing tracks</label>
                     <select class="form-control" id="existing_track" name="existing_track" required
