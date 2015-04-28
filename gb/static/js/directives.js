@@ -354,6 +354,12 @@
                                        // Modify the selected view and PUT the changes
                                        scope.addTrackToView({track_id:new_track_id});
                                    }
+
+                                   scope.new_track = {
+                                       'type':'',
+                                       'name':'',
+                                       'file':''
+                                   };
                                });
                            }
 
