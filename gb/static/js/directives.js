@@ -4,27 +4,39 @@
 /* Directives */
     var genoBrowserDirectives = angular.module('genoBrowserDirectives', ['genoBrowserControllers','genoBrowserServices', 'ui.bootstrap', 'angularFileUpload']);
 
-    genoBrowserDirectives.directive("userToolbar", ['$window', 'API', '$location',
-        function ($window, API, $location) {
+    genoBrowserDirectives.directive("userToolbar", ['$window', '$location', '$rootScope', '$modal', 'API', 'Users', 'AppAlert',
+        function ($window, $location, $rootScope, $modal, API, Users, AppAlert) {
             return {
                 restrict: "E",
                 templateUrl: "/partials/user_toolbar.html",
                 link: function (scope, element, attrs) {
                     scope.user = {
                         'username':'',
-                        'password':''
+                        'password':'',
+                        'email':''
                     };
 
                     scope.isAuthenticated = function() {
                         return $window.sessionStorage.token;
                     };
 
+                    if (scope.isAuthenticated()) {
+                        Users.get({}, function(data) {
+                            scope.logged_user = data;
+                        });
+                    }
+
                     scope.login = function() {
-                        API.authenticate(scope.user, function(data) {
-                            $window.sessionStorage.token = data.token;
+                        API.authenticate({'username':scope.user.username,'password':scope.user.password}, function(data) {
+                            if (data.token)
+                                $window.sessionStorage.token = data.token;
+                            else
+                                delete $window.sessionStorage.token;
+
                         }, function (response) {
                             delete $window.sessionStorage.token;
                         });
+
                         $location.path('/');
                         $window.location.reload();
                     };
@@ -33,6 +45,40 @@
                         delete $window.sessionStorage.token;
                         $location.path('/');
                         $window.location.reload();
+                    };
+
+                    scope.editAccount = function() {
+                        Users.get({}, function(data) {
+                            scope.user = data;
+                        }, function(response) {
+
+                        });
+
+                        $modal.open({
+                            templateUrl:'partials/edit_account_modal.html',
+                            scope:scope
+                        }).result.then(
+                            function() {
+                                Users.update(scope.user, function(data) {
+                                    AppAlert.add("success", "Account updated!");
+                                }, function(response) {
+                                    AppAlert.add("error", "There was an error updating your account.");
+                                })
+                            });
+                    };
+
+                    scope.registerAccount = function() {
+                        $modal.open({
+                            templateUrl:'partials/add_account_modal.html',
+                            scope:scope
+                        }).result.then(
+                            function() {
+                                Users.save(scope.user, function(data) {
+                                    AppAlert.add("success", "Account created!");
+                                }, function(response) {
+                                    AppAlert.add("error", "There was an error creating your account.");
+                                })
+                            });
                     };
                 }
             };
@@ -313,7 +359,7 @@
         return {
             restrict:'E',
             templateUrl:'partials/track.html',
-            scope:true,
+            scope:true
         }
     }]);
 
@@ -333,6 +379,8 @@
                 // Set bounds from first x value and last x value in data.
                 PlotBounds[0] = scope.track.data[0][0];
                 PlotBounds[1] = scope.track.data.slice(-1)[0][0];
+                PlotBounds[2] = scope.track.data[0][0];
+                PlotBounds[3] = scope.track.data.slice(-1)[0][0];
                 // Bind the bounds to the scope
                 scope.bounds = PlotBounds;
                 scope.$watch('bounds', function(){
@@ -352,22 +400,22 @@
         };
     }]);
 
-    genoBrowserDirectives.directive('gbFastaPlot', ['PlotBounds', function(PlotBounds){
+    genoBrowserDirectives.directive('gbFastaPlot', ['PlotBounds', function(PlotBounds) {
         return {
-            restrict:'E',
-            templateUrl:'partials/fasta-plot.html',
-            scope:{track: '='},
-            link: function(scope, element, attrs){
+            restrict: 'E',
+            templateUrl: 'partials/fasta-plot.html',
+            scope: {track: '='},
+            link: function (scope, element, attrs) {
                 // Set bounds from first x value and last x value in data.
                 PlotBounds[0] = 0;
                 PlotBounds[1] = scope.track.data[1].length;
 
                 // Bind the bounds to the scope
                 scope.bounds = PlotBounds;
-                scope.$watch('bounds', function(){
+                scope.$watch('bounds', function () {
                     scope.boundedData = [{
-                        key:'Fasta',
-                        values: scope.track.data[1].slice(PlotBounds[0],PlotBounds[1]+1)
+                        key: 'Fasta',
+                        values: scope.track.data[1].slice(PlotBounds[0], PlotBounds[1] + 1)
                     }];
                 }, true);
 
@@ -377,11 +425,76 @@
                 // render the bases for now
                 var svg = d3.select(element[0]).append('svg');
                 console.log(scope.bounds);
-                var axisScale = d3.scale.linear().domain(scope.bounds).range([0,700]);
+                var axisScale = d3.scale.linear().domain(scope.bounds).range([0, 700]);
                 var axis = d3.svg.axis().scale(axisScale);
                 svg.append('g').call(axis);
             }
         };
+    }]);
+    genoBrowserDirectives.directive('plotControls', function(){
+        return {
+            restrict:'E',
+            templateUrl:'partials/plot_controls.html'
+        };
+    });
+
+    genoBrowserDirectives.directive('gbGtfPlot', ['PlotBounds', function(PlotBounds){
+        return {
+            restrict:'E',
+            template:'<div style="height:230px" class="well track"><plot-controls></plot-controls><div class="col-xs-11 plot"><svg viewBox="0 0 1000 200"></svg></div>',
+            scope:true,
+            link: function(scope, element, attrs){
+                scope.bounds = PlotBounds;
+                var svg = d3.select(element[0]).select('svg');
+                var xscale = d3.scale.linear().domain(scope.bounds).range([0,1000]);
+                scope.bounds[1] = d3.max(scope.track.data,function(e){
+                    return e.end;
+                });
+                var yscale = d3.scale.linear().domain([0,scope.track.data.length]).range([0,175]);
+                var blocks = svg.append('g');
+                var axis = svg.append('g').attr('transform','translate(0,180)');
+                scope.render = function(data){
+                    var d = svg.selectAll('rect').data(data);
+                    d
+                        .attr('x', function(e){
+                            return xscale(e.start);
+                        })
+                        .attr('y',function(e,i){
+                            return yscale(i);
+                        })
+                        .attr('height', 10)
+                        .attr('width', function(e){
+                            return xscale(e.end) - xscale(e.start);
+                        })
+                        .attr('fill',function(e) {
+                            return {exon:'steelblue',CDS:'red'}[e.feature] || 'brown';
+                        });
+                    d.enter()
+                        .append('rect')
+                        .attr('x', function(e){
+                            return xscale(e.start) || 0;
+                        })
+                        .attr('y',function(e,i){
+                            return yscale(i);
+                        })
+                        .attr('height', 10)
+                        .attr('width', function(e){
+                            return (xscale(e.end) - xscale(e.start)) || 0;
+                        })
+                        .attr('fill',function(e) {
+                            return {exon:'steelblue',CDS:'red'}[e.feature] || 'brown';
+                        });
+                    d.exit().remove();
+                };
+                //scope.render(scope.track.data);
+                scope.$watch('bounds',function(){
+                    xscale = d3.scale.linear().domain(scope.bounds).range([0,1000]);
+                    axis.call(d3.svg.axis().scale(xscale));
+                    scope.render(scope.track.data);
+                },true);
+
+            }
+        }
     }]);
 
 })();

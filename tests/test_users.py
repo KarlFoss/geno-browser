@@ -89,6 +89,21 @@ class UserTestCase(TestCase):
         user_refresh = self.get_user()
         self.assertEqual(user_refresh,json_up)
 
+    def testChangePassword(self):
+        LOG.info("Testing user endoint /api/users/ with PUT for password change")
+        self.createTestUser()
+        user = self.get_user()
+
+        user['password'] = 'NEW'
+
+        # Handle put request
+        updated_json = json.dumps(user)
+        response = self.app.put('/api/users/', 
+            headers=[('Authorization','Bearer ' + self.token)],
+            data=updated_json, 
+            content_type='application/json')
+        self.assert200(response)
+
     def testDeleteUser(self):
         LOG.info("Testing user endpoint /api/users/ with DELETE")
         self.createTestUser()

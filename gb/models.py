@@ -1,5 +1,6 @@
 from gb import app, db, session
 from passlib.apps import custom_app_context as pwd_context
+from sqlalchemy.orm import backref
 
 class Wig(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -273,8 +274,8 @@ class ViewTrack(db.Model):
     hidden = db.Column(db.Boolean)
     y_max = db.Column(db.Integer)
 
-    view = db.relationship('View', backref='view_tracks')
-    track = db.relationship('Track', backref='view_tracks')
+    view = db.relationship('View', backref=backref('view_tracks', cascade="delete"))
+    track = db.relationship('Track', backref=backref('view_tracks', cascade="delete"))
     
     def __init__(self, track_id, view_id):
         self.track_id = track_id

@@ -2,7 +2,7 @@
     <gb-wig-plot ng-controller="wigController" track="track" ng-switch-when="wig"></gb-wig-plot>
     <gb-fasta-plot ng-controller="fastaController" track="track" ng-switch-when="fasta"></gb-fasta-plot>
     <gb-bed-plot ng-switch-when="bed"></gb-bed-plot>
-    <div class="well track" ng-switch-when="gtf">GTF</div>
+    <gb-gtf-plot ng-switch-when="gtf">GTF</gb-gtf-plot>
     <div ng-switch-default>
         Unknown track type. ID: {{track.id}}
     </div>
