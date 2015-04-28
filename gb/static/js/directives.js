@@ -362,6 +362,8 @@
                scope.editTrack = function(track){
                    // Select the track to be edited
                    scope.selectTrack(track);
+                   // grab it's name
+                   scope.track_name = track.track_name;
                    // GET a list of all tracks for the dropdown
                    scope.all_tracks = Tracks.query();
                    // Open the edit track modal
