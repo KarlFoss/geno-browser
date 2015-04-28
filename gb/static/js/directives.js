@@ -150,6 +150,10 @@
                     scope.track_ids = view.track_ids;
                 };
 
+                scope.viewSelected = function() {
+                    return scope.selected_view;
+                };
+
                 // This is used by ng-class to check if a view is active
                 scope.isSelectedView = function (view) {
                     return scope.selected_view === view;
