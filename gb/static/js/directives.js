@@ -123,7 +123,7 @@
             restrict: 'E',
             templateUrl: 'partials/views.html',
             link: function (scope, element, attrs) {
-                var new_view = {
+                scope.new_view = {
                     'name':'',
                     'track':''
                 };
@@ -193,7 +193,6 @@
                             // After the modal is submitted
                             // Set the view's attributes to the edited values
                             view.view_name = result.view_name;
-                            view.track_ids = [result.initial_track.track_id];
                             // Send PUT request with new values
                             view.$update();
                             $route.reload();
