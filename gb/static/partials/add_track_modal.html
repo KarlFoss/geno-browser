@@ -1,0 +1,54 @@
+<div class="modal-header">
+    <button type="button" class="close" ng-click="$dismiss()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+    <h4 class="modal-title" id="trackModalLabel">Add New Track</h4>
+</div>
+<div class="modal-body">
+    <tabset type="pills">
+        <tab heading="Choose existing track">
+            <form name="existingForm" novalidate
+                  resettable-form="existing_track"
+                  ng-submit="existingForm.$valid && $close({track:existing_track})">
+                <div class="form-group" show-errors>
+                    <label for="existing_track">Existing tracks</label>
+                    <select class="form-control" id="existing_track" name="existing_track" required
+                            ng-model="existing_track"
+                            ng-options="track as track.track_name for track in all_tracks">
+                    </select>
+                </div>
+                <div class="form-group pull-right">
+                    <a href="" class="form-reset">Reset</a>
+                    <input type="submit" class="btn btn-primary" value="Add Track" />
+                </div>
+            </form>
+        </tab>
+        <tab heading="Upload File">
+            <form name="form" novalidate
+                  resettable-form="new_track"
+                  ng-submit="form.$valid && $close({track_name:new_track.name,file:new_track.file,track_type:new_track.type})">
+                <div class="form-group">
+                    <label for="track_name">Track Name</label>
+                    <input type="text" ng-model="new_track.name" class="form-control" id="track_name" placeholder="Track Name (Optional)"/>
+                </div>
+                <div class="form-group" show-errors>
+                    <label for="track_file">Select Track File</label>
+                    <input type="file" class="form-control" id="track_file" name="track_file" required
+                           ng-model="new_track.file"
+                           ng-file-select />
+                </div>
+                <div class="form-group">
+                    <label for="track_type">Type</label>
+                    <select class="form-control" id="track_type" ng-model="new_track.type">
+                        <option value="fasta">FASTA</option>
+                        <option value="wig">WIG</option>
+                        <option value="gtf">GTF</option>
+                        <option value="bed">BED</option>
+                    </select>
+                </div>
+                <div class="form-group pull-right">
+                    <a href="" class="form-reset">Reset</a>
+                    <button type="submit" class="btn btn-primary">Add Track</button>
+                </div>
+            </form>
+        </tab>
+    </tabset>
+</div>

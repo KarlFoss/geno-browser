@@ -1,0 +1,9 @@
+<div ng-switch="track.data_type">
+    <gb-wig-plot ng-controller="wigController" track="track" ng-switch-when="wig"></gb-wig-plot>
+    <div class="well track" ng-switch-when="fasta">FASTA</div>
+    <gb-bed-plot ng-switch-when="bed"></gb-bed-plot>
+    <gb-gtf-plot ng-switch-when="gtf">GTF</gb-gtf-plot>
+    <div ng-switch-default>
+        Unknown track type. ID: {{track.id}}
+    </div>
+</div>

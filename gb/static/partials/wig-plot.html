@@ -1,5 +1,5 @@
 <div class="well track" ng-hide="hidden" ng-class="{sticky:sticky}">
-    <div id="plot_controls" class="col-xs-1">
+    <div class="plot_controls col-xs-1">
         <button ng-click="hideTrack()" class="btn btn-primary btn-md row">
             Y-Max
         </button>
@@ -16,10 +16,10 @@
     <div class="col-xs-11 plot">
         <nvd3-line-chart
                 data="boundedData"
-                id="example"
-                height="350"
+                height="230"
                 showxaxis="true"
                 showyaxis="true"
+                isArea="true"
                 >
             <svg></svg>
         </nvd3-line-chart>

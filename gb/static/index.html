@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="en" ng-app="genoBrowser">
 <head>
-	<meta charset="utf-8">
-	<title>Geno-Browser</title>
+    <meta charset="utf-8">
+    <title>Geno-Browser</title>
 
     <!-- bower:css -->
     <link rel="stylesheet" href="lib/bootstrap-css/css/bootstrap.min.css" />
     <link rel="stylesheet" href="lib/nvd3/src/nv.d3.css" />
+    <link rel="stylesheet" href="lib/angular-rangeslider/angular.rangeSlider.css" />
     <!-- endbower -->
-	<link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/main.css">
 
     <!-- bower:js -->
     <script src="lib/jquery/dist/jquery.js"></script>
@@ -20,90 +21,38 @@
     <script src="lib/d3/d3.js"></script>
     <script src="lib/nvd3/nv.d3.js"></script>
     <script src="lib/angularjs-nvd3-directives/dist/angularjs-nvd3-directives.js"></script>
+    <script src="lib/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="lib/ng-file-upload/angular-file-upload.js"></script>
+    <script src="lib/angular-rangeslider/angular.rangeSlider.js"></script>
+    <script src="lib/angular-bootstrap-show-errors/src/showErrors.js"></script>
     <!-- endbower -->
 
     <script src="js/app.js"></script>
     <script src="js/services.js"></script>
-	<script src="js/controllers.js"></script>
+    <script src="js/controllers.js"></script>
     <script src="js/directives.js"></script>
 </head>
 <body>
     <nav class="navbar navbar-default navbar-absolute">
-        <div class="container-fluid" ng-controller="navBarController">
+        <div class="container-fluid">
             <div class="navbar-header">
                 <a class="navbar-brand" data-toggle="collapse" data-target="#navbar-menu">
                     <span class="glyphicon glyphicon-cog" aria-hidden="true" ></span>
                 </a>
-                <a class="navbar-brand" href="/">Geno-Browser</a>
+                <a class="navbar-brand">Geno-Browser</a>
             </div>
-            <form class="navbar-form navbar-right">
-                <div class="form-group">
-                    <input type="text" placeholder="Username" ng-model="user.username" class="form-control">
-                </div>
-                <div class="form-group">
-                    <input type="password" placeholder="Password" ng-model="user.password" class="form-control">
-                </div>
-                <button type="submit" class="btn btn-default" ng-click="login()">Login</button>
-                <button type="submit" class="btn btn-default" data-toggle="modal" data-target="#registerModal">Sign Up</button>
-            </form>
+            <user-toolbar></user-toolbar>
         </div>
-        <div id="navbar-menu" class="container-fluid collapse" ng-controller="navMenuController">
+        <div id="navbar-menu" class="container-fluid collapse">
             <div class="row">
-                <div class="col-md-3">
-                    <div class="well well-sm">
-                        <h4>
-                            <span>Views</span>
-                            <small class="pull-right">
-                                <a data-toggle="modal" data-target="#viewModal"><span class="glyphicon glyphicon-plus"></span></a>
-                            </small>
-                        </h4>
-                        <div class="list-group">
-                            <div ng-repeat="view in views" ng-click="View.select(view)" class="list-group-item">
-                                <span class="glyphicon glyphicon-star-empty" ng-click="View.show($event, view); $event.stopPropagation()"></span>
-                                <span>{{view.view_name}}</span>
-                                <a class="action-item pull-right" ng-click="View.delete(view); $event.stopPropagation()">
-                                    <span class="glyphicon glyphicon-remove"></span>
-                                </a>
-                                <a class="action-item pull-right" ng-click="View.edit(view); $event.stopPropagation()">
-                                    <span class="glyphicon glyphicon-edit"></span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="well well-sm">
-                        <h4>
-                            <span>Tracks</span>
-                            <small class="pull-right">
-                                <a data-toggle="modal" data-target="#trackModal"><span class="glyphicon glyphicon-plus"></span></a>
-                            </small>
-                        </h4>
-                        <div class="list-group">
-                            <div ng-repeat="track in tracks" ng-click="Track.select(track)" class="list-group-item">
-                                <span>{{track.track_name}}</span>
-                                <a class="action-item pull-right" ng-click="Track.delete(track); $event.stopPropagation()">
-                                    <span class="glyphicon glyphicon-remove"></span>
-                                </a>
-                                <a class="action-item pull-right" ng-click="Track.edit(track); $event.stopPropagation()">
-                                    <span class="glyphicon glyphicon-edit"></span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="well well-sm">
-                        <h4>
-                            <span>Track Information</span>
-                        </h4>
-                        <div class="list-group">
-                        </div>
-                    </div>
-                </div>
+                <view-list></view-list>
             </div>
         </div>
     </nav>
+
+    <div class="container text-center">
+        <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="alert.close()">{{alert.msg}}</alert>
+    </div>
 
     <div ng-view>
     </div>
@@ -114,15 +63,15 @@
                 <div class="col-md-1">
                 </div>
                 <div class="col-md-10">
-                    <form class="form-inline" ng-controller="BoundsController">
+                    <form class="form-inline" ng-controller="manualBoundsController">
                         <div class="input-group">
                             <span>Range: </span>
                             <div class="form-group">
-                                <input type="number" ng-model="bounds[0]" class="form-control" id="range-min" step="1000" placeholder="Position">
+                                <input type="number" ng-model="bounds[0]" class="form-control" id="range-min" min="0" ng-attr-max="{{bounds[1]}}" placeholder="Position">
                             </div>
                             <span> thru </span>
                             <div class="form-group">
-                                <input type="number" ng-model="bounds[1]" class="form-control" id="range-max" step="1000" placeholder="Position">
+                                <input type="number" ng-model="bounds[1]" class="form-control" id="range-max" min="0" placeholder="Position">
                             </div>
                         </div>
                     </form>
@@ -133,16 +82,13 @@
             <div class="row">
                 <div class="col-md-1">
                 </div>
-                <div class="col-md-10">
+                <div class="col-md-10" ng-controller="sliderBoundsController">
+                    <div range-slider min="bounds[2]" max="bounds[3]" model-min="bounds[0]" model-max="bounds[1]"></div>
                 </div>
                 <div class="col-md-1">
                 </div>
             </div>
         </div>
     </footer>
-
-	<ng-include src="'partials/register-modal.html'"></ng-include>
-    <ng-include src="'partials/view-modal.html'"></ng-include>
-    <ng-include src="'partials/track-modal.html'"></ng-include>
 </body>
 </html>

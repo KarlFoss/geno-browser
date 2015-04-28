@@ -10,8 +10,6 @@ logging.basicConfig()
 LOG = logging.getLogger(__name__)
 
 class TrackTestCase(TestCase):
-    user_header = [('Authorization','Basic a3lsZTpTRUNSRVQ=')]
-
     def create_app(self):
         app = Flask(__name__)
         app.config['TESTING'] = True
@@ -26,6 +24,10 @@ class TrackTestCase(TestCase):
         # we set self to the app instance
         self.app = app.test_client()
         db.create_all()
+
+        #
+        self.user_header = []
+
 
     def tearDown(self):
     	db.session.remove()
@@ -76,8 +78,9 @@ class TrackTestCase(TestCase):
         )
 
     def testGetNonexistantTrack(self):
-        response = self.app.get('/api/tracks/1',headers=self.user_header)
-        self.assert401(response)
+        self.createTestUser()
+        response = self.app.get('/api/tracks/1', headers=self.user_header)
+        self.assert404(response)
 
     def testPutTrack(self):
         LOG.info("Testing track endoint /api/tracks/<track_id> with PUT")
@@ -115,13 +118,24 @@ class TrackTestCase(TestCase):
         self.assert200(response)
 
         # Check if we can still GET
-        response_get = self.app.get('/api/tracks/{}'.format(track_id))
-        self.assert401(response_get)
+        response_get = self.app.get('/api/tracks/{}'.format(track_id),
+            headers=self.user_header
+        )
+
+        self.assert404(response_get)
 
     def createTestUser(self):
         response = self.app.post('/api/users', 
-            data=json.dumps({'username': 'kyle', 'email': 'kyle@email.com','password':'SECRET'}), 
+            data=json.dumps({'username': 'kyle', 'email': 'kyle@email.com','password':'SECRET'}),
             content_type='application/json')
+
+        response = self.app.post('api/auth',
+             data=json.dumps({'username':'kyle', 'password':'SECRET'}),
+             content_type='application/json')
+
+        JSON = json.loads(response.get_data())
+        token = str(JSON.get('token'))
+        self.user_header = [('Authorization','Bearer ' + token)]
     
     def createTestTrack(self):
         response = self.app.post('/api/tracks', 

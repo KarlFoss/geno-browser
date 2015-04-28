@@ -1,12 +1,14 @@
 from flask import Flask, request, Response, jsonify, g
-from gb import app, auth, db, session
+
+from gb import app, db, session
 from models import *
+from controllers import protected
 import re
 
-@app.route('/api/files/',methods=['POST'])
-@auth.login_required
+@app.route('/api/files',methods=['POST'])
+@protected
 def new_file():
-    user_id = g.user.id
+    user_id = g.current_user_id
     file = request.files['file']
     type = request.form['type']
     track_name = request.form['track_name'] if request.form.has_key('track_name') else file.filename
@@ -64,6 +66,20 @@ def new_file():
         session.commit()
         return jsonify(track_id = new_track.id)
 
+    elif type == 'bed':
+        bed_id = new_bed(file)
+        new_track = Track(
+            track_name = track_name,
+            user_id = user_id,
+            data_type = type,
+            data_id = bed_id,
+            file_name = file.filename,
+        )
+        session.add(new_track)
+        session.commit()
+        return jsonify(track_id = new_track.id)
+
+
 def valid_wig_header(header):
     if header.startswith("fixedStep"):
         return re.match(r"^fixedStep\schrom=\w+\sstart=\d+\sstep=\d+(\sspan=\d+$|$)", header)
@@ -90,7 +106,6 @@ def parse_header(header):
 
     return values
 
-# TODO implement support for multi fasta files
 def new_fasta(fasta_file):
     position = 0
     basepairs = []
@@ -243,3 +258,49 @@ def new_gtf(gtf_file):
     session.add_all(gtf_values)
     session.commit()
     return gtf.id
+
+def new_bed(bed_file):
+
+    # create the base record
+    bed = Bed()
+    session.add(bed)
+    session.commit()
+
+    bed_vals = []
+    for line in bed_file:
+        
+        # skip the header
+        if line.startswith("#"):
+            continue
+
+        line_vals = line.split("\t")
+
+        if len(line_vals) != 12:
+            app.logger.warning('Invalid bed line - skipping')
+            continue
+
+        [chrom, start, stop, name, score, strand, thick_start, 
+        thick_end, item_rgb, block_count, bed_block_sizes, 
+        bed_block_starts] = line_vals
+
+        bed_val = BedValue(chrom, int(start), int(stop), name, int(score), strand, int(thick_start), int(thick_end), int(item_rgb), int(block_count), bed.id)
+        session.add(bed_val)
+        session.commit()
+
+        index = 0
+        bed_block_sizes = bed_block_sizes.rstrip(",").split(",")
+        for size in bed_block_sizes:
+            bed_block_size = BedBlockSize(index, size, bed_val.id)
+            index += 1
+            bed_vals.append(bed_block_size)
+
+        index = 0
+        bed_block_starts = bed_block_starts.rstrip("\n").split(",")
+        for start in bed_block_starts:
+            bed_block_start = BedBlockStart(index, start, bed_val.id)
+            index += 1
+            bed_vals.append(bed_block_start)
+
+    session.add_all(bed_vals)
+    session.commit()
+    return bed.id
