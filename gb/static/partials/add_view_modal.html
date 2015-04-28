@@ -3,15 +3,17 @@
     <h4 class="modal-title" id="viewModalLabel">Add New View</h4>
 </div>
 <div class="modal-body">
-    <form name="addViewForm" ng-submit="addViewForm.$valid && $close({initial_track:new_initial_track, view_name:new_view_name})" novalidate>
-        <div class="form-group">
+    <form name="addViewForm" novalidate
+          resettable-form="new_view"
+          ng-submit="addViewForm.$valid && $close({initial_track:new_view.track, view_name:new_view.name})">
+        <div class="form-group" show-errors>
             <label for="view-name">View Name</label>
-            <input type="text" class="form-control" ng-model="new_view_name" id="view-name" placeholder="View Name" required>
+            <input type="text" class="form-control" ng-model="new_view.name" id="view-name" placeholder="View Name" required>
         </div>
-        <div class="form-group">
+        <div class="form-group" show-errors>
             <label for="view-track">Initial Track</label>
             <select class="form-control" id="view-track"
-                    ng-model="new_initial_track"
+                    ng-model="new_view.track"
                     ng-options="track as track.track_name for track in all_tracks" required>
             </select>
         </div>

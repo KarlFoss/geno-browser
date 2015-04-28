@@ -123,6 +123,11 @@
             restrict: 'E',
             templateUrl: 'partials/views.html',
             link: function (scope, element, attrs) {
+                var new_view = {
+                    'name':'',
+                    'track':''
+                };
+
                 // First see if the route indicates a loaded view
                 var location_view_id = parseInt($location.path().slice(-1)[0]);
                 scope.views = Views.query(function(views) {
