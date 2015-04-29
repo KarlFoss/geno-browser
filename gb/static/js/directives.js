@@ -1,8 +1,41 @@
 (function(){
 'use strict';
 
-/* Directives */
     var genoBrowserDirectives = angular.module('genoBrowserDirectives', ['genoBrowserControllers','genoBrowserServices', 'ui.bootstrap', 'angularFileUpload']);
+
+    genoBrowserDirectives.directive("resettableForm", ['$parse',
+        function($parse) {
+            return {
+                restrict: "A",
+                require: "form",
+                link: function (scope, element, attr) {
+                    var fn = $parse( attr.resettableForm );
+                    var masterModel = angular.copy( fn( scope ) );
+
+                    // Error check to see if expression returned a model
+                    if ( !fn.assign ) {
+                        throw Error( 'Expression is required to be a model: ' + attr.resettableForm );
+                    }
+
+                    $('.form-reset', element).on('click', function (event) {
+                        scope.$broadcast('show-errors-reset');
+                        scope.$apply( function () {
+                            fn.assign( scope, angular.copy( masterModel ) );
+                            scope.form.$setPristine();
+                        });
+
+                        // TODO: memoize prevention method
+                        if ( event.preventDefault ) {
+                            return event.preventDefault();
+                        }
+                        else {
+                            return false;
+                        }
+                    });
+                }
+            };
+        }
+    ]);
 
     genoBrowserDirectives.directive("userToolbar", ['$window', '$location', '$rootScope', '$modal', 'API', 'Users', 'AppAlert',
         function ($window, $location, $rootScope, $modal, API, Users, AppAlert) {
@@ -85,11 +118,16 @@
         }
     ]);
 
-    genoBrowserDirectives.directive('viewList',['$location', 'Views', 'Tracks', '$modal', '$route', function($location, Views, Tracks, $modal, $route){
+    genoBrowserDirectives.directive('viewList', ['$location', 'Views', 'Tracks', '$modal', '$route', function($location, Views, Tracks, $modal, $route){
         return {
             restrict: 'E',
             templateUrl: 'partials/views.html',
             link: function (scope, element, attrs) {
+                scope.new_view = {
+                    'name':'',
+                    'track':''
+                };
+
                 // First see if the route indicates a loaded view
                 var location_view_id = parseInt($location.path().slice(-1)[0]);
                 scope.views = Views.query(function(views) {
@@ -110,6 +148,10 @@
                     scope.selected_view = view;
                     // and the track_ids to the view's track_ids
                     scope.track_ids = view.track_ids;
+                };
+
+                scope.viewSelected = function() {
+                    return scope.selected_view;
                 };
 
                 // This is used by ng-class to check if a view is active
@@ -155,7 +197,6 @@
                             // After the modal is submitted
                             // Set the view's attributes to the edited values
                             view.view_name = result.view_name;
-                            view.track_ids = [result.initial_track.track_id];
                             // Send PUT request with new values
                             view.$update();
                             $route.reload();
@@ -227,6 +268,12 @@
            link: function(scope,element,attr){
                // Deselect tracks
                scope.selected_track = null;
+
+               scope.new_track = {
+                   'type':'',
+                   'name':'',
+                   'file':''
+               };
 
                // Watch the track_ids attribute, controlled mostly by viewList
                scope.$watch('track_ids',function(newValue){
@@ -307,6 +354,12 @@
                                        // Modify the selected view and PUT the changes
                                        scope.addTrackToView({track_id:new_track_id});
                                    }
+
+                                   scope.new_track = {
+                                       'type':'',
+                                       'name':'',
+                                       'file':''
+                                   };
                                });
                            }
 
@@ -318,6 +371,8 @@
                scope.editTrack = function(track){
                    // Select the track to be edited
                    scope.selectTrack(track);
+                   // grab it's name
+                   scope.track_name = track.track_name;
                    // GET a list of all tracks for the dropdown
                    scope.all_tracks = Tracks.query();
                    // Open the edit track modal

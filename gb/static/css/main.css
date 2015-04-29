@@ -44,11 +44,11 @@ body {
     font-weight: bold;
 }
 
-.active a {
+.active a.action-item {
     color: #FFFFFF;
 }
 
-.active a:hover {
+.active a.action-item:hover {
     color: #E0E0E0;
 }
 
@@ -87,7 +87,7 @@ a[ng-click], a[data-toggle] {
 
 .modal-content {
     overflow: auto;
-    padding-bottom: 15px;
+    padding-bottom: 0;
 }
 
 .glyphicon.glyphicon-unchecked, .glyphicon.glyphicon-expand {
@@ -96,4 +96,12 @@ a[ng-click], a[data-toggle] {
 
 .ngrs-range-slider {
     margin-bottom: 0;
+}
+
+.form-reset {
+    margin-right: 10px;
+}
+
+.nav-pills {
+    margin-bottom: 15px;
 }
