@@ -349,7 +349,15 @@
                                }).then(function(success){
                                    // After the upload is complete
                                    // Get the track_id for the recently uploaded file returned by the API
-                                   var new_track_id = success.data.track_ids[0];
+                                   console.log('GEbb');
+
+                                   var new_track_id = null;
+                                   if(success.data.track_ids && success.data.track_ids.length > 0){
+                                       new_track_id = success.data.track_ids[0];
+                                   } else if (success.data.track_id){
+                                       new_track_id = success.data.track_id;
+                                   }
+
                                    if(new_track_id && new_track_id !== 0) {
                                        // Modify the selected view and PUT the changes
                                        scope.addTrackToView({track_id:new_track_id});
@@ -478,7 +486,7 @@
                 scope.sticky = false;
 
                 // render the bases for now
-                var svg = d3.select(element[0]).append('svg');
+                var svg = d3.select(element[0]).select('svg');
                 console.log(scope.bounds);
                 var axisScale = d3.scale.linear().domain(scope.bounds).range([0, 700]);
                 var axis = d3.svg.axis().scale(axisScale);
@@ -519,7 +527,7 @@
                         })
                         .attr('height', 10)
                         .attr('width', function(e){
-                            return xscale(e.end) - xscale(e.start);
+                            return Math.abs(xscale(e.end) - xscale(e.start));
                         })
                         .attr('fill',function(e) {
                             return {exon:'steelblue',CDS:'red'}[e.feature] || 'brown';
@@ -534,7 +542,7 @@
                         })
                         .attr('height', 10)
                         .attr('width', function(e){
-                            return (xscale(e.end) - xscale(e.start)) || 0;
+                            return Math.abs(xscale(e.end) - xscale(e.start)) || 0;
                         })
                         .attr('fill',function(e) {
                             return {exon:'steelblue',CDS:'red'}[e.feature] || 'brown';

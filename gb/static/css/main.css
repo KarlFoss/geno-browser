@@ -85,6 +85,12 @@ a[ng-click], a[data-toggle] {
     min-width: 500px;
 }
 
+.fasta {
+    min-heigh: 50px;
+    max-height: 50px;
+    min-width: 500px;
+}
+
 .modal-content {
     overflow: auto;
     padding-bottom: 0;
