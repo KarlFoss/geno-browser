@@ -1,5 +1,5 @@
 (function(){
-'use strict';
+    'use strict';
 
     var genoBrowserDirectives = angular.module('genoBrowserDirectives', ['genoBrowserControllers','genoBrowserServices', 'ui.bootstrap', 'angularFileUpload']);
 
