@@ -4,6 +4,7 @@
     var genoBrowser = angular.module('genoBrowser', [
         'ngRoute',
         'ngResource',
+        'ngCookies',
         'genoBrowserControllers',
         'genoBrowserServices',
         'nvd3ChartDirectives',
@@ -11,6 +12,16 @@
         'ui-rangeSlider',
         'ui.bootstrap.showErrors'
     ]);
+
+    genoBrowser.run(['$cookies', '$modal',
+        function($cookies, $modal) {
+            if (!$cookies.visited)
+                $modal.open({
+                    templateUrl:'partials/welcome_modal.html'
+                });
+
+            $cookies.visited = true;
+        }]);
 
     genoBrowser.config(['$routeProvider',
         function($routeProvider) {
